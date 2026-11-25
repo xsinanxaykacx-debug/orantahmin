@@ -66,14 +66,25 @@ export default async function handler(req: Req, res: Res) {
     const fixtures: FotMatch[] = fixtureSets.flat();
     const results = rows.map(row => {
       if (!row.homeName || !row.awayName) return { bulletinId: String(row.matchId), home: row.homeName || null, away: row.awayName || null, date: row.date, time: row.time, match: null, confidence: 0, state: "invalid_bulletin_team" };
-      const ranked = fixtures.map(f => {
+      const leagueCode = String((row as any).fields?.leagueCode || "");
+      const sourceNames = row.homeName + " " + row.awayName;
+      const youthFixture = leagueCode === "UEGL" || /\\bU(?:19|21|23)\\b/i.test(sourceNames);
+      const ageMarkers = (s: string) => (s.match(/\\bU(?:17|18|19|20|21|23)\\b/gi) || []).map(x => x.toUpperCase());
+      const ranked = fixtures.filter(f => {
+        const league = f.league || "";
+        if (youthFixture && !/youth|U19|U21|U23/i.test(league)) return false;
+        const sourceAge = [...ageMarkers(row.homeName!), ...ageMarkers(row.awayName!)];
+        const candidateAge = [...ageMarkers(f.home || ""), ...ageMarkers(f.away || "")];
+        if (sourceAge.length && sourceAge.some(x => !candidateAge.includes(x))) return false;
+        return true;
+      }).map(f => {
         const hs = similarity(row.homeName!, f.home || ""), as = similarity(row.awayName!, f.away || "");
         return { f, hs, as, score: (hs + as) / 2 };
-      }).filter(x => x.hs >= 0.62 && x.as >= 0.62).sort((a, b) => b.score - a.score);
+      }).filter(x => x.hs >= 0.58 && x.as >= 0.58).sort((a, b) => b.score - a.score);
       const best = ranked[0], second = ranked[1];
-      if (!best || best.score < 0.76) return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, match: null, confidence: best ? Number(best.score.toFixed(3)) : 0, state: "unmatched", candidate: best ? { home: best.f.home, away: best.f.away, id: best.f.id } : null };
-      if (second && best.score - second.score < 0.055) return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, match: null, confidence: Number(best.score.toFixed(3)), state: "ambiguous", candidates: ranked.slice(0, 2).map(x => ({ id: x.f.id, home: x.f.home, away: x.f.away, score: Number(x.score.toFixed(3)) })) };
-      return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, match: { id: best.f.id, home: best.f.home, away: best.f.away, league: best.f.league, status: best.f.status }, confidence: Number(best.score.toFixed(3)), state: "matched" };
+      if (!best || best.score < 0.76) return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, leagueCode, match: null, confidence: best ? Number(best.score.toFixed(3)) : 0, state: "unmatched", candidate: best ? { home: best.f.home, away: best.f.away, id: best.f.id } : null };
+      if (second && best.score - second.score < 0.055) return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, leagueCode, match: null, confidence: Number(best.score.toFixed(3)), state: "ambiguous", candidates: ranked.slice(0, 2).map(x => ({ id: x.f.id, home: x.f.home, away: x.f.away, score: Number(x.score.toFixed(3)) })) };
+      return { bulletinId: String(row.matchId), home: row.homeName, away: row.awayName, date: row.date, time: row.time, leagueCode, match: { id: best.f.id, home: best.f.home, away: best.f.away, league: best.f.league, status: best.f.status }, confidence: Number(best.score.toFixed(3)), state: "matched" };
     });
     const matched = results.filter(x => x.state === "matched");
     let lineupResults: any[] = [];
