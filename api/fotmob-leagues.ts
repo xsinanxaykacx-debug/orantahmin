@@ -47,8 +47,12 @@ export default async function handler(req: Req, res: Res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
   try {
-    const bulletinUrl = "https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/main/public/data/mackolik-bulletin.json";
-    const bulletinResponse = await fetch(bulletinUrl, { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000) });
+    const [allLeaguesPayload, bulletinResponse] = await Promise.all([
+      jsonFetch("https://www.fotmob.com/api/data/allLeagues?locale=en"),
+      fetch("https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/main/public/data/mackolik-bulletin.json", {
+        headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000)
+      })
+    ]);
     if (!bulletinResponse.ok) throw new Error(`Maç bülteni alınamadı (HTTP ${bulletinResponse.status}).`);
     const bulletin = JSON.parse(await bulletinResponse.text());
     const rows: BulletinMatch[] = (bulletin.matches || []).filter((item: BulletinMatch) => item.homeName && item.awayName);
@@ -61,27 +65,22 @@ export default async function handler(req: Req, res: Res) {
         const leagueId = Number(league.id || league.primaryId);
         if (!leagueId) continue;
         for (const match of league.matches || []) fixtures.push({
-          id: Number(match.id),
-          home: match.home,
-          away: match.away,
-          status: match.status,
-          time: match.time,
-          leagueId,
-          leagueName: league.name || "Lig",
+          id: Number(match.id), home: match.home, away: match.away, status: match.status,
+          time: match.time, leagueId, leagueName: league.name || "Lig",
           country: league.ccode || league.ccode3 || null
         });
       }
     }
     const uniqueFixtures = [...new Map(fixtures.filter(item => item.id).map(item => [item.id, item])).values()];
     const usedFixtureIds = new Set<number>();
-    const leagueMap = new Map<number, any>();
+    const matchedLeagueMap = new Map<number, any>();
     let matchedCount = 0;
     for (const row of rows) {
       const sourceHome = row.homeName || "";
       const sourceAway = row.awayName || "";
       const sourceNames = `${sourceHome} ${sourceAway}`;
       const sourceAges = [...ageMarkers(sourceHome), ...ageMarkers(sourceAway)];
-      const youth = row.fields?.leagueCode === "UEGL" || /\bU(?:19|21|23)\b/i.test(sourceNames);
+      const youth = row.fields?.leagueCode === "UEGL" || /\\bU(?:19|21|23)\\b/i.test(sourceNames);
       const ranked = uniqueFixtures.filter(fixture => {
         if (usedFixtureIds.has(fixture.id)) return false;
         if (youth && !/youth|U19|U21|U23/i.test(fixture.leagueName)) return false;
@@ -98,41 +97,68 @@ export default async function handler(req: Req, res: Res) {
       const fixture = best.fixture;
       usedFixtureIds.add(fixture.id);
       matchedCount++;
-      const existing = leagueMap.get(fixture.leagueId);
       const match = {
-        mackolikMatchId: String(row.matchId),
-        fotmobMatchId: fixture.id,
-        date: row.date,
-        time: row.time || fixture.time || "",
-        home: fixture.home?.name || sourceHome,
-        away: fixture.away?.name || sourceAway,
-        homeScore: fixture.home?.score ?? null,
-        awayScore: fixture.away?.score ?? null,
-        status: fixture.status?.reason?.short || fixture.status?.utcTime || null,
-        started: !!fixture.status?.started,
-        finished: !!fixture.status?.finished
+        mackolikMatchId: String(row.matchId), fotmobMatchId: fixture.id, date: row.date,
+        time: row.time || fixture.time || "", home: fixture.home?.name || sourceHome,
+        away: fixture.away?.name || sourceAway, homeScore: fixture.home?.score ?? null,
+        awayScore: fixture.away?.score ?? null, status: fixture.status?.reason?.short || fixture.status?.utcTime || null,
+        started: !!fixture.status?.started, finished: !!fixture.status?.finished
       };
+      const existing = matchedLeagueMap.get(fixture.leagueId);
       if (existing) existing.matches.push(match);
-      else leagueMap.set(fixture.leagueId, {
-        id: fixture.leagueId,
-        name: fixture.leagueName,
-        country: fixture.country,
+      else matchedLeagueMap.set(fixture.leagueId, {
+        id: fixture.leagueId, name: fixture.leagueName, country: fixture.country,
         logo: `https://images.fotmob.com/image_resources/logo/leaguelogo/${fixture.leagueId}.png`,
         matches: [match]
       });
     }
-    const leagues = [...leagueMap.values()].map(league => ({
+
+    // FotMob'un ana lig kataloğu: popüler, uluslararası ve ülke bazlı tüm organizasyonlar.
+    const directory = new Map<number, any>();
+    const addLeague = (item: any, country: string | null = null) => {
+      const id = Number(item?.id);
+      if (!id || !item?.name) return;
+      const previous = directory.get(id);
+      directory.set(id, {
+        id, name: item.name, country: item.ccode || country || previous?.country || null,
+        logo: `https://images.fotmob.com/image_resources/logo/leaguelogo/${id}.png`,
+        matches: [], matchCount: 0
+      });
+    };
+    for (const item of allLeaguesPayload?.popular || []) addLeague(item);
+    const international = allLeaguesPayload?.international;
+    const internationalLeagues = Array.isArray(international) ? international : international?.leagues || [];
+    for (const item of internationalLeagues) addLeague(item, "Uluslararası");
+    for (const country of allLeaguesPayload?.countries || []) {
+      for (const item of country.leagues || []) addLeague(item, country.ccode || country.name || null);
+    }
+
+    // Günlük bültende bulunan ama katalogda ayrı bir aşama ID'siyle gelen ligleri de kaybetme.
+    for (const [id, matched] of matchedLeagueMap) {
+      const catalogLeague = directory.get(id);
+      if (catalogLeague) {
+        catalogLeague.matches = matched.matches;
+        catalogLeague.matchCount = matched.matches.length;
+        if (!catalogLeague.country) catalogLeague.country = matched.country;
+      } else {
+        directory.set(id, { ...matched, matchCount: matched.matches.length });
+      }
+    }
+    const leagues = [...directory.values()].map(league => ({
       ...league,
-      matches: league.matches.sort((a: any, b: any) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)),
-      matchCount: league.matches.length
-    })).sort((a, b) => a.name.localeCompare(b.name, "tr"));
+      matches: league.matches.sort((a: any, b: any) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
+    })).sort((a, b) => {
+      const countryCompare = String(a.country || "").localeCompare(String(b.country || ""), "tr");
+      return countryCompare || a.name.localeCompare(b.name, "tr");
+    });
     return res.status(200).json({
-      source: "Mackolik + FotMob",
+      source: "FotMob allLeagues + Mackolik daily bulletin",
       generatedAt: new Date().toISOString(),
       bulletinMatchCount: rows.length,
       matchedMatchCount: matchedCount,
       leagueCount: leagues.length,
-      matchCount: leagues.reduce((sum, league) => sum + league.matchCount, 0),
+      activeLeagueCount: leagues.filter(league => league.matchCount > 0).length,
+      matchCount: matchedCount,
       leagues
     });
   } catch (error) {
