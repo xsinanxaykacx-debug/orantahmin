@@ -10,7 +10,6 @@ type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
 type NavItem = { id: "matches" | "statistics" | "settings"; label: string; icon: string };
 
-const PAGE_SIZE = 100;
 const navItems: NavItem[] = [
   { id: "matches", label: "Maçlar", icon: "▦" },
   { id: "statistics", label: "İstatistikler", icon: "▥" },
@@ -295,7 +294,7 @@ function App() {
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
-                {group.slice(0, PAGE_SIZE).map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} />)}
+                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} />)}
               </section>
             ))}
         </div>
