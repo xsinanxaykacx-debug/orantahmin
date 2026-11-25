@@ -275,14 +275,17 @@ function App() {
       }
     };
     const onVisibilityChange = () => { if (document.visibilityState === "visible") void refresh(); };
+    const onPageHide = () => { stopped = true; controller?.abort(); };
     void refresh();
     const interval = window.setInterval(() => { void refresh(); }, 60_000);
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
     return () => {
       stopped = true;
       controller?.abort();
       window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
     };
   }, [leagueDirectory]);
 
