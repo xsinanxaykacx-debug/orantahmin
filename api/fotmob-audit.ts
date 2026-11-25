@@ -49,7 +49,9 @@ export default async function handler(req: Req, res: Res) {
   if (requestedDate && !/^\d{8}$/.test(requestedDate)) return res.status(400).json({ error: "date must be YYYYMMDD" });
   try {
     const rawUrl = "https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/feature/sofascore-lineups/public/data/mackolik-bulletin.json";
-    const bulletin = await jsonFetch(rawUrl);
+    const rawResponse = await fetch(rawUrl, { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000) });
+    if (!rawResponse.ok) throw new Error("Bulletin HTTP " + rawResponse.status);
+    const bulletin = JSON.parse(await rawResponse.text());
     const rows: BulletinMatch[] = (bulletin.matches || []).filter((m: BulletinMatch) => {
       const d = (m.date || "").split(".").reverse().join("");
       return !requestedDate || d === requestedDate;
