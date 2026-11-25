@@ -7,12 +7,12 @@ type Metric =
   | "goals-25" | "btts" | "first-second-btts" | "correct-score"
   | "half-time-score" | "under" | "over";
 type SortMode = "percentage" | "matches";
-type SeasonMode = "current" | "all";
+type SeasonMode = "current" | "last2" | "last3" | "all";
 type MetricValue = { value: number | null; label: string; detail: string };
 type Stats = Record<string, MetricValue>;
 type LeagueRow = { id: number; name: string; country: string | null; matches: number; season: string; metrics: Stats };
 type TeamRow = { id: number; name: string; leagueId: number; leagueName: string; country: string | null; matches: number; metrics: Stats };
-type Batch = { totalLeagues: number; scannedLeagues: number; scannedMatches: number; leagues: LeagueRow[]; teams: TeamRow[] };
+type Batch = { totalLeagues: number; scannedLeagues: number; scannedMatches: number; season: SeasonMode; leagues: LeagueRow[]; teams: TeamRow[] };
 
 const metricOptions: Array<{ value: Metric; label: string }> = [
   { value: "xg", label: "xG sıralaması" },
@@ -59,12 +59,18 @@ export function FotMobStatistics() {
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
+    setLeagues([]);
+    setTeams([]);
+    setScannedLeagues(0);
+    setScannedMatches(0);
+    setError(null);
+    setLoading(true);
     const load = async () => {
       try {
-        const pageSize = 20;
+        const pageSize = season === "all" ? 5 : 10;
         let total = 0;
         for (let offset = 0; active; offset += pageSize) {
-          const response = await fetch(`/api/fotmob-statistics?offset=${offset}&limit=${pageSize}&season=current`, { signal: controller.signal });
+          const response = await fetch(`/api/fotmob-statistics?offset=${offset}&limit=${pageSize}&season=${season}`, { signal: controller.signal });
           const payload = await response.json() as Batch & { error?: string };
           if (!response.ok) throw new Error(payload.error || "FotMob istatistikleri alınamadı.");
           if (!active) return;
@@ -86,7 +92,7 @@ export function FotMobStatistics() {
     };
     void load();
     return () => { active = false; controller.abort(); };
-  }, []);
+  }, [season]);
 
   const sourceRows = scope === "leagues" ? leagues : teams;
   const visibleRows = useMemo(() => sourceRows
@@ -121,6 +127,8 @@ export function FotMobStatistics() {
         <span className="stats-control-label">Sezon</span>
         <select value={season} onChange={event => setSeason(event.target.value as SeasonMode)}>
           <option value="current">Bu sezon</option>
+          <option value="last2">Son 2 sezon</option>
+          <option value="last3">Son 3 sezon</option>
           <option value="all">Tüm sezonlar</option>
         </select>
       </label>
@@ -138,9 +146,8 @@ export function FotMobStatistics() {
     </section>
 
     <section className="stats-results info-card">
-      <div className="card-heading"><span>{scope === "leagues" ? "LİG SIRALAMASI" : "TAKIM SIRALAMASI"}</span><small>{currentMetricLabel} · {season === "current" ? "Bu sezon" : "Tüm sezonlar"}</small></div>
-      {season === "all" ? <div className="stats-empty"><strong>Tüm sezonlar taraması henüz etkin değil</strong><p>Şu anda FotMob'un seçili güncel sezonu taranıyor. Geçmiş sezonları birleştiren tarama, sezonlar arası takım kimlikleri ve maç tekrarları doğrulandıktan sonra açılacak.</p></div>
-        : unavailableMetrics[metric] ? <div className="stats-empty"><strong>Bu istatistik için ek veri gerekiyor</strong><p>{unavailableMetrics[metric]}</p><small>Kaynakta doğrulanmayan devre sonuçları tahmin edilmez.</small></div>
+      <div className="card-heading"><span>{scope === "leagues" ? "LİG SIRALAMASI" : "TAKIM SIRALAMASI"}</span><small>{currentMetricLabel} · {season === "current" ? "Bu sezon" : season === "last2" ? "Son 2 sezon" : season === "last3" ? "Son 3 sezon" : "Tüm sezonlar"}</small></div>
+      {unavailableMetrics[metric] ? <div className="stats-empty"><strong>Bu istatistik için ek veri gerekiyor</strong><p>{unavailableMetrics[metric]}</p><small>Kaynakta doğrulanmayan devre sonuçları tahmin edilmez.</small></div>
         : <><div className="stats-scan-progress"><span>{scannedMatches.toLocaleString("tr-TR")} tamamlanmış maç tarandı</span><span>{loading ? "Tarama sürüyor…" : `${visibleRows.length.toLocaleString("tr-TR")} sonuç`}</span></div>
           {loading && <div className="stats-progress-track"><i style={{ width: `${totalLeagues ? Math.min(100, scannedLeagues / totalLeagues * 100) : 0}%` }} /></div>}
           {error ? <div className="stats-empty stats-error"><strong>Tarama kısmen durdu</strong><p>{error}</p><small>Şu ana kadar alınan sonuçlar korunuyor.</small></div>
@@ -153,7 +160,7 @@ export function FotMobStatistics() {
                 </tr>;
               })}</tbody>
             </table></div>
-            : <div className="stats-empty"><strong>{loading ? "İstatistikler taranıyor" : "Filtreye uygun sonuç bulunamadı"}</strong><p>{loading ? "FotMob lig sezonları sırayla okunuyor. Tarama tamamlandıkça sıralama burada oluşacak." : `${scannedLeagues.toLocaleString("tr-TR")} lig tarandı; en az ${minimumMatches} maç şartını karşılayan ve seçili ölçümde doğrulanmış veri içeren kayıt bulunamadı.`}</p></div>}
+            : <div className="stats-empty"><strong>{loading ? "İstatistikler taranıyor" : "Filtreye uygun sonuç bulunamadı"}</strong><p>{loading ? "Seçili sezon aralığındaki FotMob ligleri sırayla okunuyor. Tarama tamamlandıkça sıralama burada oluşacak." : `${scannedLeagues.toLocaleString("tr-TR")} lig tarandı; en az ${minimumMatches} maç şartını karşılayan ve seçili ölçümde doğrulanmış veri içeren kayıt bulunamadı.`}</p></div>}
         </>}
     </section>
     <p className="stats-source-note">Kaynak: FotMob sezon fikstürleri ve takım istatistikleri. Katalogdaki lig sayısı taranan lig sayısı değildir; yalnızca tamamlanmış ve skoru doğrulanmış maçlar hesaba katılır.</p>
