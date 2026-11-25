@@ -202,7 +202,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (activeNav !== "leagues" || leagueDirectory.length > 0 || leagueDirectoryLoading) return;
+    if (activeNav !== "leagues" || leagueDirectory.length > 0) return;
     let active = true;
     setLeagueDirectoryLoading(true);
     setLeagueDirectoryError(null);
@@ -221,7 +221,7 @@ function App() {
       .catch(reason => { if (active) setLeagueDirectoryError(reason instanceof Error ? reason.message : "Lig listesi alınamadı."); })
       .finally(() => { if (active) setLeagueDirectoryLoading(false); });
     return () => { active = false; };
-  }, [activeNav, leagueDirectory.length, leagueDirectoryLoading]);
+  }, [activeNav, leagueDirectory.length]);
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
   const filteredMatches = useMemo(() => {
