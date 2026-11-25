@@ -4,6 +4,7 @@ import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } fro
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
+import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "closing";
@@ -20,8 +21,6 @@ const detailTabs: { id: MatchDetailTab; label: string }[] = [
   { id: "overview", label: "Genel Bakış" },
   { id: "odds", label: "Oran Analizi" },
   { id: "squad", label: "Kadro" },
-  { id: "similar", label: "Benzer" },
-  { id: "stands", label: "Tribün" },
   { id: "ai", label: "AI Tahmin" }
 ];
 const markets: MarketDefinition[] = [
@@ -128,27 +127,8 @@ function Overview({ match }: { match: DisplayMatch }) {
             <div><span>Hava durumu</span><strong>Veri yok</strong></div>
           </div>
         </article>
-        <article className="info-card form-card">
-          <div className="card-heading"><span>SON 5 MAÇ FORMU</span><small>Geçmiş maç verisi bulunmuyor</small></div>
-          <div className="form-columns">
-            <div><strong>{safeTeamName(match.homeName)}</strong><div className="form-squares">{[1,2,3,4,5].map((n) => <i key={n} className="unknown-form">—</i>)}</div></div>
-            <div><strong>{safeTeamName(match.awayName)}</strong><div className="form-squares">{[1,2,3,4,5].map((n) => <i key={n} className="unknown-form">—</i>)}</div></div>
-          </div>
-        </article>
       </div>
-      <section className="info-card stat-card">
-        <div className="card-heading"><span>TAKIM İSTATİSTİKLERİ</span><small>Yalnızca doğrulanmış kaynak verisi</small></div>
-        {["Attığı gol", "Yediği gol", "2,5 üst", "Karşılıklı gol"].map((label) => (
-          <div className="stat-row" key={label}>
-            <span className="stat-team">{safeTeamName(match.homeName)}</span>
-            <div className="stat-track"><i className="stat-unknown" /></div>
-            <b>{label}</b>
-            <div className="stat-track"><i className="stat-unknown" /></div>
-            <span className="stat-team right">{safeTeamName(match.awayName)}</span>
-          </div>
-        ))}
-        <p className="data-footnote">Gol ve form istatistikleri kaynak bültende yer almadığı için grafik değerleri hesaplanmadı.</p>
-      </section>
+      <FotMobTeamFormPanel matchId={match.matchId} />
       <section className="info-card">
         <div className="card-heading"><span>MEVCUT ORANLAR</span><small>Orijinal market alanlarından</small></div>
         <div className="market-grid-detail">{markets.map((market) => <MarketCard key={market.key} market={market} match={match} />)}</div>
@@ -166,15 +146,8 @@ function OddsAnalysis({ match }: { match: DisplayMatch }) {
   );
 }
 
-function DetailPlaceholder({ tab }: { tab: MatchDetailTab }) {
-  const copy: Record<Exclude<MatchDetailTab, "overview" | "odds">, { title: string; body: string }> = {
-    squad: { title: "Kadro verisi bulunmuyor", body: "İlk 11, yedekler ve oyuncu istatistikleri mevcut 61 alanlı maç kaynağında yer almıyor." },
-    similar: { title: "Benzer maç verisi bulunmuyor", body: "Benzer karşılaşma karşılaştırması için geçmiş maç sonuçları ve takım istatistikleri gerekiyor." },
-    stands: { title: "Tribün verisi bulunmuyor", body: "Tribün yorumları veya taraftar etkileşim verisi bağlı değil." },
-    ai: { title: "AI tahmini oluşturulmadı", body: "Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." }
-  };
-  const item = copy[tab as Exclude<MatchDetailTab, "overview" | "odds">];
-  return <div className="placeholder-wrap"><EmptyData title={item.title} description={item.body} /></div>;
+function DetailPlaceholder() {
+  return <div className="placeholder-wrap"><EmptyData title="AI tahmini oluşturulmadı" description="Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." /></div>;
 }
 
 function MatchDetail({ match, tab, onTabChange }: {
@@ -196,7 +169,7 @@ function MatchDetail({ match, tab, onTabChange }: {
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder tab={tab} />}
+      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
     </div>
   );
 }
