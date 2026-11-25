@@ -43,32 +43,32 @@ export default async function handler(req: Req, res: Res) {
 
     let home = 0;
     let away = 0;
-    let foundFirstHalfGoalEvent = false;
+    let allHomeGoals = 0;
+    let allAwayGoals = 0;
 
     for (const event of events) {
       if (String(event?.type || "").toLowerCase() !== "goal") continue;
       if (event?.isPenaltyShootoutEvent === true) continue;
 
+      const ownGoal = Boolean(event?.ownGoal);
+      const isHome = Boolean(event?.isHome);
+      const scoringHome = ownGoal ? !isHome : isHome;
+      if (scoringHome) allHomeGoals++;
+      else allAwayGoals++;
+
       const halfLabel = String(event?.halfStrShort || event?.halfStrKey || "").toLowerCase();
       const time = Number(event?.time);
       const firstHalf = /first|1st|1h|firsthalf|first_half|ilk/.test(halfLabel) ||
-        (!halfLabel && Number.isFinite(time) && time <= 45);
+        (!/second|2nd|2h|secondhalf|second_half|ikinci/.test(halfLabel) && Number.isFinite(time) && time <= 45);
       if (!firstHalf) continue;
 
-      foundFirstHalfGoalEvent = true;
-      const ownGoal = Boolean(event?.ownGoal);
-      const isHome = Boolean(event?.isHome);
-      if (ownGoal) {
-        if (isHome) away++;
-        else home++;
-      } else {
-        if (isHome) home++;
-        else away++;
-      }
+      if (scoringHome) home++;
+      else away++;
     }
 
-    // A 0-0 first half has no goal events; confirm the match details payload has an events array.
-    if (!foundFirstHalfGoalEvent && events.length === 0 && !(finalHome === 0 && finalAway === 0)) {
+    // Confirm the event list accounts for the official full-time score before trusting a derived half-time score.
+    if (!Number.isFinite(finalHome) || !Number.isFinite(finalAway) ||
+        allHomeGoals !== finalHome || allAwayGoals !== finalAway) {
       return res.status(200).json({ available: false, finished: true });
     }
 
