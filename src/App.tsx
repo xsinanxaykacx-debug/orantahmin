@@ -246,6 +246,7 @@ function App() {
             })}
           </div>
         )}
+        {renderPagination()}
       </>
     );
   }
