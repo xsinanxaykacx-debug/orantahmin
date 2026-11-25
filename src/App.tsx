@@ -209,7 +209,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (activeNav !== "leagues" || leagueDirectory.length > 0) return;
+    if (leagueDirectory.length > 0) return;
     let active = true;
     setLeagueDirectoryLoading(true);
     setLeagueDirectoryError(null);
