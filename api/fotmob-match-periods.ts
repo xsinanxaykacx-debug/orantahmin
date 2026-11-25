@@ -33,7 +33,13 @@ export default async function handler(req: Req, res: Res) {
     if (!finished) return res.status(200).json({ available: false, finished: false });
 
     const events = data?.content?.matchFacts?.events?.events;
-    if (!Array.isArray(events)) return res.status(200).json({ available: false, finished: true });
+    const finalTeams = data?.header?.teams || [];
+    const finalHome = Number(finalTeams[0]?.score);
+    const finalAway = Number(finalTeams[1]?.score);
+    if (!Array.isArray(events)) {
+      if (finalHome === 0 && finalAway === 0) return res.status(200).json({ source: "FotMob final score", available: true, finished: true, firstHalfHomeScore: 0, firstHalfAwayScore: 0 });
+      return res.status(200).json({ available: false, finished: true });
+    }
 
     let home = 0;
     let away = 0;
@@ -62,7 +68,7 @@ export default async function handler(req: Req, res: Res) {
     }
 
     // A 0-0 first half has no goal events; confirm the match details payload has an events array.
-    if (!foundFirstHalfGoalEvent && events.length === 0) {
+    if (!foundFirstHalfGoalEvent && events.length === 0 && !(finalHome === 0 && finalAway === 0)) {
       return res.status(200).json({ available: false, finished: true });
     }
 
