@@ -147,7 +147,7 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
           <FixtureList matches={fixtures} />
         </section>
         <section className="info-card league-panel league-scorers-panel">
-          <div className="card-heading"><span>GOL KRALLIĞI</span><small>FotMob</small></div>
+          <div className="card-heading"><span>OYUNCU İSTATİSTİKLERİ</span><small>FotMob</small></div>
           {playerLeaderboards.length ? <div className="league-scorer-groups">{playerLeaderboards.map((group: any) => <section className="league-scorer-group" key={group.stat}>
             <h4>{group.title}</h4>
             <div className="league-scorers">{group.top.map((player: any, index: number) => <div key={player.id || player.name || index}>
