@@ -4,7 +4,6 @@ import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } fro
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
 import { SofascoreLineupPanel } from "./components/SofascoreLineupPanel";
-import "./components/sofascore-lineups.css";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "closing";
