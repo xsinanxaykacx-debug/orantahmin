@@ -307,11 +307,13 @@ function App() {
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
   const teamLogosByMatch = useMemo(() => {
-    const map = new Map<string, { home: number | null; away: number | null } & FotMobMatchState>();
+    const map = new Map<string, { home: number | null; away: number | null; homeName: string | null; awayName: string | null } & FotMobMatchState>();
     for (const league of leagueDirectory) for (const match of league.matches || []) {
       map.set(String(match.mackolikMatchId), {
         home: match.homeTeamId || null,
         away: match.awayTeamId || null,
+        homeName: match.home?.trim() || null,
+        awayName: match.away?.trim() || null,
         started: Boolean(match.started),
         finished: Boolean(match.finished),
         homeScore: match.homeScore ?? null,
@@ -325,9 +327,14 @@ function App() {
     }
     return map;
   }, [leagueDirectory, liveScores]);
+  const displayMatches = useMemo(() => matches.map(match => {
+    const fotmob = teamLogosByMatch.get(String(match.matchId));
+    return { ...match, homeName: fotmob?.homeName || match.homeName, awayName: fotmob?.awayName || match.awayName };
+  }), [matches, teamLogosByMatch]);
+
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
-    return matches.filter((match) => {
+    return displayMatches.filter((match) => {
       const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
       const live = isLiveMatch(match.status, fotmobStatus);
       if (statusFilter === "live" && !live) return false;
@@ -339,7 +346,7 @@ function App() {
     }).sort((a, b) => statusFilter === "finished"
       ? dateTimeKey(b).localeCompare(dateTimeKey(a))
       : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [matches, statusFilter, search, teamLogosByMatch]);
+  }, [displayMatches, statusFilter, search, teamLogosByMatch]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -355,8 +362,8 @@ function App() {
   const selectedMatchLogos = selectedId ? teamLogosByMatch.get(selectedId) : undefined;
   const selectedMatchFotMobStatus = selectedMatchLogos;
   const selectedMatch = useMemo(
-    () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
-    [matches, selectedId]
+    () => displayMatches.find((match) => String(match.matchId) === selectedId) ?? null,
+    [displayMatches, selectedId]
   );
   const filteredLeagues = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
@@ -376,7 +383,6 @@ function App() {
     return isFinishedMatch(match.status, fotmobStatus);
   }).length, [matches, teamLogosByMatch]);
   const visibleCount = filteredMatches.length;
-  const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
 
   useEffect(() => {
     if (selectedId && !matches.some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
@@ -412,7 +418,7 @@ function App() {
             <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
           </div>}
           <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
-          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : sourceCount + " kayıt"}</span></div>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : matches.length + " benzersiz maç"}</span></div>
         </div>
 
         {activeNav === "leagues" ? <div className="league-directory-scroll">
