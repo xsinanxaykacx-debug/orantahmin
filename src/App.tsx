@@ -8,7 +8,7 @@ import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
-type StatusFilter = "all" | "live" | "closing";
+type StatusFilter = "all" | "live" | "finished";
 type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
 type NavItem = { id: "matches" | "leagues" | "settings"; label: string; icon: string };
@@ -136,7 +136,8 @@ function Overview({ match }: { match: DisplayMatch }) {
           </div>
         </article>
       </div>
-      <FotMobTeamFormPanel matchId={match.matchId} />
+        <FotMobTeamFormPanel matchId={match.matchId} />
+      </div>
       <section className="info-card">
         <div className="card-heading"><span>MEVCUT ORANLAR</span><small>Orijinal market alanlarından</small></div>
         <div className="market-grid-detail">{markets.map((market) => <MarketCard key={market.key} market={market} match={match} />)}</div>
@@ -223,7 +224,7 @@ function App() {
         if (!active) return;
         const leagues = payload.leagues || [];
         setLeagueDirectory(leagues);
-        setSelectedLeagueId(current => current && leagues.some(league => league.id === current) ? current : leagues[0]?.id ?? null);
+        setSelectedLeagueId(current => current && leagues.some(league => league.id === current) ? current : leagues.find(league => league.matchCount > 0)?.id ?? leagues[0]?.id ?? null);
       })
       .catch(reason => { if (active) setLeagueDirectoryError(reason instanceof Error ? reason.message : "Lig listesi alınamadı."); })
       .finally(() => { if (active) setLeagueDirectoryLoading(false); });
@@ -236,8 +237,8 @@ function App() {
     return matches.filter((match) => {
       const live = match.status > 0 && match.status < 4;
       if (statusFilter === "live" && !live) return false;
-      // The feed has no verified "closing" flag; don't infer it from status codes.
-      if (statusFilter === "closing") return false;
+      const finished = match.status >= 4;
+      if (statusFilter === "finished" && !finished) return false;
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
         .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
@@ -277,6 +278,7 @@ function App() {
   );
 
   const liveCount = useMemo(() => matches.filter((match) => match.status > 0 && match.status < 4).length, [matches]);
+  const finishedCount = useMemo(() => matches.filter((match) => match.status >= 4).length, [matches]);
   const visibleCount = filteredMatches.length;
   const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
 
@@ -311,10 +313,10 @@ function App() {
           {activeNav === "matches" && <div className="status-filters">
             <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{matches.length}</b></button>
             <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
-            <button className={statusFilter === "closing" ? "active" : ""} onClick={() => setStatusFilter("closing")}>Kapanış</button>
+            <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
           </div>}
           <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
-          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} aktif · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : sourceCount + " kayıt"}</span></div>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : sourceCount + " kayıt"}</span></div>
         </div>
 
         {activeNav === "leagues" ? <div className="league-directory-scroll">
@@ -329,7 +331,7 @@ function App() {
         </div> : activeNav === "matches" ? <div className="match-list-scroll">
           {loading ? <div className="list-message">Bülten yükleniyor…</div>
             : error ? <div className="list-message error-text">{error}</div>
-            : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "closing" ? "Kaynakta kapanış durumu alanı bulunmuyor." : "Eşleşen maç bulunamadı."}</div>
+            : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "finished" ? "Tamamlanmış maç bulunamadı." : statusFilter === "live" ? "Şu anda canlı maç bulunamadı." : "Eşleşen maç bulunamadı."}</div>
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
