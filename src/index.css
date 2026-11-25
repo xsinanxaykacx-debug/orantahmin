@@ -22,15 +22,7 @@
 }
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; min-width: 320px; margin: 0; }
-body { overflow: hidden; background: var(--bg); }
-/* Enforce the requested typography instead of allowing component rules to override it. */
-body, body *, body *::before, body *::after {
-  font-family: Inter, system-ui, -apple-system, sans-serif !important;
-  font-size: 14px !important;
-  font-weight: 400 !important;
-  line-height: 14px !important;
-  letter-spacing: -0.16px !important;
-}
+body { overflow: hidden; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 14px; letter-spacing: -0.16px; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 .dashboard-shell { width: 100%; height: 100dvh; min-height: 0; display: grid; grid-template-columns: 68px minmax(350px, 450px) minmax(0, 1fr); overflow: hidden; background: var(--bg); }
