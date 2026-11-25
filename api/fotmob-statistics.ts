@@ -159,9 +159,14 @@ export default async function handler(req: Req, res: Res) {
       const xgEntry = (data?.stats?.teams || []).find((item: any) => item?.participant?.stat?.name === "expected_goals_team");
       let xgRows: any[] = [];
       if (xgEntry?.fetchAllUrl) {
-        const xgUrl = new URL(String(xgEntry.fetchAllUrl), "https://data.fotmob.com/").toString();
-        const xgData = await getJson(xgUrl);
-        xgRows = Array.isArray(xgData?.TopLists?.[0]?.StatList) ? xgData.TopLists[0].StatList : [];
+        try {
+          const xgUrl = new URL(String(xgEntry.fetchAllUrl), "https://data.fotmob.com/").toString();
+          const xgData = await getJson(xgUrl);
+          xgRows = Array.isArray(xgData?.TopLists?.[0]?.StatList) ? xgData.TopLists[0].StatList : [];
+        } catch {
+          // xG may be unavailable for a competition; keep its verified score-based metrics.
+          xgRows = [];
+        }
       }
       const xgByTeam = new Map<number, { value: number; matches: number }>();
       for (const row of xgRows) {
