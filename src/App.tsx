@@ -231,18 +231,31 @@ function App() {
   }, [activeNav, leagueDirectory.length]);
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
+  const teamLogosByMatch = useMemo(() => {
+    const map = new Map<string, { home: number | null; away: number | null; started: boolean; finished: boolean }>();
+    for (const league of leagueDirectory) for (const match of league.matches || []) {
+      map.set(String(match.mackolikMatchId), {
+        home: match.homeTeamId || null,
+        away: match.awayTeamId || null,
+        started: Boolean(match.started),
+        finished: Boolean(match.finished)
+      });
+    }
+    return map;
+  }, [leagueDirectory]);
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
     return matches.filter((match) => {
-      const live = match.status > 0 && match.status < 4;
+      const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
+      const live = fotmobStatus ? fotmobStatus.started && !fotmobStatus.finished : match.status > 0 && match.status < 4;
       if (statusFilter === "live" && !live) return false;
-      const finished = match.status >= 4;
+      const finished = fotmobStatus ? fotmobStatus.finished : match.status >= 4;
       if (statusFilter === "finished" && !finished) return false;
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
         .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
     }).sort((a, b) => dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [matches, statusFilter, search]);
+  }, [matches, statusFilter, search, teamLogosByMatch]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -255,13 +268,6 @@ function App() {
     return [...groups.entries()];
   }, [filteredMatches]);
 
-  const teamLogosByMatch = useMemo(() => {
-    const map = new Map<string, { home: number | null; away: number | null }>();
-    for (const league of leagueDirectory) for (const match of league.matches || []) {
-      map.set(String(match.mackolikMatchId), { home: match.homeTeamId || null, away: match.awayTeamId || null });
-    }
-    return map;
-  }, [leagueDirectory]);
   const selectedMatchLogos = selectedId ? teamLogosByMatch.get(selectedId) : undefined;
   const selectedMatch = useMemo(
     () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
@@ -276,8 +282,14 @@ function App() {
     [leagueDirectory, selectedLeagueId]
   );
 
-  const liveCount = useMemo(() => matches.filter((match) => match.status > 0 && match.status < 4).length, [matches]);
-  const finishedCount = useMemo(() => matches.filter((match) => match.status >= 4).length, [matches]);
+  const liveCount = useMemo(() => matches.filter((match) => {
+    const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
+    return fotmobStatus ? fotmobStatus.started && !fotmobStatus.finished : match.status > 0 && match.status < 4;
+  }).length, [matches, teamLogosByMatch]);
+  const finishedCount = useMemo(() => matches.filter((match) => {
+    const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
+    return fotmobStatus ? fotmobStatus.finished : match.status >= 4;
+  }).length, [matches, teamLogosByMatch]);
   const visibleCount = filteredMatches.length;
   const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
 
