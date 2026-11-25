@@ -118,7 +118,7 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
 
   return <div className="league-hub">
     <header className="league-hub-header">
-      <LeagueLogo id={league.id} name={league.name} src={league.logo} className="league-hub-logo" />
+      <LeagueLogo key={league.id} id={league.id} name={league.name} src={league.logo} className="league-hub-logo" />
       <div><span className="eyebrow">LİG MERKEZİ</span><h2>{detail?.details?.name || league.name}</h2><p>{detail?.details?.country || league.country || "Uluslararası"} · {detail?.details?.selectedSeason || "Güncel sezon"}</p></div>
       <div className="league-hub-count"><b>{league.matchCount}</b><span>Bültendeki maç</span></div>
     </header>
