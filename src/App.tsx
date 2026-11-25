@@ -36,6 +36,13 @@ const markets: MarketDefinition[] = [
   { key: "half-time-goals-15", title: "İY 1,5 Gol", selections: [{ label: "Alt", field: "halfTimeGoals15Under" }, { label: "Üst", field: "halfTimeGoals15Over" }] }
 ];
 
+function TeamCrest({ id, name, large = false }: { id?: number | null; name: string; large?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  const className = large ? "detail-crest" : "team-crest";
+  return <span className={className}>
+    {id && !failed ? <img src={`https://images.fotmob.com/image_resources/logo/teamlogo/${id}.png`} alt="" loading="lazy" onError={() => setFailed(true)} /> : name.trim().slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}
+  </span>;
+}
 function safeTeamName(value: string | null | undefined): string {
   return value?.trim() || "Takım bilgisi yok";
 }
@@ -64,8 +71,8 @@ function matchKey(match: DisplayMatch): string {
 }
 
 const MatchRow = memo(function MatchRow({
-  match, active, onSelect
-}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void }) {
+  match, active, onSelect, homeLogo, awayLogo
+}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void; homeLogo?: number | null; awayLogo?: number | null }) {
   const homeOdds = getOdds(match, "ms1");
   const drawOdds = getOdds(match, "msX");
   const awayOdds = getOdds(match, "ms2");
@@ -78,8 +85,8 @@ const MatchRow = memo(function MatchRow({
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
-          <div className="team-line"><span className="team-crest">{match.homeName?.trim()?.slice(0, 1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.homeName)}</strong></div>
-          <div className="team-line"><span className="team-crest">{match.awayName?.trim()?.slice(0, 1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.awayName)}</strong></div>
+          <div className="team-line"><TeamCrest id={homeLogo} name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
+          <div className="team-line"><TeamCrest id={awayLogo} name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
         </div>
         <div className="row-odds">
           <span className="odds-caption">1 · X · 2</span>
@@ -151,8 +158,8 @@ function DetailPlaceholder() {
   return <div className="placeholder-wrap"><EmptyData title="AI tahmini oluşturulmadı" description="Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." /></div>;
 }
 
-function MatchDetail({ match, tab, onTabChange }: {
-  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void;
+function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo }: {
+  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void; homeLogo?: number | null; awayLogo?: number | null;
 }) {
   const hasScore = match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
     match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
@@ -162,9 +169,9 @@ function MatchDetail({ match, tab, onTabChange }: {
       <header className="detail-header">
         <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
         <div className="versus-header">
-          <div className="detail-team"><span className="detail-crest">{match.homeName?.trim()?.slice(0,1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
+          <div className="detail-team"><TeamCrest id={homeLogo} name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
           <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${match.fields.scoreHome} : ${match.fields.scoreAway}` : "— : —"}</strong><small>{statusLabel(match.status)}</small></div>
-          <div className="detail-team"><span className="detail-crest">{match.awayName?.trim()?.slice(0,1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
+          <div className="detail-team"><TeamCrest id={awayLogo} name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
         </div>
       </header>
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
@@ -248,6 +255,14 @@ function App() {
     return [...groups.entries()];
   }, [filteredMatches]);
 
+  const teamLogosByMatch = useMemo(() => {
+    const map = new Map<string, { home: number | null; away: number | null }>();
+    for (const league of leagueDirectory) for (const match of league.matches || []) {
+      map.set(String(match.mackolikMatchId), { home: match.homeTeamId || null, away: match.awayTeamId || null });
+    }
+    return map;
+  }, [leagueDirectory]);
+  const selectedMatchLogos = selectedId ? teamLogosByMatch.get(selectedId) : undefined;
   const selectedMatch = useMemo(
     () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
     [matches, selectedId]
@@ -318,7 +333,7 @@ function App() {
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
-                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} />)}
+                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} homeLogo={teamLogosByMatch.get(String(match.matchId))?.home} awayLogo={teamLogosByMatch.get(String(match.matchId))?.away} />)}
               </section>
             ))}
         </div> : <div className="league-directory-empty">Ayarlar</div>}
@@ -330,7 +345,7 @@ function App() {
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
           : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
           : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON." />
-          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} />
+          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
       </main>
     </div>
