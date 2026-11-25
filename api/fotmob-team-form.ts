@@ -82,6 +82,11 @@ export default async function handler(req: Req, res: Res) {
     ]);
     const homeForm = normalizeForm(homeData);
     const awayForm = normalizeForm(awayData);
+    const debug = req.query.debug === "1";
+    if (debug) return res.status(200).json({
+      home: { keys: Object.keys(homeData || {}), overviewKeys: Object.keys(homeData?.overview || {}), fixtureKeys: Object.keys(homeData?.fixtures || {}), overviewForm: homeData?.overview?.form ?? null, fixtures: homeData?.fixtures ?? null },
+      away: { keys: Object.keys(awayData || {}), overviewKeys: Object.keys(awayData?.overview || {}), fixtureKeys: Object.keys(awayData?.fixtures || {}), overviewForm: awayData?.overview?.form ?? null, fixtures: awayData?.fixtures ?? null }
+    });
     const homeName = homeData?.details?.name || general?.homeTeam?.name || "Ev sahibi";
     const awayName = awayData?.details?.name || general?.awayTeam?.name || "Deplasman";
     return res.status(200).json({
