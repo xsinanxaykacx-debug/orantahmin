@@ -299,13 +299,13 @@ function App() {
             <button className={statusFilter === "closing" ? "active" : ""} onClick={() => setStatusFilter("closing")}>Kapanış</button>
           </div>}
           <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
-          <div className="list-caption"><span>{activeNav === "leagues" ? "Günlük maç bültenindeki ligler" : statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0) + " maç" : sourceCount + " kayıt"}</span></div>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} aktif · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : sourceCount + " kayıt"}</span></div>
         </div>
 
         {activeNav === "leagues" ? <div className="league-directory-scroll">
-          {leagueDirectoryLoading ? <div className="league-directory-empty">Günlük maçlardaki ligler yükleniyor…</div>
+          {leagueDirectoryLoading ? <div className="league-directory-empty">FotMob lig kataloğu yükleniyor…</div>
             : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
-            : filteredLeagues.length === 0 ? <div className="league-directory-empty">Bugünkü maç bülteninde eşleşmiş lig bulunamadı.</div>
+            : filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
             : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
               <span className="league-directory-logo">{league.name.slice(0, 1).toLocaleUpperCase("tr-TR")}<img src={league.logo} alt="" onError={event => { event.currentTarget.style.display = "none"; }} /></span>
               <span className="league-directory-name"><b>{league.name}</b><small>{league.country || "Uluslararası"}</small></span>
@@ -322,13 +322,13 @@ function App() {
               </section>
             ))}
         </div> : <div className="league-directory-empty">Ayarlar</div>}
-        <div className="list-footer"><span><i /> {activeNav === "leagues" ? "FotMob lig verisi" : "Yerel veri bağlantısı"}</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
+        <div className="list-footer"><span><i /> {activeNav === "leagues" ? "Tüm FotMob ligleri" : "Yerel veri bağlantısı"}</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
       </aside>
 
       <main className="detail-pane">
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
-          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="Günlük maç bültenindeki ligler FotMob ile eşleştiriliyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="Bugünkü bültende FotMob ile eşleşmiş lig verisi bulunamadı." />
+          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
           : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON." />
           : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
