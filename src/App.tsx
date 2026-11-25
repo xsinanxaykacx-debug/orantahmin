@@ -224,7 +224,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     const controller = new AbortController();
     setFirstHalfScore(null);
     setFirstHalfUnavailable(false);
-    fetch(`/api/fotmob-match-periods?matchId=${fotmobStatus.fotmobMatchId}`, { cache: "force-cache", signal: controller.signal })
+    fetch(`/api/fotmob-match-periods?matchId=${fotmobStatus.fotmobMatchId}&date=${encodeURIComponent((match.date || "").split(".").reverse().join("-"))}&home=${encodeURIComponent(match.homeName || "")}&away=${encodeURIComponent(match.awayName || "")}`, { cache: "force-cache", signal: controller.signal })
       .then(async response => {
         const payload = await response.json() as { available?: boolean; firstHalfHomeScore?: number; firstHalfAwayScore?: number; error?: string };
         if (!response.ok) throw new Error(payload.error || "İlk yarı skoru alınamadı.");
