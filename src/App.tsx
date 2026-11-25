@@ -125,9 +125,10 @@ function EmptyData({ title, description }: { title: string; description: string 
 }
 
 function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?: FotMobMatchState }) {
-  const hasScore = match.status > 0 && match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
-    match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
-    String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
+  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
+  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined &&
+    String(homeScore) !== "" && String(awayScore) !== "";
   return (
     <div className="detail-content">
       <div className="overview-cards">
@@ -168,16 +169,17 @@ function DetailPlaceholder() {
 function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus }: {
   match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void; homeLogo?: number | null; awayLogo?: number | null; fotmobStatus?: FotMobMatchState;
 }) {
-  const hasScore = match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
-    match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
-    String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
+  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
+  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined &&
+    String(homeScore) !== "" && String(awayScore) !== "";
   return (
     <div className="detail-pane-inner">
       <header className="detail-header">
         <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
         <div className="versus-header">
           <div className="detail-team"><TeamCrest id={homeLogo} name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
-          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${homeScore} : ${awayScore}` : "— : —"}</strong><small>{statusLabel(match.status, fotmobStatus)}</small></div>
+          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${homeScore} : ${awayScore}` : "— : —"}</strong><small>{fotmobStatus?.minute && isLiveMatch(match.status, fotmobStatus) ? fotmobStatus.minute : statusLabel(match.status, fotmobStatus)}</small></div>
           <div className="detail-team"><TeamCrest id={awayLogo} name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
         </div>
       </header>
@@ -201,7 +203,7 @@ function App() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");\n  const [liveScores, setLiveScores] = useState<Map<string, Omit<FotMobMatchState, "home" | "away"> & { fotmobMatchId: number }>>(new Map());
+  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");\n  const [liveScores, setLiveScores] = useState<Map<string, FotMobMatchState>>(new Map());
 
   useEffect(() => {
     let active = true;
@@ -258,10 +260,13 @@ function App() {
         if (stopped) return;
         setLiveScores(previous => {
           const next = new Map(previous);
+          const idMap = new Map<number, string>();
+          for (const league of leagueDirectory) for (const match of league.matches || []) {
+            idMap.set(match.fotmobMatchId, String(match.mackolikMatchId));
+          }
           for (const item of payload.matches || []) {
-            const matchId = [...leagueDirectory].flatMap(league => league.matches || [])
-              .find(match => match.fotmobMatchId === item.fotmobMatchId)?.mackolikMatchId;
-            if (matchId) next.set(String(matchId), item);
+            const matchId = idMap.get(item.fotmobMatchId);
+            if (matchId) next.set(matchId, item);
           }
           return next;
         });
@@ -283,17 +288,24 @@ function App() {
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
   const teamLogosByMatch = useMemo(() => {
-    const map = new Map<string, { home: number | null; away: number | null; started: boolean; finished: boolean }>();
+    const map = new Map<string, { home: number | null; away: number | null } & FotMobMatchState>();
     for (const league of leagueDirectory) for (const match of league.matches || []) {
       map.set(String(match.mackolikMatchId), {
         home: match.homeTeamId || null,
         away: match.awayTeamId || null,
         started: Boolean(match.started),
-        finished: Boolean(match.finished)
+        finished: Boolean(match.finished),
+        homeScore: match.homeScore ?? null,
+        awayScore: match.awayScore ?? null,
+        status: match.status ?? null
       });
     }
+    for (const [matchId, score] of liveScores) {
+      const existing = map.get(matchId);
+      if (existing) map.set(matchId, { ...existing, ...score });
+    }
     return map;
-  }, [leagueDirectory]);
+  }, [leagueDirectory, liveScores]);
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
     return matches.filter((match) => {
