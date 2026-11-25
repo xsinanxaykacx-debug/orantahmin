@@ -187,10 +187,10 @@ function MackolikMarketCard({ market, result }: { market: MackolikMarket; result
       <div className="market-values">
         {market.outcomes.map((outcome, index) => {
           const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
-          return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : ""}`} key={`${market.code}-${index}`}>
+          return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={`${market.code}-${index}`}>
             <span>{outcome.name}</span>
             <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
-            {settlement !== "unknown" && <em className="settlement-label">{settlement === "won" ? "Kazandı" : "Kaybetti"}</em>}
+            {result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}
           </div>;
         })}
       </div>
