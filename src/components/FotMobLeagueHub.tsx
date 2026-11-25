@@ -74,7 +74,7 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
   useEffect(() => {
     let active = true;
     setLoading(true); setError(null); setDetail(null);
-    fetch(`/api/fotmob-league-detail?leagueId=${league.id}`)
+    fetch(`/api/fotmob-league-detail?leagueId=${league.id}&matchId=${league.matches[0]?.fotmobMatchId || ""}`)
       .then(async response => {
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error || "Lig detayları alınamadı.");
