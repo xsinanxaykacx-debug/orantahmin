@@ -19,15 +19,21 @@ function FormSquares({ form }: { form: FormMatch[] }) {
 }
 function TeamStatColumn({ team }: { team: TeamForm }) {
   const stats = [
-    ["Attığı gol", stat(team.stats.goalsForAvg)],
-    ["Yediği gol", stat(team.stats.goalsAgainstAvg)],
-    ["2,5 üst", stat(team.stats.over25Pct, "%")],
-    ["Karşılıklı gol", stat(team.stats.bttsPct, "%")]
+    { label: "Attığı gol", value: team.stats.goalsForAvg, display: stat(team.stats.goalsForAvg), max: 5, color: "goals-for" },
+    { label: "Yediği gol", value: team.stats.goalsAgainstAvg, display: stat(team.stats.goalsAgainstAvg), max: 5, color: "goals-against" },
+    { label: "2,5 üst", value: team.stats.over25Pct, display: stat(team.stats.over25Pct, "%"), max: 100, color: "over" },
+    { label: "Karşılıklı gol", value: team.stats.bttsPct, display: stat(team.stats.bttsPct, "%"), max: 100, color: "btts" }
   ];
   return <div className="team-stat-column">
     <strong>{team.name}</strong>
     <small>Son {team.stats.sampleSize} maç · skor verisi: {team.stats.scoredMatches}</small>
-    {stats.map(([label, value]) => <div className="team-stat-item" key={label}><span>{label}</span><b>{value}</b></div>)}
+    <div className="team-stat-bars">{stats.map(item => {
+      const width = item.value === null ? 0 : Math.max(0, Math.min(100, (item.value / item.max) * 100));
+      return <div className="team-stat-bar" key={item.label}>
+        <div className="team-stat-bar-label"><span>{item.label}</span><b>{item.display}</b></div>
+        <div className="team-stat-track"><i className={item.color} style={{ width: `${width}%` }} /></div>
+      </div>;
+    })}</div>
   </div>;
 }
 
