@@ -30,11 +30,46 @@ export default async function handler(req: Req, res: Res) {
     const contentType = upstream.headers.get("content-type") || "";
     if (!upstream.ok || !contentType.includes("json")) return res.status(502).json({ error: `FotMob lig verisi alınamadı (HTTP ${upstream.status}).` });
     const data = await upstream.json();
+    const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
+    const parseGoals = (value: unknown) => {
+      if (typeof value !== "string") return null;
+      const match = value.match(/(\\d+)\\s*[-–:]\\s*(\\d+)/);
+      return match ? { for: Number(match[1]), against: Number(match[2]) } : null;
+    };
+    const formByTeam = new Map<number, Array<{ result: "W" | "D" | "L"; score: string; date: string }>>();
+    for (const match of allFixtures) {
+      if (match?.status?.finished !== true || match?.status?.cancelled) continue;
+      const homeId = Number(match?.home?.id || match?.homeTeam?.id);
+      const awayId = Number(match?.away?.id || match?.awayTeam?.id);
+      const scoreText = match?.status?.scoreStr || match?.scoreStr || "";
+      const parsed = parseGoals(scoreText);
+      const homeGoals = Number.isFinite(Number(match?.home?.score)) ? Number(match.home.score) : parsed?.for;
+      const awayGoals = Number.isFinite(Number(match?.away?.score)) ? Number(match.away.score) : parsed?.against;
+      if (!homeId || !awayId || homeGoals === undefined || homeGoals === null || awayGoals === undefined || awayGoals === null) continue;
+      const date = String(match?.status?.utcTime || match?.status?.utcDate || "");
+      const addForm = (teamId: number, scored: number, conceded: number) => {
+        const form = formByTeam.get(teamId) || [];
+        form.push({ result: scored > conceded ? "W" : scored < conceded ? "L" : "D", score: `${scored}-${conceded}`, date });
+        formByTeam.set(teamId, form);
+      };
+      addForm(homeId, homeGoals, awayGoals);
+      addForm(awayId, awayGoals, homeGoals);
+    }
+    for (const form of formByTeam.values()) form.sort((a, b) => a.date.localeCompare(b.date));
     const tableGroups = Array.isArray(data?.table) ? data.table.map((group: any) => ({
       name: group?.data?.tableName || group?.data?.leagueName || group?.data?.ccode || data?.details?.name || "Puan durumu",
-      rows: group?.data?.table?.all || group?.table?.all || []
+      rows: (group?.data?.table?.all || group?.table?.all || []).map((row: any) => {
+        const goals = parseGoals(row?.scoresStr || row?.scores || row?.goalStats);
+        const teamId = Number(row?.id);
+        const recentForm = formByTeam.get(teamId) || [];
+        return {
+          ...row,
+          goalsFor: goals?.for ?? null,
+          goalsAgainst: goals?.against ?? null,
+          recentForm: recentForm.slice(-5)
+        };
+      })
     })).filter((group: any) => group.rows.length) : [];
-    const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
     const upcoming = allFixtures.filter((match: any) => !match?.status?.finished && !match?.status?.cancelled)
       .sort((a: any, b: any) => String(a?.status?.utcTime || "").localeCompare(String(b?.status?.utcTime || "")));
     const recent = allFixtures.filter((match: any) => match?.status?.finished)
