@@ -60,7 +60,7 @@ function rangeSettlement(outcomeName: string, value: number): Settlement {
   const outcome = normalize(outcomeName);
   const range = rangeFromSelection(outcomeName);
   if (range) return value >= range[0] && value <= range[1] ? "won" : "lost";
-  const plus = outcome.match(/^(\d+)\s*(?:\+|ve uzeri|ustu|ve ustu)$/);
+  const plus = outcome.match(/^(\d+)(?:\s*(?:\+|ve uzeri|ustu|ve ustu))?$/);
   if (plus) return value >= Number(plus[1]) ? "won" : "lost";
   return "unknown";
 }
