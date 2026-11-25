@@ -29,22 +29,39 @@ function normalizeResult(value: unknown, score: { scored: number; conceded: numb
   if (!score) return null;
   return score.scored > score.conceded ? "W" : score.scored < score.conceded ? "L" : "D";
 }
-function normalizeForm(teamData: any) {
-  const raw = teamData?.overview?.form ?? teamData?.form ?? [];
-  if (!Array.isArray(raw)) return [];
-  return raw.map((item: any) => {
-    const score = parseScore(firstValue(item?.score, item?.scoreStr, item?.status?.scoreStr));
-    const result = normalizeResult(firstValue(item?.result, item?.resultString, item?.outcome), score);
-    const opponent = typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name;
-    return {
-      result,
-      score: score ? `${score.scored} - ${score.conceded}` : null,
-      scored: score?.scored ?? null,
-      conceded: score?.conceded ?? null,
-      opponent: opponent || null,
-      date: item?.date || item?.utcTime || item?.status?.utcTime || null
-    };
-  }).filter((item: any) => item.result).slice(0, 5);
+function normalizeForm(teamData: any, teamId: number, beforeDate: string) {
+  const fixtures = teamData?.fixtures?.allFixtures?.fixtures;
+  if (!Array.isArray(fixtures)) return [];
+  return fixtures
+    .filter((item: any) => {
+      const kickoff = item?.status?.utcTime;
+      return item?.status?.finished === true && !item?.status?.cancelled &&
+        typeof kickoff === "string" && kickoff < beforeDate;
+    })
+    .map((item: any) => {
+      const homeId = Number(item?.home?.id);
+      const awayId = Number(item?.away?.id);
+      const homeScore = Number(item?.home?.score);
+      const awayScore = Number(item?.away?.score);
+      if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return null;
+      const isHome = homeId === teamId;
+      const isAway = awayId === teamId;
+      if (!isHome && !isAway) return null;
+      const scored = isHome ? homeScore : awayScore;
+      const conceded = isHome ? awayScore : homeScore;
+      const opponent = typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name;
+      return {
+        result: scored > conceded ? "W" as const : scored < conceded ? "L" as const : "D" as const,
+        score: `${scored} - ${conceded}`,
+        scored,
+        conceded,
+        opponent: opponent || null,
+        date: item?.status?.utcTime || null
+      };
+    })
+    .filter((item: any) => item !== null)
+    .sort((a: any, b: any) => String(b.date).localeCompare(String(a.date)))
+    .slice(0, 5);
 }
 function summarize(form: ReturnType<typeof normalizeForm>) {
   const scoredMatches = form.filter(item => item.scored !== null && item.conceded !== null);
@@ -80,13 +97,9 @@ export default async function handler(req: Req, res: Res) {
       jsonFetch(`https://www.fotmob.com/api/data/teams?id=${encodeURIComponent(homeId)}`),
       jsonFetch(`https://www.fotmob.com/api/data/teams?id=${encodeURIComponent(awayId)}`)
     ]);
-    const homeForm = normalizeForm(homeData);
-    const awayForm = normalizeForm(awayData);
-    const debug = req.query.debug === "1";
-    if (debug) return res.status(200).json({
-      home: { keys: Object.keys(homeData || {}), overviewKeys: Object.keys(homeData?.overview || {}), fixtureKeys: Object.keys(homeData?.fixtures || {}), overviewForm: homeData?.overview?.form ?? null, fixtures: homeData?.fixtures ?? null },
-      away: { keys: Object.keys(awayData || {}), overviewKeys: Object.keys(awayData?.overview || {}), fixtureKeys: Object.keys(awayData?.fixtures || {}), overviewForm: awayData?.overview?.form ?? null, fixtures: awayData?.fixtures ?? null }
-    });
+    const beforeDate = general?.matchTimeUTCDate || general?.matchTimeUTC || new Date().toISOString();
+    const homeForm = normalizeForm(homeData, Number(homeId), beforeDate);
+    const awayForm = normalizeForm(awayData, Number(awayId), beforeDate);
     const homeName = homeData?.details?.name || general?.homeTeam?.name || "Ev sahibi";
     const awayName = awayData?.details?.name || general?.awayTeam?.name || "Deplasman";
     return res.status(200).json({
