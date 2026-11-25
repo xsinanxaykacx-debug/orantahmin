@@ -69,8 +69,8 @@ export interface BulletinWarning {
 
 export interface BulletinMatch {
   matchId: string;
-  homeName: string;
-  awayName: string;
+  homeName: string | null;
+  awayName: string | null;
   date: string;
   time: string;
   status: number;
