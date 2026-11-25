@@ -147,8 +147,8 @@ export function settleMarketOutcome(
   if (/toplam gol araligi|gol araligi/.test(market)) {
     const range = rangeFromSelection(outcomeName);
     if (range) return total >= range[0] && total <= range[1] ? "won" : "lost";
-    if (/6\+|6 ve uzeri|6 ustu/.test(outcome)) return total >= 6 ? "won" : "lost";
-    if (/7\+|7 ve uzeri|7 ustu/.test(outcome)) return total >= 7 ? "won" : "lost";
+    if (/^(?:6\s*(?:gol)?|6\s*ve\s*uzeri|6\s*ustu)$/.test(outcome)) return total >= 6 ? "won" : "lost";
+    if (/^(?:7\s*(?:gol)?|7\s*ve\s*uzeri|7\s*ustu)$/.test(outcome)) return total >= 7 ? "won" : "lost";
   }
 
   if (/mac sonucu/.test(market) && !/ilk gol|daha cok gol|alt ust|handikap/.test(market)) {
