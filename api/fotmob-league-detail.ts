@@ -91,26 +91,56 @@ export default async function handler(req: Req, res: Res) {
     const fixtureList = (upcoming.length ? upcoming : recent).slice(0, 12);
     const seasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
       Array.isArray(data?.seasons) ? data.seasons : [];
-    // FotMob's league response already contains the current season's three
-    // leaderboard previews. Use these canonical arrays instead of guessing
-    // the season ID or relying on a second endpoint.
-    const topPlayers = data?.overview?.topPlayers || {};
+    // FotMob's full player leaderboards are served from data.fotmob.com.
+    // Resolve the selected season from the league payload; never hardcode a
+    // season ID, so this works for every supported league and season.
+    const selectedSeason = String(data?.details?.selectedSeason || "");
+    const availableSeasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
+      Array.isArray(data?.seasons) ? data.seasons : [];
+    const seasonEntry = availableSeasons.find((season: any) =>
+      String(season?.name || season?.seasonName || season?.value || "") === selectedSeason
+    ) || availableSeasons[0];
+    const seasonId = Number(
+      seasonEntry?.id || seasonEntry?.seasonId || seasonEntry?.value ||
+      data?.details?.selectedSeasonId || data?.details?.seasonId
+    );
     const statDefinitions = [
-      { key: "rating", title: "En yüksek puan", source: topPlayers?.byRating?.players, valueKey: "rating" },
-      { key: "goals", title: "En çok gol atan", source: topPlayers?.byGoals?.players, valueKey: "goals" },
-      { key: "goal_assist", title: "En çok asist yapan", source: topPlayers?.byAssists?.players, valueKey: "assists" }
+      { key: "rating", title: "En yüksek puan", file: "rating" },
+      { key: "goals", title: "En çok gol atan", file: "goals" },
+      { key: "goal_assist", title: "En çok asist yapan", file: "goal_assist" }
     ];
-    const playerStats = statDefinitions.map((stat) => ({
-      stat: stat.key,
-      title: stat.title,
-      top: (Array.isArray(stat.source) ? stat.source : []).slice(0, 3).map((player: any, index: number) => ({
-        id: Number(player?.id) || null,
-        name: player?.name || "Oyuncu",
-        teamId: Number(player?.teamId) || null,
-        teamName: player?.teamName || "",
-        value: player?.value ?? player?.[stat.valueKey] ?? player?.stat?.value ?? "—",
-        rank: player?.rank ?? index + 1
-      }))
+    const playerStats = await Promise.all(statDefinitions.map(async (stat) => {
+      if (!Number.isFinite(seasonId) || seasonId <= 0) {
+        return { stat: stat.key, title: stat.title, top: [] };
+      }
+      try {
+        const statsResponse = await fetch(
+          `https://data.fotmob.com/stats/${encodeURIComponent(String(dataLeagueId))}/season/${encodeURIComponent(String(seasonId))}/${stat.file}.json`,
+          {
+            headers: { Accept: "application/json", "User-Agent": UA, Referer: "https://www.fotmob.com/" },
+            signal: AbortSignal.timeout(12000)
+          }
+        );
+        if (!statsResponse.ok) return { stat: stat.key, title: stat.title, top: [] };
+        const statsData = await statsResponse.json();
+        const statRows = Array.isArray(statsData?.TopLists?.[0]?.StatList)
+          ? statsData.TopLists[0].StatList
+          : Array.isArray(statsData?.stats) ? statsData.stats : [];
+        return {
+          stat: stat.key,
+          title: stat.title,
+          top: statRows.slice(0, 3).map((player: any, index: number) => ({
+            id: Number(player?.ParticiantId ?? player?.ParticipantId ?? player?.id) || null,
+            name: player?.ParticipantName || player?.name || "Oyuncu",
+            teamId: Number(player?.TeamId ?? player?.teamId) || null,
+            teamName: player?.TeamName || player?.teamName || "",
+            value: player?.StatValue ?? player?.statValue?.value ?? player?.value ?? "—",
+            rank: player?.Rank ?? player?.rank ?? index + 1
+          }))
+        };
+      } catch {
+        return { stat: stat.key, title: stat.title, top: [] };
+      }
     }));
     return res.status(200).json({
       source: "FotMob",
