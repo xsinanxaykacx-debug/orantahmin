@@ -28,6 +28,7 @@ function extractFixtures(value: any): any[] {
   if (Array.isArray(value)) return value;
   if (!value || typeof value !== "object") return [];
   if (Array.isArray(value.fixtures)) return value.fixtures;
+  if (Array.isArray(value.allMatches)) return value.allMatches;
   if (Array.isArray(value.allFixtures?.fixtures)) return value.allFixtures.fixtures;
   if (Array.isArray(value.matches)) return value.matches;
   for (const key of ["allFixtures", "upcoming", "results", "data"]) {
@@ -56,11 +57,13 @@ function FixtureList({ matches }: { matches: any[] }) {
   return <div className="league-fixtures">{matches.map((match, index) => {
     const home = match.home?.name || match.home || "Ev sahibi";
     const away = match.away?.name || match.away || "Deplasman";
-    const hs = match.homeScore ?? match.home?.score;
-    const as = match.awayScore ?? match.away?.score;
+    const scoreText = match.status?.scoreStr || "";
+    const scoreParts = scoreText.match(/(\d+)\s*[-–:]\s*(\d+)/);
+    const hs = match.homeScore ?? match.home?.score ?? (scoreParts ? Number(scoreParts[1]) : null);
+    const as = match.awayScore ?? match.away?.score ?? (scoreParts ? Number(scoreParts[2]) : null);
     const hasScore = hs !== null && hs !== undefined && as !== null && as !== undefined;
     return <div className="league-fixture" key={match.id || match.fotmobMatchId || index}>
-      <div className="league-fixture-time">{match.time || match.matchDate || "—"}<small>{formatFixtureStatus(match)}</small></div>
+      <div className="league-fixture-time">{match.time || match.matchDate || (match.status?.utcTime ? new Date(match.status.utcTime).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "—")}<small>{formatFixtureStatus(match)}</small></div>
       <div className="league-fixture-teams"><span>{home}</span><span>{away}</span></div>
       <b className="league-fixture-score">{hasScore ? `${hs} : ${as}` : "— : —"}</b>
     </div>;
@@ -88,7 +91,12 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
 
   const fixtures = useMemo(() => {
     const seasonFixtures = extractFixtures(detail?.fixtures);
-    return seasonFixtures.length ? seasonFixtures : league.matches;
+    if (!seasonFixtures.length) return league.matches;
+    const upcoming = seasonFixtures.filter((match: any) => !match.status?.finished && !match.status?.cancelled)
+      .sort((a: any, b: any) => String(a.status?.utcTime || "").localeCompare(String(b.status?.utcTime || "")));
+    if (upcoming.length) return upcoming.slice(0, 10);
+    return seasonFixtures.filter((match: any) => match.status?.finished)
+      .sort((a: any, b: any) => String(b.status?.utcTime || "").localeCompare(String(a.status?.utcTime || ""))).slice(0, 10);
   }, [detail, league.matches]);
   const topScorers = useMemo(() => {
     const players = detail?.stats?.players || [];
