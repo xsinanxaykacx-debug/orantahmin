@@ -33,7 +33,7 @@ export default async function handler(req: Req, res: Res) {
     const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
     const parseGoals = (value: unknown) => {
       if (typeof value !== "string") return null;
-      const match = value.match(/(\\d+)\\s*[-–:]\\s*(\\d+)/);
+      const match = value.match(/(\d+)\s*[-–:]\s*(\d+)/);
       return match ? { for: Number(match[1]), against: Number(match[2]) } : null;
     };
     const formByTeam = new Map<number, Array<{ result: "W" | "D" | "L"; score: string; date: string }>>();
@@ -88,7 +88,7 @@ export default async function handler(req: Req, res: Res) {
       seasons,
       tableGroups,
       fixtures: fixtureList,
-      stats: { players: topScorer ? [topScorer] : [] }
+      stats: { players: [] }
     });
   } catch (error) {
     return res.status(502).json({ error: error instanceof Error ? error.message : "Lig verisi alınamadı." });
