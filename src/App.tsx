@@ -6,6 +6,7 @@ import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
+import { LeagueLogo } from "./components/LeagueLogo";
 import { settleMarketOutcome, type MatchEventFacts, type MatchResult } from "./utils/marketSettlement";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
@@ -589,7 +590,7 @@ function App() {
             : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
             : filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
             : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
-              <span className="league-directory-logo">{league.name.slice(0, 1).toLocaleUpperCase("tr-TR")}<img src={league.logo} alt="" onError={event => { event.currentTarget.style.display = "none"; }} /></span>
+              <LeagueLogo id={league.id} name={league.name} src={league.logo} className="league-directory-logo" />
               <span className="league-directory-name"><b>{league.name}</b><small>{league.country || "Uluslararası"}</small></span>
               <span className="league-directory-count">{league.matchCount}</span>
             </button>)}
