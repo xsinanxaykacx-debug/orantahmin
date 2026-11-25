@@ -1,4 +1,4 @@
-.fotmob-form-panel { display: grid; gap: 15px; }
+.fotmob-form-panel { display: contents; }
 .fotmob-form-panel .form-card, .fotmob-form-panel .stat-card { min-width: 0; }
 .fotmob-form-panel .form-columns { gap: 16px; }
 .fotmob-form-panel .form-columns > div { gap: 9px; }
