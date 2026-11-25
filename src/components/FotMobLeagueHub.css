@@ -49,3 +49,10 @@
 .league-source-note { margin: 14px 0 0; color: #6f7c90; font-size: 8px; }
 @media (max-width: 1000px) { .league-hub-grid { grid-template-columns: 1fr; } .league-table-panel { grid-row: auto; } }
 @media (max-width: 760px) { .league-hub { padding: 13px 10px 24px; } .league-hub-header { gap: 11px; padding: 13px; } .league-hub-logo { width: 49px; height: 49px; } .league-hub-logo img { inset: 6px; width: 35px; height: 35px; } .league-hub-header h2 { font-size: 15px; } .league-hub-count { padding-left: 9px; } .league-hub-count b { font-size: 16px; } .league-hub-count span { max-width: 56px; white-space: normal; } }
+
+/* FotMob team crests */
+.fotmob-team-logo { position: relative; flex: 0 0 18px; width: 18px; height: 18px; display: inline-grid; place-items: center; overflow: hidden; border-radius: 50%; background: #293447; color: #a9c9ff; font-size: 8px; font-weight: 800; vertical-align: middle; }
+.fotmob-team-logo img { width: 100%; height: 100%; object-fit: contain; }
+.league-team-cell { display: flex; align-items: center; gap: 7px; }
+.league-fixture-teams > span { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.league-scorers b { display: flex; align-items: center; gap: 7px; min-width: 0; }
