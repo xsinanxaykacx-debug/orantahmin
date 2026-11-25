@@ -49,7 +49,7 @@ function isFirstHalf(event: any) {
   const period = String(event?.period || "").toLowerCase();
   if (period.includes("firsthalf") || period === "1h") return true;
   if (period.includes("secondhalf") || period.includes("extrahalf")) return false;
-  const label = String(event?.timeStr || "");
+  const label = String(event?.timeStr || event?.time || "");
   const plus = label.match(/^(\d+)\s*\+/);
   if (plus) return Number(plus[1]) <= 45;
   const minute = Number(event?.time);
@@ -122,25 +122,21 @@ export default async function handler(req: Req, res: Res) {
     const byId = new Map<string, { finalScore: { home: number; away: number }; half: { home: number; away: number } | null }>();
     for (const row of detailRows.filter(Boolean) as Array<{ id: string; finalScore: { home: number; away: number }; half: { home: number; away: number } | null }>) byId.set(row.id, row);
     const finalScores = selectedFixtures.map((match: any) => scoreOf(match)).filter(Boolean) as Array<{ home: number; away: number }>;
-    const halfRows = selectedFixtures.map((match: any) => byId.get(String(match?.id || match?.matchId || ""))?.half || null);
+    const verifiedPairs = selectedFixtures.map((match: any) => {
+      const full = scoreOf(match);
+      const detail = byId.get(String(match?.id || match?.matchId || ""));
+      return full && detail?.half ? { full, half: detail.half } : null;
+    }).filter(Boolean) as Array<{ full: { home: number; away: number }; half: { home: number; away: number } }>;
     const fullTime = finalScores;
-    const halfTime = halfRows.filter(Boolean) as Array<{ home: number; away: number }>;
-    const secondHalf = halfTime.map((half, index) => {
-      const full = fullTime.find((_, fixtureIndex) => halfRows[fixtureIndex] === half);
-      return full ? { home: full.home - half.home, away: full.away - half.away } : null;
-    }).filter(Boolean) as Array<{ home: number; away: number }>;
+    const halfTime = verifiedPairs.map(pair => pair.half);
+    const secondHalf = verifiedPairs.map(({ full, half }) => ({
+      home: full.home - half.home,
+      away: full.away - half.away
+    }));
     const fullScores = fullTime.map(score => `${score.home}-${score.away}`);
     const halfScores = halfTime.map(score => `${score.home}-${score.away}`);
-    const htft = halfTime.map((half, index) => {
-      const fixture = selectedFixtures.find((match: any) => {
-        const row = byId.get(String(match?.id || match?.matchId || ""));
-        return row?.half === half;
-      });
-      if (!fixture) return "";
-      const full = scoreOf(fixture);
-      return full ? `${resultCode(half.home, half.away)}/${resultCode(full.home, full.away)}` : "";
-    }).filter(Boolean);
-    const firstSecondBtts = halfTime.map((half, index) => {
+    const htft = verifiedPairs.map(({ full, half }) => `${resultCode(half.home, half.away)}/${resultCode(full.home, full.away)}`);
+    const firstSecondBtts = verifiedPairs.map(({ half }, index) => {
       const second = secondHalf[index];
       return `${half.home > 0 && half.away > 0 ? "Evet" : "Hayır"}/${second.home > 0 && second.away > 0 ? "Evet" : "Hayır"}`;
     });
