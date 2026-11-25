@@ -6,7 +6,7 @@ import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
-import { settleMarketOutcome, type MatchResult } from "./utils/marketSettlement";
+import { settleMarketOutcome, type MatchEventFacts, type MatchResult } from "./utils/marketSettlement";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "finished";
@@ -209,9 +209,9 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
-  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);
+  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);\n  const [eventFacts, setEventFacts] = useState<MatchEventFacts>({});
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
-    ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
+    ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore, ...eventFacts }
     : null;
 
   useEffect(() => {
@@ -240,6 +240,36 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
       .catch(() => {});
     return () => controller.abort();
   }, [finished, fotmobStatus?.fotmobMatchId, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
+  useEffect(() => {
+    if (!finished || !Number.isFinite(parsedHome) || !Number.isFinite(parsedAway)) {
+      setEventFacts({});
+      return;
+    }
+    const controller = new AbortController();
+    setEventFacts({});
+    const params = new URLSearchParams({
+      date: (match.date || "").split(".").reverse().join("-"),
+      home: match.homeName || "",
+      away: match.awayName || "",
+      finalHome: String(parsedHome),
+      finalAway: String(parsedAway)
+    });
+    fetch(`/api/sofascore-match-events?${params.toString()}`, { cache: "force-cache", signal: controller.signal })
+      .then(async response => {
+        const payload = await response.json() as { available?: boolean; corners?: MatchEventFacts["corners"]; cards?: MatchEventFacts["cards"]; firstGoal?: MatchEventFacts["firstGoal"] };
+        if (!response.ok) throw new Error("Maç olay verileri alınamadı.");
+        if (payload.available) {
+          setEventFacts({
+            ...(payload.corners ? { corners: payload.corners } : {}),
+            ...(payload.cards ? { cards: payload.cards } : {}),
+            ...(payload.firstGoal != null ? { firstGoal: payload.firstGoal } : {})
+          });
+        }
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [finished, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
+
   const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
   const [marketError, setMarketError] = useState<string | null>(null);
@@ -278,7 +308,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     <div className="detail-content">
       <div className="section-intro">
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi{firstHalfScore && <small className="first-half-inline">İYS: {firstHalfScore.home} - {firstHalfScore.away}</small>}</h3></div>
-        <p>Biten maçlarda kazanan ve kaybeden oranlar renklendirilir.</p>
+        <p>Doğrulanabilen gol, kart ve korner verileriyle market sonuçları hesaplanır.</p>
       </div>
       {loadingMarkets ? (
         <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
