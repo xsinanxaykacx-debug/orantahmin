@@ -13,8 +13,8 @@ function isMatch(value: unknown): value is BulletinMatch {
     typeof value.date === "string" &&
     typeof value.time === "string" &&
     typeof value.status === "number" &&
-    typeof value.homeName === "string" &&
-    typeof value.awayName === "string" &&
+    (typeof value.homeName === "string" || value.homeName === null) &&
+    (typeof value.awayName === "string" || value.awayName === null) &&
     Array.isArray(value.raw) &&
     Number.isInteger(value.source.groupIndex) &&
     Number.isInteger(value.source.matchIndex)
