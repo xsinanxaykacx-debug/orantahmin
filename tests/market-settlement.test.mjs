@@ -18,6 +18,7 @@ test("second-half result is derived from full-time minus half-time score", () =>
 test("goal range supports six or more", () => {
   const result = { home: 4, away: 2, finished: true };
   assert.equal(settleMarketOutcome("Toplam Gol Aralığı", "6+ Gol", result), "won");
+  assert.equal(settleMarketOutcome("Toplam Gol Aralığı", "6+ Gol", { ...result, home: 1, away: 4 }), "lost");
   assert.equal(settleMarketOutcome("Toplam Gol Aralığı", "4-5 Gol", result), "lost");
 });
 
