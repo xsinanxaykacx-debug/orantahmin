@@ -1,3 +1,5 @@
+export const config = { regions: ["fra1"] };
+
 type VercelRequest = {
   method?: string;
   query: Record<string, string | string[] | undefined>;
@@ -15,7 +17,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
@@ -39,14 +40,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
       signal: AbortSignal.timeout(12000)
     });
-    if (!upstream.ok) {
-      return res.status(upstream.status).json({
-        error: upstream.status === 403
-          ? "Sofascore sunucu erişimini reddetti (403)."
-          : `Sofascore HTTP ${upstream.status}`,
-        upstreamStatus: upstream.status
-      });
-    }
+    if (!upstream.ok) return res.status(upstream.status).json({
+      error: `Sofascore HTTP ${upstream.status}`,
+      upstreamStatus: upstream.status
+    });
     return res.status(200).json(await upstream.json());
   } catch (error) {
     return res.status(502).json({
