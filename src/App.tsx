@@ -6,6 +6,7 @@ import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
+import { FotMobStatistics } from "./components/FotMobStatistics";
 import { LeagueLogo } from "./components/LeagueLogo";
 import { settleMarketOutcome, type MatchEventFacts, type MatchResult } from "./utils/marketSettlement";
 
@@ -13,11 +14,12 @@ type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "finished";
 type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
-type NavItem = { id: "matches" | "leagues" | "settings"; label: string; icon: string };
+type NavItem = { id: "matches" | "leagues" | "statistics" | "settings"; label: string; icon: string };
 
 const navItems: NavItem[] = [
   { id: "matches", label: "Maç Merkezi", icon: "▦" },
   { id: "leagues", label: "Ligler", icon: "▤" },
+  { id: "statistics", label: "İstatistikler", icon: "▤" },
   { id: "settings", label: "Ayarlar", icon: "⚙" }
 ];
 const detailTabs: { id: MatchDetailTab; label: string }[] = [
@@ -591,17 +593,17 @@ function App() {
 
       <aside className="match-list-pane">
         <div className="list-header">
-          <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "leagues" ? "Ligler" : "Ayarlar"}</h1></div><span className="count-pill">{activeNav === "leagues" ? leagueDirectory.length : matches.length}</span></div>
+          <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "leagues" ? "Ligler" : activeNav === "statistics" ? "İstatistikler" : "Ayarlar"}</h1></div><span className="count-pill">{activeNav === "leagues" ? leagueDirectory.length : activeNav === "statistics" ? "Σ" : matches.length}</span></div>
           {activeNav === "matches" && <div className="status-filters">
             <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{matches.length}</b></button>
             <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
             <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
           </div>}
-          <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
-          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : matches.length + " benzersiz maç"}</span></div>
+          <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : activeNav === "statistics" ? "İstatistik sayfası" : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.filter(league => league.matchCount > 0).length} eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
         </div>
 
-        {activeNav === "leagues" ? <div className="league-directory-scroll">
+        {activeNav === "statistics" ? <div className="league-directory-empty">Lig ve takım istatistikleri</div> : activeNav === "leagues" ? <div className="league-directory-scroll">
           {leagueDirectoryLoading ? <div className="league-directory-empty">FotMob lig kataloğu yükleniyor…</div>
             : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
             : filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
@@ -627,7 +629,7 @@ function App() {
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
           : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
-          : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
+          : activeNav === "statistics" ? <FotMobStatistics /> : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
           : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} fotmobStatus={selectedMatchFotMobStatus} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p></div>}
       </main>
