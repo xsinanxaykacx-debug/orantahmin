@@ -31,6 +31,13 @@ export default async function handler(req: Req, res: Res) {
     if (!upstream.ok || !contentType.includes("json")) return res.status(502).json({ error: `FotMob lig verisi alınamadı (HTTP ${upstream.status}).` });
     const data = await upstream.json();
     const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
+    const resultFixtures = [
+      data?.fixtures?.results,
+      data?.fixtures?.finished,
+      data?.fixtures?.pastMatches,
+      data?.fixtures?.recentMatches,
+      allFixtures
+    ].find((items: any) => Array.isArray(items) && items.some((item: any) => item?.status?.finished === true)) || [];
     const parseGoals = (value: unknown) => {
       if (typeof value !== "string") return null;
       const match = value.match(/(\d+)\s*[-–:]\s*(\d+)/);
