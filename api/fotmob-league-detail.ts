@@ -9,7 +9,7 @@ export default async function handler(req: Req, res: Res) {
   const leagueId = Array.isArray(raw) ? raw[0] : raw;
   const rawMatchId = req.query.matchId;
   const matchId = Array.isArray(rawMatchId) ? rawMatchId[0] : rawMatchId;
-  if (!leagueId || !/^\d{1,8}$/.test(leagueId)) return res.status(400).json({ error: "Geçersiz lig kimliği." });
+  if (!leagueId || !/^\d{1,12}$/.test(leagueId)) return res.status(400).json({ error: "Geçersiz lig kimliği." });
   if (matchId && !/^\d{5,12}$/.test(matchId)) return res.status(400).json({ error: "Geçersiz FotMob maç kimliği." });
   try {
     let dataLeagueId = Number(leagueId);
