@@ -4,6 +4,7 @@ export type MatchResult = {
   home: number;
   away: number;
   finished: boolean;
+  firstHalf?: { home: number; away: number } | null;
 };
 
 function normalize(value: string): string {
@@ -53,8 +54,23 @@ export function settleMarketOutcome(
   const market = normalize(marketName);
   const outcome = normalize(outcomeName);
 
-  // Half-time and second-half markets require a verified period score.
-  if (/ilk yari|ikinci yari|devre|yari sonucu|yari alt ust/.test(market)) return "unknown";
+  // Period markets are settled only when FotMob supplies a verified first-half score.
+  if (/ilk yari|1 yari|devre|iy /.test(market)) {
+    if (!result.firstHalf) return "unknown";
+    const halfHome = result.firstHalf.home;
+    const halfAway = result.firstHalf.away;
+    const halfTotal = halfHome + halfAway;
+    if (/sonucu|cifte sans/.test(market)) return selectionResult(outcomeName, halfHome, halfAway);
+    if (/alt ust|gol/.test(market)) {
+      const threshold = thresholdFromTitle(marketName);
+      if (threshold !== null) {
+        if (/alt/.test(outcome)) return halfTotal < threshold ? "won" : "lost";
+        if (/ust|over/.test(outcome)) return halfTotal > threshold ? "won" : "lost";
+      }
+    }
+    return "unknown";
+  }
+  if (/ikinci yari|2 yari/.test(market)) return "unknown";
 
   if (/karsilikli gol|kg var|kg yok/.test(market)) {
     if (/var/.test(outcome)) return home > 0 && away > 0 ? "won" : "lost";
