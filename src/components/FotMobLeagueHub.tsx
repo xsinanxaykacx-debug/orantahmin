@@ -14,6 +14,8 @@ export type LeagueSummary = {
     time: string;
     home: string;
     away: string;
+    homeTeamId?: number | null;
+    awayTeamId?: number | null;
     homeScore: number | null;
     awayScore: number | null;
     status: string | null;
@@ -42,11 +44,18 @@ function formatFixtureStatus(match: any): string {
   if (match.started || match.status?.started) return match.status?.reason?.short || "CANLI";
   return match.status?.reason?.short || match.time || match.matchDate || "—";
 }
+function TeamLogo({ id, name, className = "" }: { id?: number | null; name: string; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  return <span className={`fotmob-team-logo ${className}`}>
+    {id && !failed ? <img src={`https://images.fotmob.com/image_resources/logo/teamlogo/${id}.png`} alt="" loading="lazy" onError={() => setFailed(true)} /> : null}
+    {(!id || failed) ? <span>{name.slice(0, 1).toLocaleUpperCase("tr-TR")}</span> : null}
+  </span>;
+}
 function Table({ rows }: { rows: TableRow[] }) {
   return <div className="league-table-scroll"><table className="league-table">
     <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AV</th><th> P</th></tr></thead>
     <tbody>{rows.map((row, index) => <tr key={row.id || row.name || index}>
-      <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><span>{row.name || "Takım"}</span></td>
+      <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><TeamLogo id={row.id} name={row.name || "Takım"} /><span>{row.name || "Takım"}</span></td>
       <td>{row.played ?? "—"}</td><td>{row.wins ?? "—"}</td><td>{row.draws ?? "—"}</td><td>{row.losses ?? "—"}</td>
       <td>{row.goalConDiff ?? "—"}</td><td><b>{row.pts ?? "—"}</b></td>
     </tr>)}</tbody>
@@ -57,6 +66,8 @@ function FixtureList({ matches }: { matches: any[] }) {
   return <div className="league-fixtures">{matches.map((match, index) => {
     const home = match.home?.name || match.home || "Ev sahibi";
     const away = match.away?.name || match.away || "Deplasman";
+    const homeId = Number(match.home?.id || match.homeTeamId) || null;
+    const awayId = Number(match.away?.id || match.awayTeamId) || null;
     const scoreText = match.status?.scoreStr || "";
     const scoreParts = scoreText.match(/(\d+)\s*[-–:]\s*(\d+)/);
     const hs = match.homeScore ?? match.home?.score ?? (scoreParts ? Number(scoreParts[1]) : null);
@@ -64,7 +75,7 @@ function FixtureList({ matches }: { matches: any[] }) {
     const hasScore = hs !== null && hs !== undefined && as !== null && as !== undefined;
     return <div className="league-fixture" key={match.id || match.fotmobMatchId || index}>
       <div className="league-fixture-time">{match.time || match.matchDate || (match.status?.utcTime ? new Date(match.status.utcTime).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "—")}<small>{formatFixtureStatus(match)}</small></div>
-      <div className="league-fixture-teams"><span>{home}</span><span>{away}</span></div>
+      <div className="league-fixture-teams"><span><TeamLogo id={homeId} name={home} />{home}</span><span><TeamLogo id={awayId} name={away} />{away}</span></div>
       <b className="league-fixture-score">{hasScore ? `${hs} : ${as}` : "— : —"}</b>
     </div>;
   })}</div>;
@@ -124,7 +135,7 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
         </section>
         <section className="info-card league-panel league-scorers-panel">
           <div className="card-heading"><span>GOL KRALLIĞI</span><small>FotMob</small></div>
-          {topScorers.length ? <div className="league-scorers">{topScorers.map((player: any, index: number) => <div key={player.id || player.name || index}><span>{index + 1}</span><b>{player.name || player.participant?.name || "Oyuncu"}</b><strong>{player.value ?? player.statValue ?? "—"}</strong></div>)}</div>
+          {topScorers.length ? <div className="league-scorers">{topScorers.map((player: any, index: number) => <div key={player.id || player.name || index}><span>{index + 1}</span><b>{player.name || player.participant?.name || "Oyuncu"}{player.teamId ? <TeamLogo id={player.teamId} name={player.teamName || ""} /> : null}</b><strong>{player.value ?? player.statValue ?? "—"}</strong></div>)}</div>
             : <div className="league-empty">Gol krallığı verisi bu lig yanıtında bulunmuyor.</div>}
         </section>
       </div>}
