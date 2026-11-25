@@ -34,6 +34,39 @@ function scoreNumber(value: unknown): number | null {
   if (typeof value === "string" && /^\d+$/.test(value.trim())) return Number(value);
   return null;
 }
+type FormItem = { result: "W" | "D" | "L"; score: string; scored: number; conceded: number; opponent: string | null; date: string | null };
+function normalizeOverviewForm(teamData: any): FormItem[] {
+  const items = teamData?.overview?.form || teamData?.overview?.teamForm;
+  if (!Array.isArray(items)) return [];
+  return items.map((item: any) => {
+    const score = parseScore(item?.score);
+    const result = normalizeResult(item?.resultString ?? item?.result, score);
+    if (!score || !result) return null;
+    const dateValue = item?.date?.utcTime || item?.date || null;
+    return {
+      result,
+      score: String(score.scored) + " - " + String(score.conceded),
+      scored: score.scored,
+      conceded: score.conceded,
+      opponent: typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name || null,
+      date: typeof dateValue === "string" ? dateValue : null
+    };
+  }).filter((item: FormItem | null): item is FormItem => item !== null);
+}
+function mergeRecentForms(primary: FormItem[], fallback: FormItem[]): FormItem[] {
+  const merged = [...primary];
+  const seen = new Set(merged.filter(item => item.opponent || item.date).map(item =>
+    (item.opponent || "").toLocaleLowerCase("tr-TR") + "|" + (item.date || "") + "|" + item.score
+  ));
+  for (const item of fallback) {
+    const key = (item.opponent || "").toLocaleLowerCase("tr-TR") + "|" + (item.date || "") + "|" + item.score;
+    if ((item.opponent || item.date) && seen.has(key)) continue;
+    merged.push(item);
+    if (item.opponent || item.date) seen.add(key);
+    if (merged.length === 5) break;
+  }
+  return merged.slice(0, 5);
+}
 function normalizeForm(teamData: any, teamId: number, beforeDate: string) {
   const fixtures = teamData?.fixtures?.allFixtures?.fixtures || teamData?.fixtures?.recent?.fixtures || teamData?.fixtures?.fixtures;
   if (!Array.isArray(fixtures)) return [];
@@ -103,8 +136,8 @@ export default async function handler(req: Req, res: Res) {
       jsonFetch(`https://www.fotmob.com/api/data/teams?id=${encodeURIComponent(awayId)}`)
     ]);
     const beforeDate = general?.matchTimeUTCDate || general?.matchTimeUTC || new Date().toISOString();
-    const homeForm = normalizeForm(homeData, Number(homeId), beforeDate);
-    const awayForm = normalizeForm(awayData, Number(awayId), beforeDate);
+    const homeForm = mergeRecentForms(normalizeForm(homeData, Number(homeId), beforeDate), normalizeOverviewForm(homeData));
+    const awayForm = mergeRecentForms(normalizeForm(awayData, Number(awayId), beforeDate), normalizeOverviewForm(awayData));
     const homeName = homeData?.details?.name || general?.homeTeam?.name || "Ev sahibi";
     const awayName = awayData?.details?.name || general?.awayTeam?.name || "Deplasman";
     return res.status(200).json({
