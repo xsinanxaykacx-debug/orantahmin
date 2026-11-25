@@ -124,9 +124,14 @@ function MarketCard({ market, match, result }: { market: MarketDefinition; match
     <section className={`market-card ${available ? "" : "is-empty"}`}>
       <div className="market-card-title">{market.title}<span>{available ? "Kaynak oranı" : "Veri yok"}</span></div>
       <div className="market-values">
-        {market.selections.map(({ label, field }) => (
-          {(() => { const settlement = settleMarketOutcome(market.title, label, result); return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={field}><span>{label}</span><strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong>{result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}</div>; })()}
-        ))}
+        {market.selections.map(({ label, field }) => {
+          const settlement = settleMarketOutcome(market.title, label, result);
+          return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={field}>
+            <span>{label}</span>
+            <strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong>
+            {result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}
+          </div>;
+        })}
       </div>
     </section>
   );
