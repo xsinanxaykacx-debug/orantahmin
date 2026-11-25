@@ -1,0 +1,20 @@
+.fotmob-status-card > strong { display: block; color: #dce5f3; font-size: 12px; line-height: 1.7; }
+.fotmob-status-card > p { margin: 10px 0 0; color: #8c9ab0; font-size: 10px; }
+.fotmob-status-card > small { display: block; margin-top: 6px; color: #74839a; font-size: 9px; }
+.fotmob-source-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: -5px 0 16px; color: #8492a8; font-size: 9px; }
+.fotmob-lineup-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.fotmob-team { min-width: 0; padding: 13px; border: 1px solid #2b3445; border-radius: 9px; background: #151c28; }
+.fotmob-team > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 11px; border-bottom: 1px solid #2a3445; }
+.fotmob-team > header strong { color: #e0e8f5; font-size: 11px; }
+.fotmob-team > header span { color: #90a3bd; font-size: 10px; }
+.fotmob-list-heading { display: flex; justify-content: space-between; margin: 13px 0 7px; color: #cbd6e6; font-size: 10px; }
+.fotmob-list-heading small { color: #77879e; font-size: 9px; }
+.fotmob-player-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.fotmob-player-list li { display: grid; grid-template-columns: 25px minmax(0, 1fr) auto; align-items: center; gap: 7px; min-height: 27px; padding: 4px 6px; border-radius: 5px; background: #1b2534; }
+.fotmob-shirt { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid #3b4c63; border-radius: 5px; color: #a9c2e4; font-size: 9px; font-weight: 700; }
+.fotmob-player-name { overflow: hidden; color: #d7e0ed; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.fotmob-player-list li > small { color: #7f8ea5; font-size: 8px; white-space: nowrap; }
+.fotmob-captain { display: inline-grid; place-items: center; width: 13px; height: 13px; margin-left: 5px; border-radius: 50%; background: #344b68; color: #d7e8ff; font-size: 8px; }
+.fotmob-muted, .fotmob-unavailable { margin: 8px 0; color: #7e8da4; font-size: 9px; }
+.fotmob-unavailable { color: #c5a47a; }
+@media (max-width: 760px) { .fotmob-lineup-grid { grid-template-columns: 1fr; } }
