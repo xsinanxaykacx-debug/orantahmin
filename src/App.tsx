@@ -241,19 +241,24 @@ function App() {
   }, [activeNav, leagueDirectory.length]);
 
   useEffect(() => {
+    const today = new Intl.DateTimeFormat("tr-TR", {
+      timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric"
+    }).format(new Date());
     const ids = [...new Set(leagueDirectory.flatMap(league => (league.matches || [])
-      .filter(match => !match.finished)
+      .filter(match => !match.finished && (match.started || match.date === today))
       .map(match => Number(match.fotmobMatchId))
       .filter(id => Number.isSafeInteger(id) && id > 0)))];
     if (!ids.length) return;
     let stopped = false;
     let controller: AbortController | null = null;
+    let interval: number | null = null;
+    const pendingIds = new Set(ids);
     const refresh = async () => {
-      if (stopped || document.visibilityState === "hidden") return;
+      if (stopped || document.visibilityState === "hidden" || pendingIds.size === 0) return;
       controller?.abort();
       controller = new AbortController();
       try {
-        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}`, {
+        const response = await fetch(`/api/fotmob-live?ids=${[...pendingIds].join(",")}`, {
           cache: "no-store", signal: controller.signal
         });
         if (!response.ok) throw new Error("Canlı skorlar güncellenemedi.");
@@ -268,23 +273,29 @@ function App() {
           for (const item of payload.matches || []) {
             const matchId = idMap.get(item.fotmobMatchId);
             if (matchId) next.set(matchId, item);
+            if (item.finished) pendingIds.delete(item.fotmobMatchId);
           }
           return next;
         });
+        if (pendingIds.size === 0 && interval !== null) window.clearInterval(interval);
       } catch (reason) {
         if (!(reason instanceof DOMException && reason.name === "AbortError")) console.warn("FotMob canlı skor yenileme:", reason);
       }
     };
     const onVisibilityChange = () => { if (document.visibilityState === "visible") void refresh(); };
-    const onPageHide = () => { stopped = true; controller?.abort(); };
+    const onPageHide = () => {
+      stopped = true;
+      controller?.abort();
+      if (interval !== null) window.clearInterval(interval);
+    };
     void refresh();
-    const interval = window.setInterval(() => { void refresh(); }, 60_000);
+    interval = window.setInterval(() => { void refresh(); }, 60_000);
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("pagehide", onPageHide);
     return () => {
       stopped = true;
       controller?.abort();
-      window.clearInterval(interval);
+      if (interval !== null) window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("pagehide", onPageHide);
     };
