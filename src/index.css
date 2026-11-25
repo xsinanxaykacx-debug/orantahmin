@@ -1,7 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap");
-
 :root {
-  font-family: "DM Sans", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
   color: #e8edf7;
   background: #0f1219;
   font-synthesis: none;
@@ -25,7 +23,7 @@ button, input { font: inherit; }
 button { cursor: pointer; }
 .dashboard-shell { width: 100%; height: 100dvh; min-height: 0; display: grid; grid-template-columns: 68px minmax(350px, 450px) minmax(0, 1fr); overflow: hidden; background: var(--bg); }
 .icon-rail { z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 18px 0 15px; border-right: 1px solid #242a37; background: #141822; }
-.rail-brand { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--blue); color: white; font-family: Manrope, sans-serif; font-size: 21px; font-weight: 800; box-shadow: 0 6px 18px #3b82f633; }
+.rail-brand { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--blue); color: white; font-family: inherit; font-size: 21px; font-weight: 800; box-shadow: 0 6px 18px #3b82f633; }
 .rail-nav { display: grid; gap: 12px; margin-top: 42px; }
 .rail-nav button { width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 11px; background: transparent; color: #7f899d; font-size: 19px; transition: .16s ease; }
 .rail-nav button:hover { color: #dbe7ff; background: #222a3a; }
@@ -37,7 +35,7 @@ button { cursor: pointer; }
 .list-header { flex: 0 0 auto; padding: 24px 19px 13px; border-bottom: 1px solid #292f3d; }
 .brand-line { display: flex; align-items: center; justify-content: space-between; }
 .eyebrow { color: #6597e9; font-size: 9px; font-weight: 800; letter-spacing: 1.7px; }
-.brand-line h1 { margin: 5px 0 19px; font-family: Manrope, sans-serif; font-size: 23px; font-weight: 800; letter-spacing: -.8px; }
+.brand-line h1 { margin: 5px 0 19px; font-family: inherit; font-size: 23px; font-weight: 800; letter-spacing: -.8px; }
 .count-pill { min-width: 34px; padding: 6px 8px; border: 1px solid #34405a; border-radius: 8px; background: #202a3c; color: #a9c9ff; font-size: 11px; text-align: center; }
 .status-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 4px; border: 1px solid #2b3140; border-radius: 9px; background: #11151e; }
 .status-filters button { min-height: 32px; border: 0; border-radius: 6px; background: transparent; color: #929caf; font-size: 10px; font-weight: 600; }
@@ -86,11 +84,11 @@ button { cursor: pointer; }
 .versus-header { max-width: 750px; display: grid; grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr); align-items: center; gap: 25px; margin: 28px auto 0; }
 .detail-team { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .detail-crest { width: 55px; height: 55px; border-radius: 17px; font-size: 20px; box-shadow: 0 7px 24px #00000030; }
-.detail-team strong { max-width: 100%; overflow-wrap: anywhere; color: #f0f4fc; font-family: Manrope, sans-serif; font-size: clamp(13px, 1.4vw, 17px); font-weight: 800; }
+.detail-team strong { max-width: 100%; overflow-wrap: anywhere; color: #f0f4fc; font-family: inherit; font-size: clamp(13px, 1.4vw, 17px); font-weight: 800; }
 .detail-team small { color: #7f8ba0; font-size: 9px; }
 .match-center { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 15px 8px; border: 1px solid #36435b; border-radius: 12px; background: #171e2b99; text-align: center; }
 .match-center span { color: #8b9ab1; font-size: 8px; font-weight: 800; letter-spacing: 1.2px; }
-.match-center strong { color: #e9f1ff; font-family: Manrope, sans-serif; font-size: 27px; font-weight: 800; letter-spacing: 1px; }
+.match-center strong { color: #e9f1ff; font-family: inherit; font-size: 27px; font-weight: 800; letter-spacing: 1px; }
 .match-center small { color: #91a1b8; font-size: 9px; }
 .detail-tabs { justify-content: center; position: sticky; z-index: 1; top: 0; display: flex; gap: 4px; overflow-x: auto; padding: 0 clamp(15px, 3vw, 40px); border-bottom: 1px solid #292f3d; background: #171b25f2; scrollbar-width: none; }
 .detail-tabs::-webkit-scrollbar { display: none; }
@@ -134,17 +132,17 @@ button { cursor: pointer; }
 .market-value span { color: #8794aa; font-size: 9px; }
 .market-value strong { color: #e4ecf9; font-size: 10px; font-variant-numeric: tabular-nums; }
 .section-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
-.section-intro h3 { margin: 5px 0 0; color: #eaf0fb; font-family: Manrope, sans-serif; font-size: 20px; }
+.section-intro h3 { margin: 5px 0 0; color: #eaf0fb; font-family: inherit; font-size: 20px; }
 .section-intro h3 .first-half-inline { display: inline-block; margin-left: 12px; color: #aebbd0; font-family: inherit; font-size: 12px; font-weight: 700; vertical-align: 2px; white-space: nowrap; }
 .section-intro p { max-width: 480px; margin: 0; color: #8290a6; font-size: 10px; line-height: 1.6; text-align: right; }
 .placeholder-wrap { min-height: 420px; display: grid; place-items: center; padding: 25px; }
 .data-empty { max-width: 440px; display: flex; flex-direction: column; align-items: center; padding: 28px; text-align: center; }
 .empty-symbol { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 15px; border: 1px solid #35425a; border-radius: 15px; background: #1b2638; color: #7da9ed; font-size: 25px; }
-.data-empty strong { color: #dfe7f4; font-family: Manrope, sans-serif; font-size: 14px; }
+.data-empty strong { color: #dfe7f4; font-family: inherit; font-size: 14px; }
 .data-empty p { margin: 8px 0 0; color: #8290a5; font-size: 10px; line-height: 1.7; }
 .detail-empty { width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 35px; text-align: center; }
 .empty-graphic { width: 84px; height: 84px; display: grid; place-items: center; margin-bottom: 22px; border: 1px solid #303b50; border-radius: 24px; background: linear-gradient(145deg, #202a3d, #171d29); color: #78a8f2; font-size: 35px; box-shadow: 0 15px 40px #00000025; }
-.detail-empty h2 { margin: 0; color: #e4ebf7; font-family: Manrope, sans-serif; font-size: 19px; }
+.detail-empty h2 { margin: 0; color: #e4ebf7; font-family: inherit; font-size: 19px; }
 .detail-empty p { margin: 9px 0 0; color: #8c98ad; font-size: 11px; }
 .detail-empty small { margin-top: 20px; color: #5f6c82; font-size: 9px; }
 @media (max-width: 1050px) {
