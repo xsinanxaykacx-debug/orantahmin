@@ -2,7 +2,7 @@ type Req = { method?: string; query: Record<string, string | string[] | undefine
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
 
 type BulletinMatch = { matchId: string | number; homeName?: string | null; awayName?: string | null; date: string; time?: string };
-type FotMatch = { id: number; home?: { name?: string }; away?: { name?: string }; status?: unknown; time?: unknown; league?: string };
+type FotMatch = { id: number; home?: string; away?: string; status?: unknown; time?: unknown; league?: string };
 
 const headers = {
   Accept: "application/json",

@@ -18,3 +18,6 @@
 .fotmob-muted, .fotmob-unavailable { margin: 8px 0; color: #7e8da4; font-size: 9px; }
 .fotmob-unavailable { color: #c5a47a; }
 @media (max-width: 760px) { .fotmob-lineup-grid { grid-template-columns: 1fr; } }
+
+.fotmob-lineup-team-name { display: inline-flex; align-items: center; gap: 9px; }
+.fotmob-lineup-team-name img { width: 25px; height: 25px; object-fit: contain; }

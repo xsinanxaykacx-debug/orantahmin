@@ -51,6 +51,7 @@ export default async function handler(req: Req, res: Res) {
     return res.status(200).json({
       source: "fotmob", matchId, general: data?.general || null,
       lineupType: lineup?.lineupType || null, lineupSource: lineup?.source || null,
+      homeTeamId: Number(data?.general?.homeTeam?.id) || null, awayTeamId: Number(data?.general?.awayTeam?.id) || null,
       hasLineup: !!lineup, home: teamSummary(lineup?.homeTeam), away: teamSummary(lineup?.awayTeam)
     });
   } catch (error) {

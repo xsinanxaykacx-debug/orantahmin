@@ -98,6 +98,4 @@ export type MatchDetailTab =
   | "overview"
   | "odds"
   | "squad"
-  | "similar"
-  | "stands"
   | "ai";

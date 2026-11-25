@@ -1,0 +1,26 @@
+.fotmob-form-panel { display: contents; }
+.fotmob-form-panel .form-card, .fotmob-form-panel .stat-card { min-width: 0; }
+.fotmob-form-panel .form-columns { gap: 16px; }
+.fotmob-form-panel .form-columns > div { gap: 9px; }
+.fotmob-form-panel .form-squares { align-items: center; flex-wrap: wrap; }
+.fotmob-form-panel .form-squares i { width: 29px; height: 27px; font-size: 10px; font-weight: 800; }
+.fotmob-form-panel .form-squares .form-w { background: #174b3a; color: #7ce0b4; }
+.fotmob-form-panel .form-squares .form-d { background: #4a4025; color: #e9c778; }
+.fotmob-form-panel .form-squares .form-l { background: #4c2c35; color: #f29aa5; }
+.form-no-data { color: #8791a5; font-size: 10px; }
+.team-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.team-stat-column { min-width: 0; padding: 14px; border: 1px solid #303747; border-radius: 9px; background: linear-gradient(145deg, #242c3b, #1d2330); }
+.team-stat-column > strong { display: block; overflow: hidden; color: #e8effb; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.team-stat-column > small { display: block; margin: 5px 0 14px; color: #8997ad; font-size: 9px; }
+.team-stat-bars { display: grid; gap: 12px; }
+.team-stat-bar { display: grid; gap: 6px; }
+.team-stat-bar-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.team-stat-bar-label span { color: #aab7ca; font-size: 10px; }
+.team-stat-bar-label b { color: #f0f4fc; font-size: 11px; font-variant-numeric: tabular-nums; }
+.team-stat-track { height: 8px; overflow: hidden; border-radius: 20px; background: #111722; box-shadow: inset 0 1px 2px #0008; }
+.team-stat-track i { display: block; height: 100%; border-radius: inherit; transition: width .35s ease; }
+.team-stat-track i.goals-for { background: linear-gradient(90deg, #168b69, #4ed6a5); }
+.team-stat-track i.goals-against { background: linear-gradient(90deg, #a64c59, #f1848e); }
+.team-stat-track i.over { background: linear-gradient(90deg, #a66a22, #f2c66d); }
+.team-stat-track i.btts { background: linear-gradient(90deg, #3267b7, #75aaff); }
+@media (max-width: 760px) { .team-stats-grid { grid-template-columns: 1fr; } }
