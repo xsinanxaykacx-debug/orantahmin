@@ -61,7 +61,7 @@ function formatDate(value: string): string {
 function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
   return uniqueOdds(match.sourceRecords.map((record) => record.fields?.[field]));
 }
- type FotMobMatchState = { started: boolean; finished: boolean };
+ type FotMobMatchState = { started: boolean; finished: boolean; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
 function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
   return fotmob ? fotmob.started && !fotmob.finished : status > 0 && status < 4;
 }
@@ -88,14 +88,14 @@ const MatchRow = memo(function MatchRow({
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
       <div className="match-row-top">
         <span>{match.time || "Saat yok"}</span>
-        <span className={`match-state ${isLiveMatch(match.status, fotmobStatus) ? "live" : ""}`}>{statusLabel(match.status, fotmobStatus)}</span>
+        <span className={`match-state ${isLiveMatch(match.status, fotmobStatus) ? "live" : ""}`}>{isLiveMatch(match.status, fotmobStatus) && fotmobStatus?.minute ? fotmobStatus.minute : statusLabel(match.status, fotmobStatus)}</span>
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
           <div className="team-line"><TeamCrest id={homeLogo} name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
           <div className="team-line"><TeamCrest id={awayLogo} name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
         </div>
-        <div className="row-odds">
+        {fotmobStatus?.homeScore !== null && fotmobStatus?.homeScore !== undefined && fotmobStatus?.awayScore !== null && fotmobStatus?.awayScore !== undefined && <span className="match-row-score">{fotmobStatus.homeScore} – {fotmobStatus.awayScore}</span>}\n        <div className="row-odds">
           <span className="odds-caption">1 · X · 2</span>
           <div><b>{homeOdds.map(safeOdds).join("/") || "—"}</b><b>{drawOdds.map(safeOdds).join("/") || "—"}</b><b>{awayOdds.map(safeOdds).join("/") || "—"}</b></div>
           <small>Kaynak oranı</small>
@@ -137,7 +137,7 @@ function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?:
             <div><span>Lig kodu</span><strong>{match.fields.leagueCode || "—"}</strong></div>
             <div><span>Başlangıç</span><strong>{match.time || "—"}</strong></div>
             <div><span>Durum</span><strong>{statusLabel(match.status, fotmobStatus)}</strong></div>
-            <div><span>Skor</span><strong>{hasScore ? `${match.fields.scoreHome} – ${match.fields.scoreAway}` : "—"}</strong></div>
+            <div><span>Skor</span><strong>{hasScore ? `${homeScore} – ${awayScore}` : "—"}</strong></div>
             <div><span>Hakem</span><strong>Veri yok</strong></div>
             <div><span>Hava durumu</span><strong>Veri yok</strong></div>
           </div>
@@ -177,7 +177,7 @@ function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus
         <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
         <div className="versus-header">
           <div className="detail-team"><TeamCrest id={homeLogo} name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
-          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${match.fields.scoreHome} : ${match.fields.scoreAway}` : "— : —"}</strong><small>{statusLabel(match.status, fotmobStatus)}</small></div>
+          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${homeScore} : ${awayScore}` : "— : —"}</strong><small>{statusLabel(match.status, fotmobStatus)}</small></div>
           <div className="detail-team"><TeamCrest id={awayLogo} name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
         </div>
       </header>
@@ -201,7 +201,7 @@ function App() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");
+  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");\n  const [liveScores, setLiveScores] = useState<Map<string, Omit<FotMobMatchState, "home" | "away"> & { fotmobMatchId: number }>>(new Map());
 
   useEffect(() => {
     let active = true;
@@ -236,6 +236,50 @@ function App() {
       .finally(() => { if (active) setLeagueDirectoryLoading(false); });
     return () => { active = false; };
   }, [activeNav, leagueDirectory.length]);
+
+  useEffect(() => {
+    const ids = [...new Set(leagueDirectory.flatMap(league => (league.matches || [])
+      .filter(match => !match.finished)
+      .map(match => Number(match.fotmobMatchId))
+      .filter(id => Number.isSafeInteger(id) && id > 0)))];
+    if (!ids.length) return;
+    let stopped = false;
+    let controller: AbortController | null = null;
+    const refresh = async () => {
+      if (stopped || document.visibilityState === "hidden") return;
+      controller?.abort();
+      controller = new AbortController();
+      try {
+        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}`, {
+          cache: "no-store", signal: controller.signal
+        });
+        if (!response.ok) throw new Error("Canlı skorlar güncellenemedi.");
+        const payload = await response.json() as { matches?: Array<{ fotmobMatchId: number; homeScore: number | null; awayScore: number | null; started: boolean; finished: boolean; status: string | null; minute: string | null }> };
+        if (stopped) return;
+        setLiveScores(previous => {
+          const next = new Map(previous);
+          for (const item of payload.matches || []) {
+            const matchId = [...leagueDirectory].flatMap(league => league.matches || [])
+              .find(match => match.fotmobMatchId === item.fotmobMatchId)?.mackolikMatchId;
+            if (matchId) next.set(String(matchId), item);
+          }
+          return next;
+        });
+      } catch (reason) {
+        if (!(reason instanceof DOMException && reason.name === "AbortError")) console.warn("FotMob canlı skor yenileme:", reason);
+      }
+    };
+    const onVisibilityChange = () => { if (document.visibilityState === "visible") void refresh(); };
+    void refresh();
+    const interval = window.setInterval(() => { void refresh(); }, 60_000);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      stopped = true;
+      controller?.abort();
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [leagueDirectory]);
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
   const teamLogosByMatch = useMemo(() => {
