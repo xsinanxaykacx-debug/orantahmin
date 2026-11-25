@@ -125,11 +125,11 @@ function MarketCard({ market, match, result = null }: { market: MarketDefinition
       <div className="market-card-title">{market.title}<span>{available ? "Kaynak oranı" : "Veri yok"}</span></div>
       <div className="market-values">
         {market.selections.map(({ label, field }) => {
-          const settlement = settleMarketOutcome(market.title, label, result);
+          const selectionOdds = getOdds(match, field);\n          const settlement = settleMarketOutcome(market.title, label, result);
           return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={field}>
             <span>{label}</span>
             <strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong>
-            {result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}
+            {result && <em className="settlement-label">{outcome.odd === null ? "Oran yok" : settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Sonuç verisi yok"}</em>}
           </div>;
         })}
       </div>
