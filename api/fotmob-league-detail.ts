@@ -7,9 +7,23 @@ export default async function handler(req: Req, res: Res) {
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
   const raw = req.query.leagueId;
   const leagueId = Array.isArray(raw) ? raw[0] : raw;
+  const rawMatchId = req.query.matchId;
+  const matchId = Array.isArray(rawMatchId) ? rawMatchId[0] : rawMatchId;
   if (!leagueId || !/^\d{1,8}$/.test(leagueId)) return res.status(400).json({ error: "Geçersiz lig kimliği." });
+  if (matchId && !/^\d{5,12}$/.test(matchId)) return res.status(400).json({ error: "Geçersiz FotMob maç kimliği." });
   try {
-    const upstream = await fetch(`https://www.fotmob.com/api/data/leagues?id=${encodeURIComponent(leagueId)}`, {
+    let dataLeagueId = Number(leagueId);
+    if (matchId) {
+      const matchDetailsResponse = await fetch(`https://www.fotmob.com/api/data/matchDetails?matchId=${encodeURIComponent(matchId)}`, {
+        headers: { Accept: "application/json", "User-Agent": UA, Referer: "https://www.fotmob.com/" },
+        signal: AbortSignal.timeout(15000)
+      });
+      if (matchDetailsResponse.ok && (matchDetailsResponse.headers.get("content-type") || "").includes("json")) {
+        const matchDetails = await matchDetailsResponse.json();
+        dataLeagueId = Number(matchDetails?.general?.parentLeagueId || matchDetails?.general?.leagueId || dataLeagueId);
+      }
+    }
+    const upstream = await fetch(`https://www.fotmob.com/api/data/leagues?id=${encodeURIComponent(String(dataLeagueId))}`, {
       headers: { Accept: "application/json", "User-Agent": UA, Referer: "https://www.fotmob.com/" },
       signal: AbortSignal.timeout(18000)
     });
@@ -23,6 +37,7 @@ export default async function handler(req: Req, res: Res) {
     return res.status(200).json({
       source: "FotMob",
       leagueId: Number(leagueId),
+      dataLeagueId,
       details: data?.details || null,
       seasons: data?.seasons || data?.allAvailableSeasons || [],
       tableGroups,
