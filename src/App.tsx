@@ -568,7 +568,14 @@ function App() {
       <aside className="icon-rail">
         <div className="rail-brand">O</div>
         <div className="rail-nav">
-          {navItems.map((item) => <button type="button" key={item.id} title={item.label} aria-label={item.label} className={activeNav === item.id ? "active" : ""} onClick={() => setActiveNav(item.id)}><span>{item.icon}</span></button>)}
+          {navItems.map((item) => <button type="button" key={item.id} title={item.label} aria-label={item.label} className={activeNav === item.id ? "active" : ""} onClick={() => setActiveNav(item.id)}>{item.id === "matches" ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="1" />
+                <path d="M12 4v16" />
+                <circle cx="12" cy="12" r="2.5" />
+                <path d="M2 8h3.5v8H2M22 8h-3.5v8H22" />
+              </svg>
+            ) : <span>{item.icon}</span>}</button>)}
         </div>
         
       </aside>
