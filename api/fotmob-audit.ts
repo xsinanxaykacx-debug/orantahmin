@@ -26,6 +26,7 @@ function similarity(a: string, b: string) {
   const edit = 1 - prev[y.length] / Math.max(x.length, y.length);
   return Math.max(edit, token * 0.88);
 }
+function shiftDate(date: string, days: number) { const d = new Date(Date.UTC(Number(date.slice(0,4)), Number(date.slice(4,6))-1, Number(date.slice(6,8)) + days)); return d.toISOString().slice(0,10).replace(/-/g, ""); }
 async function jsonFetch(url: string) {
   const r = await fetch(url, { headers, signal: AbortSignal.timeout(12000) });
   const type = r.headers.get("content-type") || "";
@@ -56,14 +57,15 @@ export default async function handler(req: Req, res: Res) {
       const d = (m.date || "").split(".").reverse().join("");
       return !requestedDate || d === requestedDate;
     });
-    const dates = [...new Set(rows.map(m => m.date.split(".").reverse().join("")))];
+    const baseDates = [...new Set(rows.map(m => m.date.split(".").reverse().join("")))];
+    const dates = [...new Set(baseDates.flatMap(d => [-1, 0, 1].map(offset => shiftDate(d, offset))))];
     const fixtureSets = await Promise.all(dates.map(async date => {
       const data = await jsonFetch("https://www.fotmob.com/api/data/matches?date=" + date);
       return (data?.leagues || []).flatMap((league: any) => (league.matches || []).map((m: any) => ({
         id: Number(m.id), home: m.home?.name, away: m.away?.name, status: m.status, time: m.time, league: league.name
       })));
     }));
-    const fixtures: FotMatch[] = fixtureSets.flat();
+    const fixtures: FotMatch[] = [...new Map(fixtureSets.flat().map((f: FotMatch) => [f.id, f])).values()];
     const results = rows.map(row => {
       if (!row.homeName || !row.awayName) return { bulletinId: String(row.matchId), home: row.homeName || null, away: row.awayName || null, date: row.date, time: row.time, match: null, confidence: 0, state: "invalid_bulletin_team" };
       const leagueCode = String((row as any).fields?.leagueCode || "");
