@@ -38,15 +38,26 @@ export function FotMobTeamFormPanel({ matchId }: { matchId: string | number }) {
     let active = true;
     setLoading(true);
     setData(null);
-    fetch(`/api/fotmob-team-form?matchId=${encodeURIComponent(String(matchId))}`, { cache: "no-store" })
-      .then(async response => {
+    (async () => {
+      try {
+        const mapResponse = await fetch("/data/fotmob-event-map.json", { cache: "no-store" });
+        if (!mapResponse.ok) throw new Error("FotMob eşleştirme dosyası okunamadı.");
+        const eventMap = await mapResponse.json() as { matches: Array<{ mackolikMatchId: string; state: string; fotmobMatchId: number | null }> };
+        const mapping = eventMap.matches.find(item => item.mackolikMatchId === String(matchId));
+        if (!mapping || mapping.state !== "matched" || !mapping.fotmobMatchId) {
+          if (active) setData({ source: "FotMob", available: false, reason: "Bu maç FotMob'da güvenilir biçimde eşleştirilmedi." });
+          return;
+        }
+        const response = await fetch(`/api/fotmob-team-form?matchId=${encodeURIComponent(String(mapping.fotmobMatchId))}`, { cache: "no-store" });
         const payload = await response.json() as FormResponse;
         if (!response.ok) throw new Error(payload.error || `Geçmiş maç verisi alınamadı (HTTP ${response.status}).`);
-        return payload;
-      })
-      .then(payload => { if (active) setData(payload); })
-      .catch(error => { if (active) setData({ source: "FotMob", available: false, error: error instanceof Error ? error.message : "Veri alınamadı." }); })
-      .finally(() => { if (active) setLoading(false); });
+        if (active) setData(payload);
+      } catch (error) {
+        if (active) setData({ source: "FotMob", available: false, error: error instanceof Error ? error.message : "Veri alınamadı." });
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
     return () => { active = false; };
   }, [matchId]);
 
