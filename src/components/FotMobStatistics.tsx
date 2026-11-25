@@ -80,7 +80,7 @@ export function FotMobStatistics() {
           setTeams(previous => [...previous, ...(payload.teams || [])]);
           setScannedLeagues(previous => previous + (payload.scannedLeagues || 0));
           setScannedMatches(previous => previous + (payload.scannedMatches || 0));
-          if (!payload.scannedLeagues || offset + pageSize >= total) break;
+          if (offset + pageSize >= total) break;
         }
       } catch (reason) {
         if (active && !(reason instanceof DOMException && reason.name === "AbortError")) {
