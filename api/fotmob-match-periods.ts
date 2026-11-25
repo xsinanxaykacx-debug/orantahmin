@@ -62,10 +62,13 @@ async function getSofaScoreHalfTime(
     const detail = await fetchJson(`https://www.sofascore.com/api/v1/event/${eventId}`, sofaHeaders);
     const event = detail?.event;
     const score = event?.homeScore && event?.awayScore ? event : best.event;
-    const scoreHome = Number(score?.homeScore?.current);
-    const scoreAway = Number(score?.awayScore?.current);
-    const firstHome = Number(score?.homeScore?.period1);
-    const firstAway = Number(score?.awayScore?.period1);
+    const statusType = String(score?.status?.type || "").toLowerCase();
+    if (statusType !== "finished" || score?.homeScore?.current == null || score?.awayScore?.current == null ||
+        score?.homeScore?.period1 == null || score?.awayScore?.period1 == null) return null;
+    const scoreHome = Number(score.homeScore.current);
+    const scoreAway = Number(score.awayScore.current);
+    const firstHome = Number(score.homeScore.period1);
+    const firstAway = Number(score.awayScore.period1);
     if (scoreHome !== finalHome || scoreAway !== finalAway ||
         !Number.isInteger(firstHome) || !Number.isInteger(firstAway) ||
         firstHome < 0 || firstAway < 0 || firstHome > finalHome || firstAway > finalAway) return null;
@@ -155,6 +158,16 @@ export default async function handler(req: Req, res: Res) {
       } catch {
         // Continue to the independent SofaScore source.
       }
+    }
+
+    if (finalHome === 0 && finalAway === 0) {
+      return res.status(200).json({
+        source: "Verified 0-0 full-time score",
+        available: true,
+        finished: true,
+        firstHalfHomeScore: 0,
+        firstHalfAwayScore: 0
+      });
     }
 
     const fallback = await getSofaScoreHalfTime(date, homeName, awayName, finalHome, finalAway);
