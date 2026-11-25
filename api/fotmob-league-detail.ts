@@ -89,9 +89,45 @@ export default async function handler(req: Req, res: Res) {
     const recent = allFixtures.filter((match: any) => match?.status?.finished)
       .sort((a: any, b: any) => String(b?.status?.utcTime || "").localeCompare(String(a?.status?.utcTime || "")));
     const fixtureList = (upcoming.length ? upcoming : recent).slice(0, 12);
-    const topScorer = null;
     const seasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
-      Array.isArray(data?.seasons) ? data.seasons.map((item: any) => typeof item === "string" ? item : item?.seasonName || item?.name).filter(Boolean) : [];
+      Array.isArray(data?.seasons) ? data.seasons : [];
+    const selectedSeasonName = String(data?.details?.selectedSeason || "");
+    const selectedSeason = seasons.find((item: any) =>
+      String(typeof item === "string" ? item : item?.name || item?.seasonName || "") === selectedSeasonName
+    ) || seasons[0];
+    const seasonId = typeof selectedSeason === "object" && selectedSeason
+      ? String(selectedSeason.id || selectedSeason.seasonId || "")
+      : "";
+    const statDefinitions = [
+      { key: "rating", title: "En yüksek puan" },
+      { key: "goals", title: "En çok gol atan" },
+      { key: "goal_assist", title: "En çok asist yapan" }
+    ];
+    const playerStats = seasonId ? await Promise.all(statDefinitions.map(async (stat) => {
+      try {
+        const response = await fetch(
+          `https://www.fotmob.com/api/data/leagueseasondeepstats?id=${encodeURIComponent(String(dataLeagueId))}&season=${encodeURIComponent(seasonId)}&type=players&stat=${encodeURIComponent(stat.key)}`,
+          { headers: { Accept: "application/json", "User-Agent": UA, Referer: "https://www.fotmob.com/" }, signal: AbortSignal.timeout(12000) }
+        );
+        if (!response.ok || !(response.headers.get("content-type") || "").includes("json")) return { stat: stat.key, title: stat.title, top: [] };
+        const payload = await response.json();
+        const rows = Array.isArray(payload?.statsData) ? payload.statsData : [];
+        return {
+          stat: stat.key,
+          title: stat.title,
+          top: rows.slice(0, 3).map((player: any) => ({
+            id: Number(player?.id) || null,
+            name: player?.name || player?.participant?.name || "Oyuncu",
+            teamId: Number(player?.teamId || player?.team?.id) || null,
+            teamName: player?.teamName || player?.team?.name || "",
+            value: player?.statValue?.value ?? player?.value ?? player?.statValue ?? "—",
+            rank: player?.rank ?? null
+          }))
+        };
+      } catch {
+        return { stat: stat.key, title: stat.title, top: [] };
+      }
+    })) : statDefinitions.map((stat) => ({ stat: stat.key, title: stat.title, top: [] }));
     return res.status(200).json({
       source: "FotMob",
       leagueId: Number(leagueId),
@@ -100,7 +136,7 @@ export default async function handler(req: Req, res: Res) {
       seasons,
       tableGroups,
       fixtures: fixtureList,
-      stats: { players: [] }
+      stats: { players: playerStats }
     });
   } catch (error) {
     return res.status(502).json({ error: error instanceof Error ? error.message : "Lig verisi alınamadı." });
