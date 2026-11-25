@@ -46,7 +46,7 @@ function scoreOf(match: any) {
   return { home: h, away: a };
 }
 function isFirstHalf(event: any) {
-  const period = String(event?.period || "").toLowerCase();
+  const period = String(event?.period || event?.shotmapEvent?.period || "").toLowerCase();
   if (period.includes("firsthalf") || period === "1h") return true;
   if (period.includes("secondhalf") || period.includes("extrahalf")) return false;
   const label = String(event?.timeStr || event?.time || "");
@@ -63,7 +63,8 @@ function halfTimeScore(events: any[], full: { home: number; away: number }) {
     .sort((a, b) => Number(a?.time || 0) - Number(b?.time || 0));
   for (const event of goals) {
     if (!isFirstHalf(event)) continue;
-    const homeScoring = Boolean(event?.isHome) !== Boolean(event?.ownGoal);
+    const ownGoal = Boolean(event?.ownGoal || event?.shotmapEvent?.isOwnGoal);
+    const homeScoring = Boolean(event?.isHome) !== ownGoal;
     if (homeScoring) home++;
     else away++;
   }
