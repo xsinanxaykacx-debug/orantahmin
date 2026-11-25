@@ -198,3 +198,6 @@ button { cursor: pointer; }
 .market-value.is-loser span, .market-value.is-loser strong { color: #ffffff; }
 .settlement-label { flex: 0 0 auto; color: #737373; font-size: 8px; font-style: normal; font-weight: 800; }
 .market-value.is-loser .settlement-label { color: #ffffff; }
+
+.market-value.is-unknown { border: 1px solid #737373; background: #737373; }
+.market-value.is-unknown span, .market-value.is-unknown strong, .market-value.is-unknown .settlement-label { color: #ffffff; }
