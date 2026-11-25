@@ -20,7 +20,12 @@ function teamSimilarity(left: string, right: string): number {
   if (!a || !b) return 0;
   if (a === b || a.includes(b) || b.includes(a)) return 1;
   const aa = new Set(a.split(" ")), bb = new Set(b.split(" "));
-  return [...aa].filter(token => bb.has(token)).length / Math.max(aa.size, bb.size);
+  const shared = [...aa].filter(token => bb.has(token)).length;
+  // Common source suffixes such as "FK" may be absent from the other provider.
+  // Treat a complete shorter-name token match as strong, but still rely on
+  // both teams and the exact match date to disambiguate the fixture.
+  if (shared === Math.min(aa.size, bb.size)) return 0.9;
+  return shared / Math.max(aa.size, bb.size);
 }
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url, { headers, signal: AbortSignal.timeout(12000) });
@@ -110,8 +115,9 @@ export default async function handler(req: Req, res: Res) {
     const incidents = Array.isArray(incidentsPayload?.incidents) ? incidentsPayload.incidents : [];
     let yellow = 0, red = 0;
     for (const incident of incidents) {
-      if (String(incident?.type || "").toLowerCase() !== "card" || incident?.rescinded === true) continue;
-      const cardClass = String(incident?.class || incident?.card || "").toLowerCase();
+      const incidentType = String(incident?.incidentType || incident?.type || "").toLowerCase();
+      if (incidentType !== "card" || incident?.rescinded === true) continue;
+      const cardClass = String(incident?.incidentClass || incident?.class || incident?.card || "").toLowerCase();
       if (cardClass.includes("yellowred") || cardClass.includes("yellow_red") || cardClass.includes("red")) red++;
       else if (cardClass.includes("yellow")) yellow++;
     }
@@ -121,7 +127,7 @@ export default async function handler(req: Req, res: Res) {
     if (statRed) red = statRed.home + statRed.away;
 
     const goalEvents = incidents.filter((incident: any) =>
-      String(incident?.type || "").toLowerCase() === "goal" && incident?.isHome != null
+      String(incident?.incidentType || incident?.type || "").toLowerCase() === "goal" && incident?.isHome != null
     ).sort((a: any, b: any) =>
       Number(a.minute || 0) - Number(b.minute || 0) ||
       Number(a.addedTime || a.added_time || 0) - Number(b.addedTime || b.added_time || 0)
@@ -129,7 +135,9 @@ export default async function handler(req: Req, res: Res) {
     let firstGoal: "home" | "away" | "none" | null = null;
     if (goalEvents.length) {
       const first = goalEvents[0];
-      const scoringHome = first.ownGoal === true ? !Boolean(first.isHome) : Boolean(first.isHome);
+      const goalClass = String(first.incidentClass || first.goalType || "").toLowerCase();
+      const isOwnGoal = first.ownGoal === true || goalClass.includes("own");
+      const scoringHome = isOwnGoal ? !Boolean(first.isHome) : Boolean(first.isHome);
       firstGoal = scoringHome ? "home" : "away";
     } else if (finalHome === 0 && finalAway === 0) {
       firstGoal = "none";
