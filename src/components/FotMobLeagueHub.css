@@ -19,18 +19,18 @@
 .league-hub-count { display: grid; gap: 4px; margin-left: auto; padding-left: 15px; border-left: 1px solid #354157; text-align: right; }
 .league-hub-count b { color: #d9e7ff; font-size: 20px; }
 .league-hub-count span { color: #8491a6; font-size: 8px; white-space: nowrap; }
-.league-hub-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); align-items: start; gap: 14px; }
+.league-hub-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .7fr); align-items: start; gap: 14px; }
 .league-panel { min-width: 0; }
 .league-table-panel { grid-row: span 2; }
 .league-table-scroll { width: 100%; overflow-x: auto; }
 .league-table { width: 100%; border-collapse: collapse; font-size: 9px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.league-table th { padding: 9px 7px; border-bottom: 1px solid #384153; color: #78869c; font-size: 8px; font-weight: 600; text-align: right; }
+.league-table th { padding: 8px 4px; border-bottom: 1px solid #384153; color: #78869c; font-size: 8px; font-weight: 600; text-align: right; }
 .league-table th:nth-child(2), .league-table td:nth-child(2) { text-align: left; }
-.league-table td { padding: 10px 7px; border-bottom: 1px solid #2b3342; color: #aab6c9; text-align: right; }
+.league-table td { padding: 9px 4px; border-bottom: 1px solid #2b3342; color: #aab6c9; text-align: right; }
 .league-table tbody tr:last-child td { border-bottom: 0; }
 .league-table td:first-child { color: #75839a; }
 .league-table td b { color: #e3ecfa; }
-.league-team-cell { max-width: 190px; overflow: hidden; color: #d9e2f0 !important; text-overflow: ellipsis; }
+.league-team-cell { max-width: 155px; overflow: hidden; color: #d9e2f0 !important; text-overflow: ellipsis; }
 .league-group-title { margin: 2px 0 8px; color: #aebbd0; font-size: 9px; font-weight: 700; }
 .league-fixtures { display: grid; gap: 7px; }
 .league-fixture { display: grid; grid-template-columns: 66px minmax(0, 1fr) 48px; align-items: center; gap: 9px; padding: 10px 9px; border: 1px solid #303747; border-radius: 8px; background: #202532; }
@@ -64,4 +64,4 @@
 .league-form-result.l { border-color: #a94343; background: #422626; color: #e08b8b; }
 .league-table th:nth-child(9), .league-table td:nth-child(9) { text-align: center; }
 .league-table th:nth-child(2) { min-width: 145px; }
-.league-table { min-width: 680px; }
+.league-table { min-width: 0; table-layout: auto; }
