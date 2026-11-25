@@ -9,7 +9,7 @@ type Fixture = {
   away?: { id?: string | number; name?: string; score?: number | string };
   status?: { finished?: boolean; cancelled?: boolean; awarded?: boolean; scoreStr?: string };
 };
-type Outcome = { home: number; away: number; homeId: number; awayId: number; homeName: string; awayName: string };
+type Outcome = { matchId: string; home: number; away: number; homeId: number; awayId: number; homeName: string; awayName: string };
 type MetricValue = { value: number | null; label: string; detail: string };
 type Stats = Record<string, MetricValue>;
 
@@ -87,7 +87,7 @@ function toOutcome(fixture: Fixture): Outcome | null {
   const awayId = Number(fixture.away?.id);
   if (!score || !homeId || !awayId) return null;
   return {
-    ...score, homeId, awayId,
+    matchId: String(fixture.id || ""), ...score, homeId, awayId,
     homeName: String(fixture.home?.name || "Takım"),
     awayName: String(fixture.away?.name || "Takım")
   };
@@ -125,7 +125,7 @@ export default async function handler(req: Req, res: Res) {
   const limit = Math.max(1, Math.min(20, Number(read("limit") || 20)));
   const season = read("season") || "current";
   if (!Number.isInteger(offset) || !Number.isInteger(limit)) return res.status(400).json({ error: "Geçersiz sayfalama parametresi." });
-  if (season !== "current") return res.status(400).json({ error: "Tüm sezonlar taraması henüz etkin değil. Bu sürüm seçili güncel sezonu tarar." });
+  if (!["current", "last2", "last3", "all"].includes(season)) return res.status(400).json({ error: "Geçersiz sezon filtresi." });
   try {
     const catalog = await getJson("https://www.fotmob.com/api/data/allLeagues?locale=en");
     const directory = new Map<number, { id: number; name: string; country: string | null }>();
@@ -142,63 +142,91 @@ export default async function handler(req: Req, res: Res) {
     for (const country of catalog?.countries || []) for (const item of country?.leagues || []) add(item, country?.ccode || country?.name || null);
     const all = [...directory.values()].sort((a, b) => String(a.country || "").localeCompare(String(b.country || ""), "tr") || a.name.localeCompare(b.name, "tr"));
     const page = all.slice(offset, offset + limit);
-    const processed = await mapLimit(page, 5, async league => {
-      const data = await getJson(`https://www.fotmob.com/api/data/leagues?id=${league.id}`);
-      const selectedSeason = String(data?.details?.selectedSeason || "");
-      const fixtureRows: Outcome[] = (Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [])
-        .map(toOutcome).filter(Boolean) as Outcome[];
+    const processed = await mapLimit(page, 3, async league => {
+      const currentData = await getJson(`https://www.fotmob.com/api/data/leagues?id=${league.id}`);
+      const currentSeason = String(currentData?.details?.selectedSeason || "");
+      const availableSeasons = Array.isArray(currentData?.allAvailableSeasons)
+        ? currentData.allAvailableSeasons.map((item: unknown) => String(item || "")).filter(Boolean)
+        : [];
+      const seasons = availableSeasons.length ? availableSeasons : currentSeason ? [currentSeason] : [];
+      if (currentSeason && !seasons.includes(currentSeason)) seasons.unshift(currentSeason);
+      const selectedSeasons = season === "current" ? [currentSeason || seasons[0]].filter(Boolean)
+        : season === "last2" ? seasons.slice(0, 2)
+        : season === "last3" ? seasons.slice(0, 3)
+        : seasons;
+      if (!selectedSeasons.length) return null;
+
+      const seasonPayloads = await mapLimit(selectedSeasons, 4, async seasonName => {
+        const data = seasonName === currentSeason
+          ? currentData
+          : await getJson(`https://www.fotmob.com/api/data/leagues?id=${league.id}&season=${encodeURIComponent(seasonName)}`);
+        const fixtures: Outcome[] = (Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [])
+          .map(toOutcome).filter(Boolean) as Outcome[];
+        const xgEntry = (data?.stats?.teams || []).find((item: any) => item?.participant?.stat?.name === "expected_goals_team");
+        let xgRows: any[] = [];
+        if (xgEntry?.fetchAllUrl) {
+          try {
+            const xgUrl = new URL(String(xgEntry.fetchAllUrl), "https://data.fotmob.com/").toString();
+            const xgData = await getJson(xgUrl);
+            xgRows = Array.isArray(xgData?.TopLists?.[0]?.StatList) ? xgData.TopLists[0].StatList : [];
+          } catch {
+            xgRows = [];
+          }
+        }
+        return { seasonName, fixtures, xgRows };
+      });
+
+      const uniqueMatches = new Map<string, Outcome>();
       const teamMatches = new Map<number, { name: string; matches: Outcome[] }>();
-      for (const match of fixtureRows) {
-        const home = teamMatches.get(match.homeId) || { name: match.homeName, matches: [] };
-        home.matches.push({ ...match, away: match.away, home: match.home });
-        teamMatches.set(match.homeId, home);
-        const away = teamMatches.get(match.awayId) || { name: match.awayName, matches: [] };
-        away.matches.push({ ...match, home: match.away, away: match.home });
-        teamMatches.set(match.awayId, away);
-      }
-      const xgEntry = (data?.stats?.teams || []).find((item: any) => item?.participant?.stat?.name === "expected_goals_team");
-      let xgRows: any[] = [];
-      if (xgEntry?.fetchAllUrl) {
-        try {
-          const xgUrl = new URL(String(xgEntry.fetchAllUrl), "https://data.fotmob.com/").toString();
-          const xgData = await getJson(xgUrl);
-          xgRows = Array.isArray(xgData?.TopLists?.[0]?.StatList) ? xgData.TopLists[0].StatList : [];
-        } catch {
-          // xG may be unavailable for a competition; keep its verified score-based metrics.
-          xgRows = [];
+      const xgByTeam = new Map<number, { value: number; matches: number; name: string }>();
+      for (const payload of seasonPayloads.filter(Boolean) as Array<{ seasonName: string; fixtures: Outcome[]; xgRows: any[] }>) {
+        for (const match of payload.fixtures) {
+          const key = match.matchId ? `match:${match.matchId}` : `${payload.seasonName}:${match.homeId}:${match.awayId}:${match.home}-${match.away}`;
+          if (uniqueMatches.has(key)) continue;
+          uniqueMatches.set(key, match);
+          const home = teamMatches.get(match.homeId) || { name: match.homeName, matches: [] };
+          home.matches.push({ ...match, home: match.home, away: match.away });
+          teamMatches.set(match.homeId, home);
+          const away = teamMatches.get(match.awayId) || { name: match.awayName, matches: [] };
+          away.matches.push({ ...match, home: match.away, away: match.home });
+          teamMatches.set(match.awayId, away);
+        }
+        for (const row of payload.xgRows) {
+          const id = Number(row?.TeamId);
+          const value = Number(row?.StatValue);
+          const matches = Number(row?.MatchesPlayed);
+          if (!id || !Number.isFinite(value) || !Number.isFinite(matches) || matches <= 0) continue;
+          const previous = xgByTeam.get(id) || { value: 0, matches: 0, name: String(row?.ParticipantName || "Takım") };
+          previous.value += value;
+          previous.matches += matches;
+          if (row?.ParticipantName) previous.name = String(row.ParticipantName);
+          xgByTeam.set(id, previous);
         }
       }
-      const xgByTeam = new Map<number, { value: number; matches: number }>();
-      for (const row of xgRows) {
-        const id = Number(row?.TeamId);
-        const value = Number(row?.StatValue);
-        const matches = Number(row?.MatchesPlayed);
-        if (id && Number.isFinite(value) && matches > 0) xgByTeam.set(id, { value, matches });
-      }
+
+      const fixtureRows = [...uniqueMatches.values()];
       const teamRows = [...teamMatches.entries()].map(([id, item]) => {
         const xg = xgByTeam.get(id);
         return {
           id, name: item.name, leagueId: league.id, leagueName: league.name, country: league.country,
           matches: item.matches.length,
-          metrics: makeMetrics(item.matches, xg, true)
+          metrics: makeMetrics(item.matches, xg ? { value: xg.value, matches: xg.matches } : undefined, true)
         };
       });
-      // FotMob's xG leaderboard also includes teams with few or no fixture rows in allMatches.
       for (const [id, xg] of xgByTeam) {
-        if (teamRows.some(row => row.id === id)) continue;
-        const statRow = xgRows.find((row: any) => Number(row?.TeamId) === id);
+        if (teamMatches.has(id)) continue;
         teamRows.push({
-          id, name: String(statRow?.ParticipantName || "Takım"), leagueId: league.id, leagueName: league.name, country: league.country,
-          matches: xg.matches, metrics: makeMetrics([], xg, true)
+          id, name: xg.name, leagueId: league.id, leagueName: league.name, country: league.country,
+          matches: xg.matches, metrics: makeMetrics([], { value: xg.value, matches: xg.matches }, true)
         });
       }
-      const xgValues = [...xgByTeam.values()];
-      const xgTotal = xgValues.reduce((sum, item) => sum + item.value, 0);
-      const xgMatches = xgValues.reduce((sum, item) => sum + item.matches, 0);
-      const leagueXg = xgMatches > 0 ? { value: xgTotal * 2, matches: xgMatches } : undefined;
+      const xgTotal = [...xgByTeam.values()].reduce((sum, item) => sum + item.value, 0);
+      const leagueXg = fixtureRows.length > 0 && xgByTeam.size > 0
+        ? { value: xgTotal, matches: fixtureRows.length }
+        : undefined;
       const metrics = makeMetrics(fixtureRows, leagueXg);
       return {
-        league: { id: league.id, name: league.name, country: league.country, matches: fixtureRows.length, season: selectedSeason, metrics },
+        league: { id: league.id, name: league.name, country: league.country, matches: fixtureRows.length, season: selectedSeasons.join(", "), metrics },
         teams: teamRows,
         matchCount: fixtureRows.length
       };
@@ -206,7 +234,7 @@ export default async function handler(req: Req, res: Res) {
     const valid = processed.filter(Boolean) as Array<{ league: any; teams: any[]; matchCount: number }>;
     return res.status(200).json({
       source: "FotMob league season fixtures + team expected-goals leaderboard",
-      season: "current",
+      season,
       totalLeagues: all.length,
       offset, limit,
       scannedLeagues: valid.length,
