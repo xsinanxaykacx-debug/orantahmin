@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type LeagueLogoProps = {
   id: number;
@@ -17,6 +17,7 @@ export function LeagueLogo({ id, name, src, className }: LeagueLogoProps) {
     return [...new Set(values)];
   }, [id, src]);
   const [sourceIndex, setSourceIndex] = useState(0);
+  useEffect(() => setSourceIndex(0), [id, src]);
   const initial = name.trim().slice(0, 1).toLocaleUpperCase("tr-TR") || "?";
 
   return (
