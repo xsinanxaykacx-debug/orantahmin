@@ -325,7 +325,7 @@ function App() {
         <div className="rail-nav">
           {navItems.map((item) => <button type="button" key={item.id} title={item.label} aria-label={item.label} className={activeNav === item.id ? "active" : ""} onClick={() => setActiveNav(item.id)}><span>{item.icon}</span></button>)}
         </div>
-        <div className="rail-bottom"><span className={error ? "connection-indicator error" : "connection-indicator"} /><small>0 TL</small></div>
+        
       </aside>
 
       <aside className="match-list-pane">
@@ -360,16 +360,15 @@ function App() {
               </section>
             ))}
         </div> : <div className="league-directory-empty">Ayarlar</div>}
-        <div className="list-footer"><span><i /> {activeNav === "leagues" ? "Tüm FotMob ligleri" : "Yerel veri bağlantısı"}</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
       </aside>
 
       <main className="detail-pane">
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
           : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
-          : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON." />
+          : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
           : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} fotmobStatus={selectedMatchFotMobStatus} />
-          : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
+          : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p></div>}
       </main>
     </div>
   );
