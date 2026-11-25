@@ -19,7 +19,7 @@ const jsonHeaders = { Accept: "application/json", "User-Agent": UA, Referer: "ht
 function parseScore(fixture: Fixture): { home: number; away: number } | null {
   const home = fixture.home?.score;
   const away = fixture.away?.score;
-  if (home !== undefined && away !== undefined && Number.isFinite(Number(home)) && Number.isFinite(Number(away))) {
+  if (home !== undefined && home !== null && home !== "" && away !== undefined && away !== null && away !== "" && Number.isFinite(Number(home)) && Number.isFinite(Number(away))) {
     return { home: Number(home), away: Number(away) };
   }
   const match = String(fixture.status?.scoreStr || "").match(/(\d+)\s*[-–:]\s*(\d+)/);
