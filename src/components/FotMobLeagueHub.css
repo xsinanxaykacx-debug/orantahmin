@@ -56,3 +56,12 @@
 .league-team-cell { display: flex; align-items: center; gap: 7px; }
 .league-fixture-teams > span { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .league-scorers b { display: flex; align-items: center; gap: 7px; min-width: 0; }
+
+.league-form-strip { display: inline-flex; align-items: center; gap: 3px; }
+.league-form-result { width: 17px; height: 17px; display: inline-grid; place-items: center; border: 1px solid transparent; border-radius: 4px; font-size: 8px; font-style: normal; font-weight: 800; line-height: 1; }
+.league-form-result.w { border-color: #267a50; background: #183b2c; color: #75c99a; }
+.league-form-result.d { border-color: #555b63; background: #30343a; color: #b9bec5; }
+.league-form-result.l { border-color: #a94343; background: #422626; color: #e08b8b; }
+.league-table th:nth-child(9), .league-table td:nth-child(9) { text-align: center; }
+.league-table th:nth-child(2) { min-width: 145px; }
+.league-table { min-width: 680px; }
