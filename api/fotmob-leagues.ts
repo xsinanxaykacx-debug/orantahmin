@@ -100,7 +100,7 @@ export default async function handler(req: Req, res: Res) {
       const match = {
         mackolikMatchId: String(row.matchId), fotmobMatchId: fixture.id, date: row.date,
         time: row.time || fixture.time || "", home: fixture.home?.name || sourceHome,
-        away: fixture.away?.name || sourceAway, homeScore: fixture.home?.score ?? null,
+        away: fixture.away?.name || sourceAway, homeTeamId: Number(fixture.home?.id) || null, awayTeamId: Number(fixture.away?.id) || null, homeScore: fixture.home?.score ?? null,
         awayScore: fixture.away?.score ?? null, status: fixture.status?.reason?.short || fixture.status?.utcTime || null,
         started: !!fixture.status?.started, finished: !!fixture.status?.finished
       };
