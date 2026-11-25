@@ -68,13 +68,14 @@ export interface BulletinWarning {
 }
 
 export interface BulletinMatch {
-  matchId: string;
+  matchId: string | number;
   homeName: string | null;
   awayName: string | null;
   date: string;
   time: string;
   status: number;
   fields: MatchFields;
+  /** Original 61-value source row. Never normalize or mutate this array. */
   raw: unknown[];
   source: {
     groupIndex: number;
@@ -91,3 +92,12 @@ export interface BulletinDocument {
     warnings: BulletinWarning[];
   };
 }
+
+/** UI-only sections. These do not add fields to the 61-column source schema. */
+export type MatchDetailTab =
+  | "overview"
+  | "odds"
+  | "squad"
+  | "similar"
+  | "stands"
+  | "ai";
