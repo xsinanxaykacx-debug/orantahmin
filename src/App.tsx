@@ -210,7 +210,6 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
   const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);
-  const [firstHalfUnavailable, setFirstHalfUnavailable] = useState(false);
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
     ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
     : null;
@@ -218,12 +217,10 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   useEffect(() => {
     if (!finished || !Number.isFinite(parsedHome) || !Number.isFinite(parsedAway)) {
       setFirstHalfScore(null);
-      setFirstHalfUnavailable(false);
       return;
     }
     const controller = new AbortController();
     setFirstHalfScore(null);
-    setFirstHalfUnavailable(false);
     const params = new URLSearchParams({
       date: (match.date || "").split(".").reverse().join("-"),
       home: match.homeName || "",
@@ -238,11 +235,9 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
         if (!response.ok) throw new Error(payload.error || "İlk yarı skoru alınamadı.");
         if (payload.available && Number.isFinite(payload.firstHalfHomeScore) && Number.isFinite(payload.firstHalfAwayScore)) {
           setFirstHalfScore({ home: Number(payload.firstHalfHomeScore), away: Number(payload.firstHalfAwayScore) });
-        } else setFirstHalfUnavailable(true);
+        }
       })
-      .catch(reason => {
-        if (!(reason instanceof DOMException && reason.name === "AbortError")) setFirstHalfUnavailable(true);
-      });
+      .catch(() => {});
     return () => controller.abort();
   }, [finished, fotmobStatus?.fotmobMatchId, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
   const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
