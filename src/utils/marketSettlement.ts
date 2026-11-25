@@ -32,9 +32,10 @@ function selectionResult(selection: string, home: number, away: number): Settlem
 
 // Parse the original title before Turkish punctuation is normalized: 1,5 must stay 1.5.
 function thresholdFromTitle(title: string): number | null {
-  const match = title.match(/(\d+(?:[,.]\d+)?)/);
-  if (!match) return null;
-  const value = Number(match[1].replace(",", "."));
+  const matches = [...title.matchAll(/(\d+(?:[,.]\d+)?)/g)];
+  const raw = matches[matches.length - 1]?.[1];
+  if (!raw) return null;
+  const value = Number(raw.replace(",", "."));
   return Number.isFinite(value) ? value : null;
 }
 
