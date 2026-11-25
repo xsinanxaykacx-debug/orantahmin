@@ -63,10 +63,17 @@ function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
 }
  type FotMobMatchState = { started: boolean; finished: boolean; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
 function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
-  return fotmob ? fotmob.started && !fotmob.finished : status > 0 && status < 4;
+  // FotMob can return a fixture without reliable started/finished flags.
+  // Only let a positive FotMob state override the Mackolik status.
+  if (fotmob?.finished) return false;
+  if (fotmob?.started) return true;
+  return status > 0 && status < 4;
 }
 function isFinishedMatch(status: number, fotmob?: FotMobMatchState): boolean {
-  return fotmob ? fotmob.finished : status >= 4;
+  // A confirmed live state must not be classified as finished.
+  if (fotmob?.finished) return true;
+  if (fotmob?.started) return false;
+  return status >= 4;
 }
 function statusLabel(status: number, fotmob?: FotMobMatchState): string {
   if (isFinishedMatch(status, fotmob)) return "Tamamlandı";
