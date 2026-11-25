@@ -282,8 +282,8 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   return (
     <div className="detail-content">
       <div className="section-intro">
-        <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi</h3></div>
-        <p>Biten maçlarda kazanan ve kaybeden oranlar renklendirilir. {firstHalfScore ? `İlk yarı skoru: ${firstHalfScore.home}–${firstHalfScore.away}.` : firstHalfUnavailable ? "İlk yarı skoru kaynakta doğrulanamadı; ilk yarı marketleri gri." : finished ? "İlk yarı skoru kontrol ediliyor." : "İlk yarı sonuçları maç tamamlanınca kontrol edilir."}</p>
+        <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi{firstHalfScore && <small className="first-half-inline">İYS: {firstHalfScore.home} - {firstHalfScore.away}</small>}</h3></div>
+        <p>Biten maçlarda kazanan ve kaybeden oranlar renklendirilir.</p>
       </div>
       {loadingMarkets ? (
         <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
