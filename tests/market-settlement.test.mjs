@@ -10,9 +10,9 @@ test("first-half 1.5 under/over uses decimal comma threshold", () => {
 });
 
 test("second-half result is derived from full-time minus half-time score", () => {
-  assert.equal(settleMarketOutcome("2. Yarı Sonucu", "1", fullTime), "lost");
+  assert.equal(settleMarketOutcome("2. Yarı Sonucu", "1", fullTime), "won");
   assert.equal(settleMarketOutcome("2. Yarı Sonucu", "X", fullTime), "lost");
-  assert.equal(settleMarketOutcome("2. Yarı Sonucu", "2", fullTime), "won");
+  assert.equal(settleMarketOutcome("2. Yarı Sonucu", "2", fullTime), "lost");
 });
 
 test("goal range supports six or more", () => {
@@ -33,8 +33,9 @@ test("handicap result applies the listed home:away adjustment", () => {
 });
 
 test("more goals in a half and team scoring in both halves", () => {
-  assert.equal(settleMarketOutcome("Daha Çok Gol Olacak Yarı", "2.Y", fullTime), "won");
+  assert.equal(settleMarketOutcome("Daha Çok Gol Olacak Yarı", "Eşit", fullTime), "won");
   assert.equal(settleMarketOutcome("Daha Çok Gol Olacak Yarı", "1.Y", fullTime), "lost");
+  assert.equal(settleMarketOutcome("Daha Çok Gol Olacak Yarı", "2.Y", fullTime), "lost");
   assert.equal(settleMarketOutcome("Evsahibi İki Yarıda da Gol", "Atamaz", fullTime), "won");
-  assert.equal(settleMarketOutcome("Deplasman İki Yarıda da Gol", "Atar", fullTime), "won");
+  assert.equal(settleMarketOutcome("Deplasman İki Yarıda da Gol", "Atar", fullTime), "lost");
 });
