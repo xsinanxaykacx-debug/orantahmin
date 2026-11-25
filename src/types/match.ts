@@ -56,7 +56,7 @@ export interface MatchFields {
   marketGoals15: string | null;
   marketGoals35: string | null;
   marketHalfTimeGoals15: string | null;
-  [key: string]: string | number | null;
+  [key: string]: unknown;
 }
 
 export interface BulletinWarning {
