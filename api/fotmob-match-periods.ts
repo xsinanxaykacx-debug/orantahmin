@@ -36,8 +36,15 @@ async function fetchJson(url: string, headers: Record<string, string>) {
   return response.json();
 }
 
-async function getSofaScoreHalfTime(date: string, homeName: string, awayName: string, finalHome: number, finalAway: number) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !homeName || !awayName) return null;
+async function getSofaScoreHalfTime(
+  date: string,
+  homeName: string,
+  awayName: string,
+  finalHome: number,
+  finalAway: number
+) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !homeName || !awayName ||
+      !Number.isInteger(finalHome) || !Number.isInteger(finalAway)) return null;
   try {
     const payload = await fetchJson(`https://www.sofascore.com/api/v1/sport/football/scheduled-events/${date}`, sofaHeaders);
     const candidates = (payload?.events || []).map((event: any) => ({
@@ -68,86 +75,88 @@ async function getSofaScoreHalfTime(date: string, homeName: string, awayName: st
   }
 }
 
+function firstHalfFromFotMob(data: any) {
+  const finished = Boolean(data?.general?.finished ?? data?.header?.status?.finished);
+  if (!finished) return null;
+  const teams = data?.header?.teams || [];
+  const finalHome = Number(teams[0]?.score);
+  const finalAway = Number(teams[1]?.score);
+  const events = data?.content?.matchFacts?.events?.events;
+  if (!Number.isInteger(finalHome) || !Number.isInteger(finalAway) || !Array.isArray(events)) return null;
+
+  let firstHome = 0;
+  let firstAway = 0;
+  let allHome = 0;
+  let allAway = 0;
+  for (const event of events) {
+    const eventType = String(event?.type || event?.eventType || "").toLowerCase();
+    if (eventType !== "goal" && event?.isGoal !== true) continue;
+    if (event?.isPenaltyShootoutEvent === true) continue;
+    const ownGoal = Boolean(event?.ownGoal);
+    const isHome = typeof event?.isHome === "boolean" ? event.isHome :
+      Number(event?.teamId) === Number(teams[0]?.id);
+    if (typeof event?.isHome !== "boolean" && !event?.teamId) return null;
+    const scoringHome = ownGoal ? !isHome : isHome;
+    if (scoringHome) allHome++;
+    else allAway++;
+    const halfLabel = String(event?.halfStrShort || event?.halfStrKey || event?.period || "").toLowerCase();
+    const rawTime = String(event?.time ?? event?.timeStr ?? "");
+    const minute = Number(rawTime.match(/^\d+/)?.[0]);
+    const firstHalf = /first|1st|1h|firsthalf|first_half|ilk|1\. yari/.test(halfLabel) ||
+      (!/second|2nd|2h|secondhalf|second_half|ikinci|2\. yari/.test(halfLabel) && Number.isFinite(minute) && minute <= 45);
+    if (firstHalf) {
+      if (scoringHome) firstHome++;
+      else firstAway++;
+    }
+  }
+  if (allHome !== finalHome || allAway !== finalAway) return null;
+  return { finalHome, finalAway, firstHalfHomeScore: firstHome, firstHalfAwayScore: firstAway };
+}
+
 export default async function handler(req: Req, res: Res) {
   res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=7200");
   res.setHeader("Access-Control-Allow-Origin", "*");
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
   const matchId = queryValue(req.query, "matchId");
-  if (!matchId || !/^\d{5,12}$/.test(matchId)) {
+  if (matchId && !/^\d{5,12}$/.test(matchId)) {
     return res.status(400).json({ error: "Geçersiz FotMob maç kimliği." });
   }
-
   const date = queryValue(req.query, "date");
   const homeName = queryValue(req.query, "home");
   const awayName = queryValue(req.query, "away");
+  const requestedHome = Number(queryValue(req.query, "finalHome"));
+  const requestedAway = Number(queryValue(req.query, "finalAway"));
 
   try {
-    const response = await fetch(`https://www.fotmob.com/api/data/matchDetails?matchId=${encodeURIComponent(matchId)}`, {
-      headers: fotmobHeaders,
-      signal: AbortSignal.timeout(15000)
-    });
-    const contentType = response.headers.get("content-type") || "";
-    if (!response.ok || !contentType.includes("json")) {
-      return res.status(502).json({ error: `FotMob maç detayları alınamadı (HTTP ${response.status}).` });
-    }
+    let finalHome = Number.isInteger(requestedHome) ? requestedHome : NaN;
+    let finalAway = Number.isInteger(requestedAway) ? requestedAway : NaN;
 
-    const data = await response.json();
-    const finished = Boolean(data?.general?.finished ?? data?.header?.status?.finished);
-    if (!finished) return res.status(200).json({ available: false, finished: false });
-
-    const events = data?.content?.matchFacts?.events?.events;
-    const finalTeams = data?.header?.teams || [];
-    const finalHome = Number(finalTeams[0]?.score);
-    const finalAway = Number(finalTeams[1]?.score);
-
-    if (Number.isFinite(finalHome) && Number.isFinite(finalAway) && Array.isArray(events)) {
-      let firstHome = 0;
-      let firstAway = 0;
-      let allHome = 0;
-      let allAway = 0;
-      let validEventData = true;
-
-      for (const event of events) {
-        const eventType = String(event?.type || event?.eventType || "").toLowerCase();
-        if (eventType !== "goal" && event?.isGoal !== true) continue;
-        if (event?.isPenaltyShootoutEvent === true) continue;
-
-        const ownGoal = Boolean(event?.ownGoal);
-        const isHome = typeof event?.isHome === "boolean" ? event.isHome :
-          Number(event?.teamId) === Number(finalTeams[0]?.id);
-        if (typeof event?.isHome !== "boolean" && !event?.teamId) {
-          validEventData = false;
-          break;
+    if (matchId) {
+      try {
+        const data = await fetchJson(`https://www.fotmob.com/api/data/matchDetails?matchId=${encodeURIComponent(matchId)}`, fotmobHeaders);
+        const fotmobResult = firstHalfFromFotMob(data);
+        if (fotmobResult) {
+          return res.status(200).json({
+            source: "FotMob matchDetails goal events",
+            available: true,
+            finished: true,
+            firstHalfHomeScore: fotmobResult.firstHalfHomeScore,
+            firstHalfAwayScore: fotmobResult.firstHalfAwayScore
+          });
         }
-        const scoringHome = ownGoal ? !isHome : isHome;
-        if (scoringHome) allHome++;
-        else allAway++;
-
-        const halfLabel = String(event?.halfStrShort || event?.halfStrKey || event?.period || "").toLowerCase();
-        const rawTime = String(event?.time ?? event?.timeStr ?? "");
-        const minute = Number(rawTime.match(/^\d+/)?.[0]);
-        const isFirstHalf = /first|1st|1h|firsthalf|first_half|ilk|1\. yari/.test(halfLabel) ||
-          (!/second|2nd|2h|secondhalf|second_half|ikinci|2\. yari/.test(halfLabel) && Number.isFinite(minute) && minute <= 45);
-        if (isFirstHalf) {
-          if (scoringHome) firstHome++;
-          else firstAway++;
+        const teams = data?.header?.teams || [];
+        const fotmobHome = Number(teams[0]?.score);
+        const fotmobAway = Number(teams[1]?.score);
+        if (Number.isInteger(fotmobHome) && Number.isInteger(fotmobAway)) {
+          finalHome = fotmobHome;
+          finalAway = fotmobAway;
         }
-      }
-
-      if (validEventData && allHome === finalHome && allAway === finalAway) {
-        return res.status(200).json({
-          source: "FotMob matchDetails goal events",
-          available: true,
-          finished: true,
-          firstHalfHomeScore: firstHome,
-          firstHalfAwayScore: firstAway
-        });
+      } catch {
+        // Continue to the independent SofaScore source.
       }
     }
 
-    // Independent fallback: SofaScore period-1 score, matched by date and both team names,
-    // then reconciled against the same final score before it is accepted.
     const fallback = await getSofaScoreHalfTime(date, homeName, awayName, finalHome, finalAway);
     if (fallback) return res.status(200).json({
       source: "SofaScore verified period score",
@@ -155,7 +164,6 @@ export default async function handler(req: Req, res: Res) {
       finished: true,
       ...fallback
     });
-
     return res.status(200).json({ available: false, finished: true });
   } catch (error) {
     return res.status(502).json({
