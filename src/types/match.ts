@@ -11,8 +11,8 @@ export interface BulletinMeta {
 
 export interface MatchFields {
   matchId: number;
-  homeName: string;
-  awayName: string;
+  homeName: string | null;
+  awayName: string | null;
   homeId: number | string;
   awayId: number | string;
   status: number;
