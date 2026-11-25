@@ -60,8 +60,11 @@ function rangeSettlement(outcomeName: string, value: number): Settlement {
   const outcome = normalize(outcomeName);
   const range = rangeFromSelection(outcomeName);
   if (range) return value >= range[0] && value <= range[1] ? "won" : "lost";
-  const plus = outcome.match(/^(\d+)(?:\s*(?:\+|ve uzeri|ustu|ve ustu))?$/);
+
+  // Mackolik labels may append a descriptor, e.g. "6+ Gol" or "12 ve Üzeri".
+  const plus = outcome.match(/^(\d+)\s*(?:\+|ve uzeri|ustu|ve ustu)(?:\s|$)/);
   if (plus) return value >= Number(plus[1]) ? "won" : "lost";
+
   return "unknown";
 }
 
