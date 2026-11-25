@@ -21,7 +21,8 @@
 .league-hub-count span { color: #8491a6; font-size: 8px; white-space: nowrap; }
 .league-hub-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .7fr); align-items: start; gap: 14px; }
 .league-panel { min-width: 0; }
-.league-table-panel { grid-row: span 2; }
+.league-table-panel { grid-row: auto; }
+.league-scorers-panel { grid-column: 1 / -1; }
 .league-table-scroll { width: 100%; overflow-x: auto; }
 .league-table { width: 100%; border-collapse: collapse; font-size: 9px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .league-table th { padding: 8px 4px; border-bottom: 1px solid #384153; color: #78869c; font-size: 8px; font-weight: 600; text-align: right; }
@@ -66,7 +67,9 @@
 .league-table th:nth-child(2) { min-width: 145px; }
 .league-table { min-width: 0; table-layout: auto; }
 
-.league-scorer-groups { display: grid; gap: 14px; }
+.league-scorer-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.league-scorers-panel .league-scorer-group { padding: 12px; border: 1px solid #303747; border-radius: 9px; background: #202532; }
+@media (max-width: 760px) { .league-scorer-groups { grid-template-columns: 1fr; } }
 .league-scorer-group { min-width: 0; }
 .league-scorer-group h4 { margin: 0 0 8px; color: #9aa8bc; font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .league-scorer-player { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
