@@ -8,6 +8,11 @@ type Metric =
   | "half-time-score" | "under" | "over";
 type SortMode = "percentage" | "matches";
 type SeasonMode = "current" | "all";
+type MetricValue = { value: number | null; label: string; detail: string };
+type Stats = Record<string, MetricValue>;
+type LeagueRow = { id: number; name: string; country: string | null; matches: number; season: string; metrics: Stats };
+type TeamRow = { id: number; name: string; leagueId: number; leagueName: string; country: string | null; matches: number; metrics: Stats };
+type Batch = { totalLeagues: number; scannedLeagues: number; scannedMatches: number; leagues: LeagueRow[]; teams: TeamRow[] };
 
 const metricOptions: Array<{ value: Metric; label: string }> = [
   { value: "xg", label: "xG sıralaması" },
@@ -23,8 +28,19 @@ const metricOptions: Array<{ value: Metric; label: string }> = [
   { value: "under", label: "Alt" },
   { value: "over", label: "Üst" }
 ];
+const unavailableMetrics: Partial<Record<Metric, string>> = {
+  "ht-ft": "İlk yarı ve maç sonu kombinasyonu için her karşılaşmanın devre skoru gerekir. FotMob bunu sezon lig özetinde toplu vermiyor.",
+  "half-time": "İlk yarı sonuçları maç detayındaki olay akışından hesaplanır; toplu sezon verisi henüz bağlanmadı.",
+  "first-second-btts": "İlk ve ikinci yarıda karşılıklı gol hesabı maç bazlı devre olayları gerektirir.",
+  "half-time-score": "İlk yarı skorları maç bazlı detay verisi gerektirir."
+};
+const supportedPercentMetrics: Metric[] = ["match-result", "goals-25", "btts", "correct-score", "under", "over"];
 
-type LeagueCatalog = { leagueCount?: number; leagues?: Array<{ id: number; name: string; country: string | null; matchCount: number }> };
+function formatValue(metric: Metric, value: number | null): string {
+  if (value === null || !Number.isFinite(value)) return "—";
+  if (supportedPercentMetrics.includes(metric)) return `${value.toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+  return value.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 export function FotMobStatistics() {
   const [scope, setScope] = useState<Scope>("leagues");
@@ -32,33 +48,59 @@ export function FotMobStatistics() {
   const [sort, setSort] = useState<SortMode>("percentage");
   const [season, setSeason] = useState<SeasonMode>("current");
   const [minimumMatches, setMinimumMatches] = useState(30);
-  const [catalog, setCatalog] = useState<LeagueCatalog | null>(null);
+  const [leagues, setLeagues] = useState<LeagueRow[]>([]);
+  const [teams, setTeams] = useState<TeamRow[]>([]);
+  const [totalLeagues, setTotalLeagues] = useState(0);
+  const [scannedLeagues, setScannedLeagues] = useState(0);
+  const [scannedMatches, setScannedMatches] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/fotmob-leagues", { signal: controller.signal })
-      .then(async response => {
-        const payload = await response.json() as LeagueCatalog & { error?: string };
-        if (!response.ok) throw new Error(payload.error || "FotMob lig kataloğu alınamadı.");
-        setCatalog(payload);
-      })
-      .catch(reason => {
-        if (!(reason instanceof DOMException && reason.name === "AbortError")) {
-          setError(reason instanceof Error ? reason.message : "Lig kataloğu alınamadı.");
+    let active = true;
+    const load = async () => {
+      try {
+        const pageSize = 20;
+        let total = 0;
+        for (let offset = 0; active; offset += pageSize) {
+          const response = await fetch(`/api/fotmob-statistics?offset=${offset}&limit=${pageSize}&season=current`, { signal: controller.signal });
+          const payload = await response.json() as Batch & { error?: string };
+          if (!response.ok) throw new Error(payload.error || "FotMob istatistikleri alınamadı.");
+          if (!active) return;
+          total = payload.totalLeagues || total;
+          setTotalLeagues(total);
+          setLeagues(previous => [...previous, ...(payload.leagues || [])]);
+          setTeams(previous => [...previous, ...(payload.teams || [])]);
+          setScannedLeagues(previous => previous + (payload.scannedLeagues || 0));
+          setScannedMatches(previous => previous + (payload.scannedMatches || 0));
+          if (!payload.scannedLeagues || offset + pageSize >= total) break;
         }
-      })
-      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
-    return () => controller.abort();
+      } catch (reason) {
+        if (active && !(reason instanceof DOMException && reason.name === "AbortError")) {
+          setError(reason instanceof Error ? reason.message : "İstatistik taraması başarısız.");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    void load();
+    return () => { active = false; controller.abort(); };
   }, []);
 
-  const leagueCount = useMemo(() => catalog?.leagues?.length ?? 0, [catalog]);
+  const sourceRows = scope === "leagues" ? leagues : teams;
+  const visibleRows = useMemo(() => sourceRows
+    .filter(row => row.matches >= minimumMatches && row.metrics[metric]?.value !== null && row.metrics[metric]?.value !== undefined)
+    .sort((a, b) => sort === "matches"
+      ? b.matches - a.matches || (b.metrics[metric].value || 0) - (a.metrics[metric].value || 0)
+      : (b.metrics[metric].value || 0) - (a.metrics[metric].value || 0) || b.matches - a.matches),
+  [sourceRows, minimumMatches, metric, sort]);
+  const currentMetricLabel = metricOptions.find(option => option.value === metric)?.label || "İstatistik";
 
   return <div className="stats-page">
     <header className="stats-page-header">
-      <div><span className="eyebrow">ORANTAHMİN ANALİZ</span><h2>Lig ve Takım İstatistikleri</h2><p>Sezon sonuçlarını aynı ölçütlerle lig veya takım bazında karşılaştır.</p></div>
-      <div className="stats-scan-count"><b>{loading ? "…" : error ? "—" : leagueCount.toLocaleString("tr-TR")}</b><span>FotMob lig kataloğu</span></div>
+      <div><span className="eyebrow">ORANTAHMİN ANALİZ</span><h2>Lig ve Takım İstatistikleri</h2><p>FotMob sezon sonuçlarından hesaplanan lig ve takım performans sıralamaları.</p></div>
+      <div className="stats-scan-count"><b>{loading ? `${scannedLeagues.toLocaleString("tr-TR")} / ${totalLeagues || "…"}` : error ? "—" : scannedLeagues.toLocaleString("tr-TR")}</b><span>Taranan lig</span></div>
     </header>
 
     <section className="stats-controls info-card">
@@ -96,15 +138,24 @@ export function FotMobStatistics() {
     </section>
 
     <section className="stats-results info-card">
-      <div className="card-heading"><span>{scope === "leagues" ? "LİG SIRALAMASI" : "TAKIM SIRALAMASI"}</span><small>{metricOptions.find(option => option.value === metric)?.label} · {season === "current" ? "Bu sezon" : "Tüm sezonlar"}</small></div>
-      {loading ? <div className="stats-empty">FotMob lig kataloğu yükleniyor…</div>
-        : error ? <div className="stats-empty stats-error">{error}</div>
-        : <div className="stats-empty">
-          <strong>İstatistik tarama motoru henüz bağlanmadı</strong>
-          <p>{leagueCount.toLocaleString("tr-TR")} lig kataloğu bulundu. Yüzde ve maç adetleri gerçek sezon sonuçlarından hesaplanacak; kaynakta doğrulanmayan xG, ilk yarı veya oran verileri gösterilmeyecek.</p>
-          <small>Seçili filtre: {minimumMatches} maç ve üzeri · {sort === "percentage" ? "Orana göre sıralama" : "Maç sayısına göre sıralama"}</small>
-        </div>}
+      <div className="card-heading"><span>{scope === "leagues" ? "LİG SIRALAMASI" : "TAKIM SIRALAMASI"}</span><small>{currentMetricLabel} · {season === "current" ? "Bu sezon" : "Tüm sezonlar"}</small></div>
+      {season === "all" ? <div className="stats-empty"><strong>Tüm sezonlar taraması henüz etkin değil</strong><p>Şu anda FotMob'un seçili güncel sezonu taranıyor. Geçmiş sezonları birleştiren tarama, sezonlar arası takım kimlikleri ve maç tekrarları doğrulandıktan sonra açılacak.</p></div>
+        : unavailableMetrics[metric] ? <div className="stats-empty"><strong>Bu istatistik için ek veri gerekiyor</strong><p>{unavailableMetrics[metric]}</p><small>Kaynakta doğrulanmayan devre sonuçları tahmin edilmez.</small></div>
+        : <><div className="stats-scan-progress"><span>{scannedMatches.toLocaleString("tr-TR")} tamamlanmış maç tarandı</span><span>{loading ? "Tarama sürüyor…" : `${visibleRows.length.toLocaleString("tr-TR")} sonuç`}</span></div>
+          {loading && <div className="stats-progress-track"><i style={{ width: `${totalLeagues ? Math.min(100, scannedLeagues / totalLeagues * 100) : 0}%` }} /></div>}
+          {error ? <div className="stats-empty stats-error"><strong>Tarama kısmen durdu</strong><p>{error}</p><small>Şu ana kadar alınan sonuçlar korunuyor.</small></div>
+            : visibleRows.length ? <div className="stats-table-scroll"><table className="stats-table">
+              <thead><tr><th>#</th><th>{scope === "leagues" ? "Lig" : "Takım"}</th><th>{scope === "leagues" ? "Ülke" : "Lig"}</th><th>Maç</th><th>Öne çıkan sonuç</th><th>Değer</th><th>Detay</th></tr></thead>
+              <tbody>{visibleRows.map((row, index) => {
+                const metricValue = row.metrics[metric];
+                return <tr key={scope === "leagues" ? `l-${row.id}` : `t-${(row as TeamRow).leagueId}-${row.id}`}>
+                  <td>{index + 1}</td><td className="stats-entity-name">{row.name}</td><td>{scope === "leagues" ? row.country || "Uluslararası" : (row as TeamRow).leagueName}</td><td>{row.matches}</td><td><b>{metricValue.label}</b></td><td className="stats-value">{formatValue(metric, metricValue.value)}</td><td className="stats-detail">{metricValue.detail}</td>
+                </tr>;
+              })}</tbody>
+            </table></div>
+            : <div className="stats-empty"><strong>{loading ? "İstatistikler taranıyor" : "Filtreye uygun sonuç bulunamadı"}</strong><p>{loading ? "FotMob lig sezonları sırayla okunuyor. Tarama tamamlandıkça sıralama burada oluşacak." : `${scannedLeagues.toLocaleString("tr-TR")} lig tarandı; en az ${minimumMatches} maç şartını karşılayan ve seçili ölçümde doğrulanmış veri içeren kayıt bulunamadı.`}</p></div>}
+        </>}
     </section>
-    <p className="stats-source-note">Kaynak: FotMob. Katalog sayısı, taranmış sezon veya doğrulanmış istatistik sayısı değildir.</p>
+    <p className="stats-source-note">Kaynak: FotMob sezon fikstürleri ve takım istatistikleri. Katalogdaki lig sayısı taranan lig sayısı değildir; yalnızca tamamlanmış ve skoru doğrulanmış maçlar hesaba katılır.</p>
   </div>;
 }
