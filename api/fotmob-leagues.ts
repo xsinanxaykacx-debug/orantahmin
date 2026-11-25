@@ -130,7 +130,14 @@ export default async function handler(req: Req, res: Res) {
     };
     for (const item of allLeaguesPayload?.popular || []) addLeague(item);
     const international = allLeaguesPayload?.international;
-    const internationalLeagues = Array.isArray(international) ? international : international?.leagues || [];
+    // FotMob yanıtında international bir grup dizisi olabilir:
+    // [{ name: "International", leagues: [...] }]. Grupları düzleştir.
+    const internationalGroups = Array.isArray(international)
+      ? international
+      : international ? [international] : [];
+    const internationalLeagues = internationalGroups.flatMap((group: any) =>
+      Array.isArray(group?.leagues) ? group.leagues : group?.id ? [group] : []
+    );
     for (const item of internationalLeagues) addLeague(item, "Uluslararası");
     for (const country of allLeaguesPayload?.countries || []) {
       for (const item of country.leagues || []) addLeague(item, country.ccode || country.name || null);
