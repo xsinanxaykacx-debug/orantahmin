@@ -34,16 +34,26 @@ export default async function handler(req: Req, res: Res) {
       name: group?.data?.tableName || group?.data?.leagueName || group?.data?.ccode || data?.details?.name || "Puan durumu",
       rows: group?.data?.table?.all || group?.table?.all || []
     })).filter((group: any) => group.rows.length) : [];
+    const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
+    const upcoming = allFixtures.filter((match: any) => !match?.status?.finished && !match?.status?.cancelled)
+      .sort((a: any, b: any) => String(a?.status?.utcTime || "").localeCompare(String(b?.status?.utcTime || "")));
+    const recent = allFixtures.filter((match: any) => match?.status?.finished)
+      .sort((a: any, b: any) => String(b?.status?.utcTime || "").localeCompare(String(a?.status?.utcTime || "")));
+    const fixtureList = (upcoming.length ? upcoming : recent).slice(0, 12);
+    const players = Array.isArray(data?.stats?.players) ? data.stats.players : [];
+    const scorer = players.find((item: any) => /top scorer|goals/i.test(String(item?.header || "")));
+    const topScorer = scorer ? { header: scorer.header, topThree: (scorer.topThree || []).slice(0, 3) } : null;
+    const seasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
+      Array.isArray(data?.seasons) ? data.seasons.map((item: any) => typeof item === "string" ? item : item?.seasonName || item?.name).filter(Boolean) : [];
     return res.status(200).json({
       source: "FotMob",
       leagueId: Number(leagueId),
       dataLeagueId,
-      details: data?.details || null,
-      seasons: data?.seasons || data?.allAvailableSeasons || [],
+      details: data?.details ? { id: data.details.id, name: data.details.name, selectedSeason: data.details.selectedSeason, country: data.details.country, leagueColor: data.details.leagueColor } : null,
+      seasons,
       tableGroups,
-      fixtures: data?.fixtures || null,
-      overview: data?.overview || null,
-      stats: data?.stats || null
+      fixtures: fixtureList,
+      stats: { players: topScorer ? [topScorer] : [] }
     });
   } catch (error) {
     return res.status(502).json({ error: error instanceof Error ? error.message : "Lig verisi alınamadı." });
