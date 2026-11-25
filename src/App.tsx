@@ -110,7 +110,7 @@ function EmptyData({ title, description }: { title: string; description: string 
 }
 
 function Overview({ match }: { match: DisplayMatch }) {
-  const hasScore = match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
+  const hasScore = match.status > 0 && match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
     match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
     String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
   return (
