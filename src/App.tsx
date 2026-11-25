@@ -62,7 +62,7 @@ function formatDate(value: string): string {
 function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
   return uniqueOdds(match.sourceRecords.map((record) => record.fields?.[field]));
 }
- type FotMobMatchState = { started: boolean; finished: boolean; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
+ type FotMobMatchState = { started: boolean; finished: boolean; fotmobMatchId?: number; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
 function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
   // FotMob can return a fixture without reliable started/finished flags.
   // Only let a positive FotMob state override the Mackolik status.
@@ -118,14 +118,14 @@ const MatchRow = memo(function MatchRow({
   );
 });
 
-function MarketCard({ market, match }: { market: MarketDefinition; match: DisplayMatch }) {
+function MarketCard({ market, match, result }: { market: MarketDefinition; match: DisplayMatch; result: MatchResult | null }) {
   const available = market.selections.some((selection) => getOdds(match, selection.field).length > 0);
   return (
     <section className={`market-card ${available ? "" : "is-empty"}`}>
       <div className="market-card-title">{market.title}<span>{available ? "Kaynak oranı" : "Veri yok"}</span></div>
       <div className="market-values">
         {market.selections.map(({ label, field }) => (
-          <div className="market-value" key={field}><span>{label}</span><strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong></div>
+          {(() => { const settlement = settleMarketOutcome(market.title, label, result); return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={field}><span>{label}</span><strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong>{result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}</div>; })()}
         ))}
       </div>
     </section>
@@ -204,9 +204,34 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
+  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);
+  const [firstHalfUnavailable, setFirstHalfUnavailable] = useState(false);
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
-    ? { home: parsedHome, away: parsedAway, finished: true }
+    ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
     : null;
+
+  useEffect(() => {
+    if (!finished || !fotmobStatus?.fotmobMatchId) {
+      setFirstHalfScore(null);
+      setFirstHalfUnavailable(false);
+      return;
+    }
+    const controller = new AbortController();
+    setFirstHalfScore(null);
+    setFirstHalfUnavailable(false);
+    fetch(`/api/fotmob-match-periods?matchId=${fotmobStatus.fotmobMatchId}`, { cache: "force-cache", signal: controller.signal })
+      .then(async response => {
+        const payload = await response.json() as { available?: boolean; firstHalfHomeScore?: number; firstHalfAwayScore?: number; error?: string };
+        if (!response.ok) throw new Error(payload.error || "İlk yarı skoru alınamadı.");
+        if (payload.available && Number.isFinite(payload.firstHalfHomeScore) && Number.isFinite(payload.firstHalfAwayScore)) {
+          setFirstHalfScore({ home: Number(payload.firstHalfHomeScore), away: Number(payload.firstHalfAwayScore) });
+        } else setFirstHalfUnavailable(true);
+      })
+      .catch(reason => {
+        if (!(reason instanceof DOMException && reason.name === "AbortError")) setFirstHalfUnavailable(true);
+      });
+    return () => controller.abort();
+  }, [finished, fotmobStatus?.fotmobMatchId]);
   const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
   const [marketError, setMarketError] = useState<string | null>(null);
@@ -245,7 +270,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     <div className="detail-content">
       <div className="section-intro">
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi</h3></div>
-        <p>Biten maçlarda doğrulanabilen kazanan marketler yeşil, kaybedenler kırmızı gösterilir. İlk yarı ve özel istatistik marketleri ilgili sonuç verisi yoksa renklendirilmez.</p>
+        <p>Biten maçlarda kazanan ve kaybeden oranlar renklendirilir. {firstHalfScore ? `İlk yarı skoru: ${firstHalfScore.home}–${firstHalfScore.away}.` : firstHalfUnavailable ? "İlk yarı skoru kaynakta doğrulanamadı; ilk yarı marketleri gri." : finished ? "İlk yarı skoru kontrol ediliyor." : "İlk yarı sonuçları maç tamamlanınca kontrol edilir."}</p>
       </div>
       {loadingMarkets ? (
         <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
@@ -256,7 +281,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
       ) : (
         <>
           {marketError && <div className="data-empty"><strong>Ek market verisi alınamadı</strong><p>{marketError} Mevcut bülten oranları gösteriliyor.</p></div>}
-          <div className="market-grid-detail">{markets.map(market => <MarketCard key={market.key} market={market} match={match} />)}</div>
+          <div className="market-grid-detail">{markets.map(market => <MarketCard key={market.key} market={market} match={match} result={result} />)}</div>
         </>
       )}
     </div>
@@ -413,6 +438,7 @@ function App() {
         awayName: match.away?.trim() || null,
         started: Boolean(match.started),
         finished: Boolean(match.finished),
+        fotmobMatchId: Number(match.fotmobMatchId),
         homeScore: match.homeScore ?? null,
         awayScore: match.awayScore ?? null,
         status: match.status ?? null
