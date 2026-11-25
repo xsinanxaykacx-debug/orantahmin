@@ -23,6 +23,14 @@
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; min-width: 320px; margin: 0; }
 body { overflow: hidden; background: var(--bg); }
+/* Enforce the requested typography instead of allowing component rules to override it. */
+body, body *, body *::before, body *::after {
+  font-family: Inter, system-ui, -apple-system, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 14px !important;
+  letter-spacing: -0.16px !important;
+}
 button, input { font: inherit; }
 button { cursor: pointer; }
 .dashboard-shell { width: 100%; height: 100dvh; min-height: 0; display: grid; grid-template-columns: 68px minmax(350px, 450px) minmax(0, 1fr); overflow: hidden; background: var(--bg); }
@@ -87,7 +95,7 @@ button { cursor: pointer; }
 .detail-meta b { padding: 5px 8px; border: 1px solid #3b4b67; border-radius: 5px; color: #afc9ef; font-size: 9px; }
 .versus-header { max-width: 750px; display: grid; grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr); align-items: center; gap: 25px; margin: 28px auto 0; }
 .detail-team { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-.detail-crest { width: 55px; height: 55px; border-radius: 17px; font-size: 20px; box-shadow: 0 7px 24px #00000030; }
+.detail-crest { width: 55px; height: 55px; border-radius: 17px; font-size: 20px; }
 .detail-team strong { max-width: 100%; overflow-wrap: anywhere; color: #f0f4fc; font-family: inherit; font-size: clamp(13px, 1.4vw, 17px); font-weight: 800; }
 .detail-team small { color: #7f8ba0; font-size: 9px; }
 .match-center { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 15px 8px; border: 1px solid #36435b; border-radius: 12px; background: #171e2b99; text-align: center; }
@@ -148,7 +156,6 @@ button { cursor: pointer; }
 .empty-graphic { width: 84px; height: 84px; display: grid; place-items: center; margin-bottom: 22px; border: 1px solid #303b50; border-radius: 24px; background: linear-gradient(145deg, #202a3d, #171d29); color: #78a8f2; font-size: 35px; box-shadow: 0 15px 40px #00000025; }
 .detail-empty h2 { margin: 0; color: #e4ebf7; font-family: inherit; font-size: 19px; }
 .detail-empty p { margin: 9px 0 0; color: #8c98ad; font-size: 11px; }
-.detail-empty small { margin-top: 20px; color: #5f6c82; font-size: 9px; }
 @media (max-width: 1050px) {
   .dashboard-shell { grid-template-columns: 58px minmax(320px, 390px) minmax(0, 1fr); }
   .overview-cards { grid-template-columns: 1fr; }
@@ -165,17 +172,15 @@ button { cursor: pointer; }
   .rail-nav button { width: 36px; height: 38px; }
   .match-list-pane { grid-column: 2; grid-row: 1; min-height: 48dvh; border-right: 0; border-bottom: 1px solid #303747; }
   .list-header { padding: 15px 12px 10px; }
-  .brand-line h1 { margin-bottom: 12px; font-size: 19px; }
+  .brand-line h1 { margin-bottom: 12px; }
   .match-list-scroll { min-height: 0; }
   .detail-pane { grid-column: 2; grid-row: 2; min-height: 52dvh; overflow: visible; }
   .detail-header { padding: 19px 12px; }
   .versus-header { grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr); gap: 7px; margin-top: 20px; }
   .detail-crest { width: 42px; height: 42px; border-radius: 13px; }
-  .detail-team strong { font-size: 11px; }
   .match-center { padding: 10px 4px; }
-  .match-center strong { font-size: 20px; }
   .detail-tabs { padding: 0 8px; }
-  .detail-tabs button { min-height: 43px; padding: 0 10px; font-size: 9px; }
+  .detail-tabs button { min-height: 43px; padding: 0 10px; }
   .detail-content { padding: 13px 10px 25px; }
   .overview-cards, .market-grid-detail { grid-template-columns: 1fr; }
   .info-card { padding: 13px; }
@@ -187,7 +192,6 @@ button { cursor: pointer; }
 }
 @media (max-width: 390px) {
   .match-row-content { grid-template-columns: minmax(0, 1fr) 94px; gap: 5px; }
-  .team-line strong { font-size: 9px; }
   .row-odds b { font-size: 8px; }
   .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
