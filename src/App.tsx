@@ -260,6 +260,7 @@ function App() {
             </article>
           ))}
         </div>
+        {renderPagination()}
       </>
     );
   }
