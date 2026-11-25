@@ -125,11 +125,12 @@ function MarketCard({ market, match, result = null }: { market: MarketDefinition
       <div className="market-card-title">{market.title}<span>{available ? "Kaynak oranı" : "Veri yok"}</span></div>
       <div className="market-values">
         {market.selections.map(({ label, field }) => {
-          const selectionOdds = getOdds(match, field);\n          const settlement = settleMarketOutcome(market.title, label, result);
+          const selectionOdds = getOdds(match, field);
+          const settlement = settleMarketOutcome(market.title, label, result);
           return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={field}>
             <span>{label}</span>
-            <strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong>
-            {result && <em className="settlement-label">{outcome.odd === null ? "Oran yok" : settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Sonuç verisi yok"}</em>}
+            <strong>{selectionOdds.map(safeOdds).join(" / ") || "—"}</strong>
+            {result && <em className="settlement-label">{selectionOdds.length === 0 ? "Oran yok" : settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Sonuç verisi yok"}</em>}
           </div>;
         })}
       </div>
@@ -195,7 +196,7 @@ function MackolikMarketCard({ market, result }: { market: MackolikMarket; result
           return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : result ? "is-unknown" : ""}`} key={`${market.code}-${index}`}>
             <span>{outcome.name}</span>
             <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
-            {result && <em className="settlement-label">{settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Veri yok"}</em>}
+            {result && <em className="settlement-label">{outcome.odd === null ? "Oran yok" : settlement === "won" ? "Kazandı" : settlement === "lost" ? "Kaybetti" : "Sonuç verisi yok"}</em>}
           </div>;
         })}
       </div>
@@ -209,7 +210,8 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
   const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
-  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);\n  const [eventFacts, setEventFacts] = useState<MatchEventFacts>({});
+  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);
+  const [eventFacts, setEventFacts] = useState<MatchEventFacts>({});
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
     ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore, ...eventFacts }
     : null;
