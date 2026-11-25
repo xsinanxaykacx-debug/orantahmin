@@ -1,7 +1,7 @@
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
 type BulletinMatch = { matchId: string | number; homeName?: string | null; awayName?: string | null; date: string; time?: string; fields?: { leagueCode?: string | null } };
-type FotMobFixture = { id: number; home?: { name?: string; score?: number }; away?: { name?: string; score?: number }; status?: any; time?: string; leagueId: number; leagueName: string; country: string | null };
+type FotMobFixture = { id: number; home?: { id?: number; name?: string; score?: number }; away?: { id?: number; name?: string; score?: number }; status?: any; time?: string; leagueId: number; leagueName: string; country: string | null };
 
 const headers = {
   Accept: "application/json",
