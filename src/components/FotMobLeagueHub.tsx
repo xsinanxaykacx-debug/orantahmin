@@ -66,8 +66,8 @@ function FixtureList({ matches }: { matches: any[] }) {
   return <div className="league-fixtures">{matches.map((match, index) => {
     const home = match.home?.name || match.home || "Ev sahibi";
     const away = match.away?.name || match.away || "Deplasman";
-    const homeId = Number(match.home?.id || match.homeTeamId) || null;
-    const awayId = Number(match.away?.id || match.awayTeamId) || null;
+    const homeId = Number(match.home?.id || match.homeTeam?.id || match.homeTeamId || match.homeId) || null;
+    const awayId = Number(match.away?.id || match.awayTeam?.id || match.awayTeamId || match.awayId) || null;
     const scoreText = match.status?.scoreStr || "";
     const scoreParts = scoreText.match(/(\d+)\s*[-–:]\s*(\d+)/);
     const hs = match.homeScore ?? match.home?.score ?? (scoreParts ? Number(scoreParts[1]) : null);
