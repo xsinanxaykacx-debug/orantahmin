@@ -39,8 +39,7 @@ async function jsonFetch(url: string) {
   if (!response.ok || !contentType.includes("json")) throw new Error(`FotMob yanıtı alınamadı (HTTP ${response.status}).`);
   return response.json();
 }
-function leagueLogo(name: string, id: number) {
-  if (norm(name).includes("super lig")) return "https://media04.ligtv.com.tr/img/news/2024/7/31/original/superliglogodikey.jpg";
+function leagueLogo(_name: string, id: number) {
   return `https://images.fotmob.com/image_resources/logo/leaguelogo/${id}.png`;
 }
 function ageMarkers(value: string) {
