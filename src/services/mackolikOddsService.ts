@@ -1,9 +1,18 @@
-import type { BulletinDocument, BulletinMatch } from "../types/match";
+import type { BulletinDocument, BulletinMatch, BulletinWarning } from "../types/match";
 
 const DATA_URL = "/data/mackolik-bulletin.json";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isWarning(value: unknown): value is BulletinWarning {
+  return isRecord(value) &&
+    typeof value.code === "string" &&
+    typeof value.message === "string" &&
+    (typeof value.matchId === "string" || typeof value.matchId === "number") &&
+    typeof value.sourceGroup === "number" &&
+    typeof value.sourceIndex === "number";
 }
 
 function isMatch(value: unknown): value is BulletinMatch {
@@ -36,7 +45,8 @@ function isBulletin(value: unknown): value is BulletinDocument {
     typeof meta.warningCount === "number" &&
     Array.isArray(value.matches) &&
     value.matches.every(isMatch) &&
-    Array.isArray(diagnostics.warnings)
+    Array.isArray(diagnostics.warnings) &&
+    diagnostics.warnings.every(isWarning)
   );
 }
 
@@ -61,6 +71,10 @@ export const OddsService = {
 
     if (!isBulletin(payload)) {
       throw new Error("Bülten şeması beklenen mackolik-61-v1 formatında değil.");
+    }
+
+    if (payload.meta.sourceFieldCount !== 61 || payload.matches.some((match) => match.raw.length !== 61)) {
+      throw new Error("Kaynak satır uzunluğu 61 alanlı şema ile uyuşmuyor.");
     }
 
     return payload;
