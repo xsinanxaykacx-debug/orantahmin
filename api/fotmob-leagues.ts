@@ -136,9 +136,6 @@ export default async function handler(req: Req, res: Res) {
       for (const item of country.leagues || []) addLeague(item, country.ccode || country.name || null);
     }
 
-    // FotMob 1. Lig (Türkiye) ID 165 katalog yanıtında görünmeyebiliyor;
-    // lig detayları ve sezon istatistikleri FotMob API üzerinden erişilebilir.
-    addLeague({ id: 165, name: "1. Lig", ccode: "TUR" }, "Türkiye");
 
     // Günlük bültende bulunan ama katalogda ayrı bir aşama ID'siyle gelen ligleri de kaybetme.
     for (const [id, matched] of matchedLeagueMap) {
