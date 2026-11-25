@@ -1,494 +1,313 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { OddsService } from "./services/mackolikOddsService";
-import type {
-  BulletinDocument,
-  Match,
-  MatchStatus
-} from "./types/match";
+import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
+import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
+import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 
-type Page = "Bülten" | "Oran Analizi" | "İstatistikler";
+type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
+type StatusFilter = "all" | "live" | "closing";
+type MarketSelection = { label: string; field: keyof MatchFields };
+type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
+type NavItem = { id: "matches" | "statistics" | "settings"; label: string; icon: string };
 
-const pages: Page[] = ["Bülten", "Oran Analizi", "İstatistikler"];
+const navItems: NavItem[] = [
+  { id: "matches", label: "Maçlar", icon: "▦" },
+  { id: "statistics", label: "İstatistikler", icon: "▥" },
+  { id: "settings", label: "Ayarlar", icon: "⚙" }
+];
+const detailTabs: { id: MatchDetailTab; label: string }[] = [
+  { id: "overview", label: "Genel Bakış" },
+  { id: "odds", label: "Oran Analizi" },
+  { id: "squad", label: "Kadro" },
+  { id: "similar", label: "Benzer" },
+  { id: "stands", label: "Tribün" },
+  { id: "ai", label: "AI Tahmin" }
+];
+const markets: MarketDefinition[] = [
+  { key: "ms", title: "Maç Sonucu", selections: [{ label: "1", field: "ms1" }, { label: "X", field: "msX" }, { label: "2", field: "ms2" }] },
+  { key: "double-chance", title: "Çifte Şans", selections: [{ label: "1X", field: "doubleChance1X" }, { label: "12", field: "doubleChance12" }, { label: "X2", field: "doubleChanceX2" }] },
+  { key: "goals-25", title: "2,5 Gol", selections: [{ label: "Alt", field: "goals25Under" }, { label: "Üst", field: "goals25Over" }] },
+  { key: "half-time", title: "İlk Yarı Sonucu", selections: [{ label: "1", field: "halfTimeResult1" }, { label: "X", field: "halfTimeResultX" }, { label: "2", field: "halfTimeResult2" }] },
+  { key: "total-goals", title: "Toplam Gol", selections: [{ label: "0–1", field: "totalGoals01" }, { label: "2–3", field: "totalGoals23" }, { label: "4–6", field: "totalGoals46" }, { label: "7+", field: "totalGoals7Plus" }] },
+  { key: "btts", title: "Karşılıklı Gol", selections: [{ label: "Var", field: "bttsYes" }, { label: "Yok", field: "bttsNo" }] },
+  { key: "goals-15", title: "1,5 Gol", selections: [{ label: "Alt", field: "goals15Under" }, { label: "Üst", field: "goals15Over" }] },
+  { key: "goals-35", title: "3,5 Gol", selections: [{ label: "Alt", field: "goals35Under" }, { label: "Üst", field: "goals35Over" }] },
+  { key: "half-time-goals-15", title: "İY 1,5 Gol", selections: [{ label: "Alt", field: "halfTimeGoals15Under" }, { label: "Üst", field: "halfTimeGoals15Over" }] }
+];
 
-function formatTime(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "—";
-
-  return new Intl.DateTimeFormat("tr-TR", {
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(date);
+function safeTeamName(value: string | null | undefined): string {
+  return value?.trim() || "Takım bilgisi yok";
+}
+function safeOdds(value: unknown): string {
+  return isValidOdds(value) ? value.toFixed(2).replace(".", ",") : "—";
+}
+function dateTimeKey(match: DisplayMatch): string {
+  const [day = "", month = "", year = ""] = (match.date || "").split(".");
+  return `${year}-${month}-${day}T${match.time || "00:00"}`;
+}
+function formatDate(value: string): string {
+  if (!value) return "Tarih bilgisi yok";
+  const [day, month, year] = value.split(".");
+  return day && month && year ? `${day} ${month} ${year}` : value;
+}
+function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
+  return uniqueOdds(match.sourceRecords.map((record) => record.fields?.[field]));
+}
+function statusLabel(status: number): string {
+  if (status > 0 && status < 4) return "Canlı";
+  if (status >= 4) return "Tamamlandı";
+  return "Başlamadı";
+}
+function matchKey(match: DisplayMatch): string {
+  return String(match.matchId);
 }
 
-function formatNumber(value: number | null | undefined): string {
-  return typeof value === "number" && Number.isFinite(value)
-    ? value.toFixed(2)
-    : "—";
+const MatchRow = memo(function MatchRow({
+  match, active, onSelect
+}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void }) {
+  const homeOdds = getOdds(match, "ms1");
+  const drawOdds = getOdds(match, "msX");
+  const awayOdds = getOdds(match, "ms2");
+  const hasMissingName = !match.homeName?.trim() || !match.awayName?.trim();
+  return (
+    <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
+      <div className="match-row-top">
+        <span>{match.time || "Saat yok"}</span>
+        <span className={`match-state ${match.status > 0 && match.status < 4 ? "live" : ""}`}>{statusLabel(match.status)}</span>
+      </div>
+      <div className="match-row-content">
+        <div className="teams-stack">
+          <div className="team-line"><span className="team-crest">{match.homeName?.trim()?.slice(0, 1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.homeName)}</strong></div>
+          <div className="team-line"><span className="team-crest">{match.awayName?.trim()?.slice(0, 1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.awayName)}</strong></div>
+        </div>
+        <div className="row-odds">
+          <span className="odds-caption">1 · X · 2</span>
+          <div><b>{homeOdds.map(safeOdds).join("/") || "—"}</b><b>{drawOdds.map(safeOdds).join("/") || "—"}</b><b>{awayOdds.map(safeOdds).join("/") || "—"}</b></div>
+          <small>Kaynak oranı</small>
+        </div>
+      </div>
+      {hasMissingName && <span className="missing-inline">Eksik takım verisi</span>}
+    </button>
+  );
+});
+
+function MarketCard({ market, match }: { market: MarketDefinition; match: DisplayMatch }) {
+  const available = market.selections.some((selection) => getOdds(match, selection.field).length > 0);
+  return (
+    <section className={`market-card ${available ? "" : "is-empty"}`}>
+      <div className="market-card-title">{market.title}<span>{available ? "Kaynak oranı" : "Veri yok"}</span></div>
+      <div className="market-values">
+        {market.selections.map(({ label, field }) => (
+          <div className="market-value" key={field}><span>{label}</span><strong>{getOdds(match, field).map(safeOdds).join(" / ") || "—"}</strong></div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
-function formatPercent(value: number | null | undefined): string {
-  return typeof value === "number" && Number.isFinite(value)
-    ? `%${value.toFixed(1)}`
-    : "—";
+function EmptyData({ title, description }: { title: string; description: string }) {
+  return <div className="data-empty"><span className="empty-symbol">⌁</span><strong>{title}</strong><p>{description}</p></div>;
 }
 
-function statusLabel(status: MatchStatus): string {
-  const labels: Record<MatchStatus, string> = {
-    scheduled: "Başlamadı",
-    live: "Canlı",
-    finished: "Tamamlandı",
-    postponed: "Ertelendi",
-    cancelled: "İptal"
+function Overview({ match }: { match: DisplayMatch }) {
+  const hasScore = match.status > 0 && match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
+    match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
+    String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
+  return (
+    <div className="detail-content">
+      <div className="overview-cards">
+        <article className="info-card">
+          <div className="card-heading"><span>MAÇ BİLGİSİ</span><small>Kaynakta bulunan alanlar</small></div>
+          <div className="info-grid">
+            <div><span>Lig kodu</span><strong>{match.fields.leagueCode || "—"}</strong></div>
+            <div><span>Başlangıç</span><strong>{match.time || "—"}</strong></div>
+            <div><span>Durum</span><strong>{statusLabel(match.status)}</strong></div>
+            <div><span>Skor</span><strong>{hasScore ? `${match.fields.scoreHome} – ${match.fields.scoreAway}` : "—"}</strong></div>
+            <div><span>Hakem</span><strong>Veri yok</strong></div>
+            <div><span>Hava durumu</span><strong>Veri yok</strong></div>
+          </div>
+        </article>
+        <article className="info-card form-card">
+          <div className="card-heading"><span>SON 5 MAÇ FORMU</span><small>Geçmiş maç verisi bulunmuyor</small></div>
+          <div className="form-columns">
+            <div><strong>{safeTeamName(match.homeName)}</strong><div className="form-squares">{[1,2,3,4,5].map((n) => <i key={n} className="unknown-form">—</i>)}</div></div>
+            <div><strong>{safeTeamName(match.awayName)}</strong><div className="form-squares">{[1,2,3,4,5].map((n) => <i key={n} className="unknown-form">—</i>)}</div></div>
+          </div>
+        </article>
+      </div>
+      <section className="info-card stat-card">
+        <div className="card-heading"><span>TAKIM İSTATİSTİKLERİ</span><small>Yalnızca doğrulanmış kaynak verisi</small></div>
+        {["Attığı gol", "Yediği gol", "2,5 üst", "Karşılıklı gol"].map((label) => (
+          <div className="stat-row" key={label}>
+            <span className="stat-team">{safeTeamName(match.homeName)}</span>
+            <div className="stat-track"><i className="stat-unknown" /></div>
+            <b>{label}</b>
+            <div className="stat-track"><i className="stat-unknown" /></div>
+            <span className="stat-team right">{safeTeamName(match.awayName)}</span>
+          </div>
+        ))}
+        <p className="data-footnote">Gol ve form istatistikleri kaynak bültende yer almadığı için grafik değerleri hesaplanmadı.</p>
+      </section>
+      <section className="info-card">
+        <div className="card-heading"><span>MEVCUT ORANLAR</span><small>Orijinal market alanlarından</small></div>
+        <div className="market-grid-detail">{markets.map((market) => <MarketCard key={market.key} market={market} match={match} />)}</div>
+      </section>
+    </div>
+  );
+}
+
+function OddsAnalysis({ match }: { match: DisplayMatch }) {
+  return (
+    <div className="detail-content">
+      <div className="section-intro"><div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi</h3></div><p>Açılış ve zaman serisi oranları kaynakta bulunmuyor. Bu görünüm yalnızca mevcut ham bültendeki değerleri listeler.</p></div>
+      <div className="market-grid-detail">{markets.map((market) => <MarketCard key={market.key} market={market} match={match} />)}</div>
+    </div>
+  );
+}
+
+function DetailPlaceholder({ tab }: { tab: MatchDetailTab }) {
+  const copy: Record<Exclude<MatchDetailTab, "overview" | "odds">, { title: string; body: string }> = {
+    squad: { title: "Kadro verisi bulunmuyor", body: "İlk 11, yedekler ve oyuncu istatistikleri mevcut 61 alanlı maç kaynağında yer almıyor." },
+    similar: { title: "Benzer maç verisi bulunmuyor", body: "Benzer karşılaşma karşılaştırması için geçmiş maç sonuçları ve takım istatistikleri gerekiyor." },
+    stands: { title: "Tribün verisi bulunmuyor", body: "Tribün yorumları veya taraftar etkileşim verisi bağlı değil." },
+    ai: { title: "AI tahmini oluşturulmadı", body: "Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." }
   };
-
-  return labels[status] ?? status;
+  const item = copy[tab as Exclude<MatchDetailTab, "overview" | "odds">];
+  return <div className="placeholder-wrap"><EmptyData title={item.title} description={item.body} /></div>;
 }
 
-function scoreLabel(match: Match): string {
-  if (
-    match.score?.home === null ||
-    match.score?.home === undefined ||
-    match.score?.away === null ||
-    match.score?.away === undefined
-  ) {
-    return "—";
-  }
-
-  return `${match.score.home} - ${match.score.away}`;
-}
-
-function movement(opening: number | null, closing: number | null): string {
-  if (
-    opening === null ||
-    closing === null ||
-    !Number.isFinite(opening) ||
-    !Number.isFinite(closing)
-  ) {
-    return "Veri yok";
-  }
-
-  const difference = closing - opening;
-  const sign = difference > 0 ? "+" : "";
-
-  return `${sign}${difference.toFixed(2)}`;
+function MatchDetail({ match, tab, onTabChange }: {
+  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void;
+}) {
+  const hasScore = match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
+    match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
+    String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
+  return (
+    <div className="detail-pane-inner">
+      <header className="detail-header">
+        <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
+        <div className="versus-header">
+          <div className="detail-team"><span className="detail-crest">{match.homeName?.trim()?.slice(0,1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
+          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${match.fields.scoreHome} : ${match.fields.scoreAway}` : "— : —"}</strong><small>{statusLabel(match.status)}</small></div>
+          <div className="detail-team"><span className="detail-crest">{match.awayName?.trim()?.slice(0,1)?.toLocaleUpperCase("tr-TR") || "?"}</span><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
+        </div>
+      </header>
+      <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
+        {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
+      </nav>
+      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder tab={tab} />}
+    </div>
+  );
 }
 
 function App() {
-  const [activePage, setActivePage] = useState<Page>("Bülten");
   const [bulletin, setBulletin] = useState<BulletinDocument | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [statusFilter, setStatusFilter] = useState<MatchStatus | "all">("all");
-  const [leagueFilter, setLeagueFilter] = useState("all");
-  const [teamFilter, setTeamFilter] = useState("");
+  const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [search, setSearch] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadBulletin() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const result = await OddsService.getBulletin();
-
-        if (!cancelled) {
-          setBulletin(result);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Bülten yüklenirken bilinmeyen bir hata oluştu."
-          );
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    void loadBulletin();
-
-    return () => {
-      cancelled = true;
-    };
+    let active = true;
+    OddsService.getBulletin().then((result) => {
+      if (active) setBulletin(result);
+    }).catch((reason: unknown) => {
+      if (active) setError(reason instanceof Error ? reason.message : "Bülten yüklenemedi.");
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
   }, []);
 
-  const matches = bulletin?.matches ?? [];
+  const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
+  const filteredMatches = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase("tr-TR");
+    return matches.filter((match) => {
+      const live = match.status > 0 && match.status < 4;
+      if (statusFilter === "live" && !live) return false;
+      // The feed has no verified "closing" flag; don't infer it from status codes.
+      if (statusFilter === "closing") return false;
+      if (!query) return true;
+      return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
+        .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
+    }).sort((a, b) => dateTimeKey(a).localeCompare(dateTimeKey(b)));
+  }, [matches, statusFilter, search]);
 
-  const leagues = useMemo(() => {
-    const unique = new Map<string, string>();
+  const leagueGroups = useMemo(() => {
+    const groups = new Map<string, DisplayMatch[]>();
+    for (const match of filteredMatches) {
+      const league = match.fields.leagueCode?.trim() || "Lig kodu bulunmuyor";
+      const group = groups.get(league);
+      if (group) group.push(match);
+      else groups.set(league, [match]);
+    }
+    return [...groups.entries()];
+  }, [filteredMatches]);
 
-    matches.forEach((match) => {
-      unique.set(match.league.code, match.league.name);
-    });
-
-    return Array.from(unique.entries()).sort((a, b) =>
-      a[1].localeCompare(b[1], "tr")
-    );
-  }, [matches]);
-
-  const filteredMatches = useMemo(
-    () =>
-      OddsService.filterMatches(matches, {
-        status: statusFilter,
-        league: leagueFilter,
-        team: teamFilter
-      }),
-    [matches, statusFilter, leagueFilter, teamFilter]
+  const selectedMatch = useMemo(
+    () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
+    [matches, selectedId]
   );
+  const liveCount = useMemo(() => matches.filter((match) => match.status > 0 && match.status < 4).length, [matches]);
+  const visibleCount = filteredMatches.length;
+  const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
 
-  const liveCount = matches.filter((match) => match.status === "live").length;
+  useEffect(() => {
+    if (selectedId && !matches.some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
+  }, [matches, selectedId]);
 
-  function renderEmpty(message: string) {
-    return (
-      <div className="empty-state">
-        <div className="empty-icon">◎</div>
-        <h3>{message}</h3>
-        <p>
-          Maçkolik JSON dosyasında bu ekran için kullanılabilir veri bulunmuyor.
-        </p>
-      </div>
-    );
+  function selectMatch(id: string) {
+    setSelectedId(id);
+    setActiveTab("overview");
+    setActiveNav("matches");
   }
-
-  function renderBulletin() {
-    return (
-      <>
-        <div className="filter-bar">
-          <select
-            value={statusFilter}
-            onChange={(event) =>
-              setStatusFilter(event.target.value as MatchStatus | "all")
-            }
-          >
-            <option value="all">Tüm durumlar</option>
-            <option value="scheduled">Başlamadı</option>
-            <option value="live">Canlı</option>
-            <option value="finished">Tamamlandı</option>
-          </select>
-
-          <select
-            value={leagueFilter}
-            onChange={(event) => setLeagueFilter(event.target.value)}
-          >
-            <option value="all">Tüm ligler</option>
-            {leagues.map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </select>
-
-          <input
-            value={teamFilter}
-            onChange={(event) => setTeamFilter(event.target.value)}
-            placeholder="Takım ara..."
-          />
-        </div>
-
-        {filteredMatches.length === 0 ? (
-          renderEmpty("Filtrelere uygun maç bulunamadı")
-        ) : (
-          <div className="match-list">
-            {filteredMatches.map((match) => (
-              <article className="match-row" key={match.id}>
-                <div className="match-league">
-                  <span>{match.league.country ?? "—"}</span>
-                  <strong>{match.league.name}</strong>
-                </div>
-
-                <div className="match-time">
-                  {formatTime(match.kickoff)}
-                </div>
-
-                <div className="match-teams">
-                  <strong>{match.home_team}</strong>
-                  <span>{match.away_team}</span>
-                </div>
-
-                <div className="match-result">
-                  <strong>{scoreLabel(match)}</strong>
-                  {match.status === "live" && match.minute !== null ? (
-                    <span>{match.minute}'</span>
-                  ) : (
-                    <span>{statusLabel(match.status)}</span>
-                  )}
-                </div>
-
-                <span className={`match-status ${match.status}`}>
-                  {statusLabel(match.status)}
-                </span>
-              </article>
-            ))}
-          </div>
-        )}
-      </>
-    );
-  }
-
-  function renderOdds() {
-    if (matches.length === 0) {
-      return renderEmpty("Oran verisi bulunamadı");
-    }
-
-    return (
-      <div className="table-scroll">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Karşılaşma</th>
-              <th>Sonuç</th>
-              <th>Açılış</th>
-              <th>Kapanış</th>
-              <th>Değişim</th>
-              <th>2.5 Üst Açılış</th>
-              <th>2.5 Üst Kapanış</th>
-              <th>KG Var Açılış</th>
-              <th>KG Var Kapanış</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match) => {
-              const ms = match.odds?.ms;
-              const ou = match.odds?.ou_2_5;
-              const kg = match.odds?.kg;
-
-              return (
-                <tr key={match.id}>
-                  <td>
-                    <strong>{match.home_team}</strong>
-                    <span className="table-subtitle">{match.away_team}</span>
-                  </td>
-                  <td>1X2</td>
-                  <td>
-                    {formatNumber(ms?.opening?.["1"])} /{" "}
-                    {formatNumber(ms?.opening?.X)} /{" "}
-                    {formatNumber(ms?.opening?.["2"])}
-                  </td>
-                  <td>
-                    {formatNumber(ms?.closing?.["1"])} /{" "}
-                    {formatNumber(ms?.closing?.X)} /{" "}
-                    {formatNumber(ms?.closing?.["2"])}
-                  </td>
-                  <td>
-                    1: {movement(ms?.opening?.["1"] ?? null, ms?.closing?.["1"] ?? null)}
-                    <br />
-                    X: {movement(ms?.opening?.X ?? null, ms?.closing?.X ?? null)}
-                    <br />
-                    2: {movement(ms?.opening?.["2"] ?? null, ms?.closing?.["2"] ?? null)}
-                  </td>
-                  <td>{formatNumber(ou?.opening?.over)}</td>
-                  <td>{formatNumber(ou?.closing?.over)}</td>
-                  <td>{formatNumber(kg?.opening?.yes)}</td>
-                  <td>{formatNumber(kg?.closing?.yes)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function renderStatistics() {
-    const matchesWithStats = matches.filter((match) => match.stats !== null);
-
-    if (matchesWithStats.length === 0) {
-      return renderEmpty("İstatistik verisi bulunamadı");
-    }
-
-    return (
-      <div className="stats-match-list">
-        {matchesWithStats.map((match) => {
-          const stats = match.stats;
-
-          if (!stats) return null;
-
-          const distribution = stats.similar_odds_distribution;
-
-          return (
-            <article className="stats-match-card" key={match.id}>
-              <div className="stats-match-heading">
-                <div>
-                  <strong>
-                    {match.home_team} - {match.away_team}
-                  </strong>
-                  <span>{match.league.name}</span>
-                </div>
-                <span>Örneklem: {stats.sample_size ?? "—"}</span>
-              </div>
-
-              <div className="stats-values">
-                <div>
-                  <span>Benzer oran 1</span>
-                  <strong>{formatPercent(distribution?.["1"])}</strong>
-                </div>
-                <div>
-                  <span>Benzer oran X</span>
-                  <strong>{formatPercent(distribution?.X)}</strong>
-                </div>
-                <div>
-                  <span>Benzer oran 2</span>
-                  <strong>{formatPercent(distribution?.["2"])}</strong>
-                </div>
-                <div>
-                  <span>2.5 Üst</span>
-                  <strong>{formatPercent(stats.over_2_5_rate)}</strong>
-                </div>
-                <div>
-                  <span>Karşılıklı gol</span>
-                  <strong>{formatPercent(stats.btts_rate)}</strong>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    );
-  }
-
-  const pageDescription: Record<Page, string> = {
-    Bülten: "Maçkolik maç bülteni ve karşılaşma durumları.",
-    "Oran Analizi": "Açılış ve kapanış oranlarının karşılaştırması.",
-    İstatistikler: "Maç verilerinden gelen istatistik dağılımları."
-  };
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-icon">O</div>
-          <div>
-            <div className="brand-name">OranTahmin</div>
-            <div className="brand-caption">MAÇ ANALİZ PLATFORMU</div>
-          </div>
+    <div className="dashboard-shell">
+      <aside className="icon-rail">
+        <div className="rail-brand">O</div>
+        <div className="rail-nav">
+          {navItems.map((item) => <button type="button" key={item.id} title={item.label} aria-label={item.label} className={activeNav === item.id ? "active" : ""} onClick={() => setActiveNav(item.id)}><span>{item.icon}</span></button>)}
         </div>
-
-        <div className="nav-heading">MENÜ</div>
-
-        <nav className="navigation">
-          {pages.map((page) => (
-            <button
-              key={page}
-              className={`nav-item ${activePage === page ? "active" : ""}`}
-              onClick={() => setActivePage(page)}
-            >
-              <span className="nav-indicator" />
-              {page}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-bottom">
-          <div className="connection-indicator">
-            <span className="status-dot" />
-            <span>{error ? "Veri alınamadı" : "Maçkolik JSON"}</span>
-          </div>
-          <div className="version">OranTahmin v1.0</div>
-        </div>
+        <div className="rail-bottom"><span className={error ? "connection-indicator error" : "connection-indicator"} /><small>0 TL</small></div>
       </aside>
 
-      <main className="main-content">
-        <header className="topbar">
-          <div className="breadcrumb">
-            Platform <span>/</span> {activePage}
+      <aside className="match-list-pane">
+        <div className="list-header">
+          <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "statistics" ? "İstatistikler" : "Ayarlar"}</h1></div><span className="count-pill">{matches.length}</span></div>
+          <div className="status-filters">
+            <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{matches.length}</b></button>
+            <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
+            <button className={statusFilter === "closing" ? "active" : ""} onClick={() => setStatusFilter("closing")}>Kapanış</button>
           </div>
-          <div className="topbar-label">ANALİZ PANELİ</div>
-        </header>
+          <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Takım, lig veya maç ara..." /><kbd>/</kbd></label>
+          <div className="list-caption"><span>{statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{sourceCount} kayıt</span></div>
+        </div>
 
-        <section className="page-content">
-          <div className="page-heading">
-            <div>
-              <div className="eyebrow">ORANTAHMİN PLATFORMU</div>
-              <h1>{activePage}</h1>
-              <p>{pageDescription[activePage]}</p>
-            </div>
-            <div className="date-label">
-              <span className="status-dot" />
-              {loading ? "Yükleniyor" : error ? "Veri bekleniyor" : "JSON yüklendi"}
-            </div>
-          </div>
+        <div className="match-list-scroll">
+          {loading ? <div className="list-message">Bülten yükleniyor…</div>
+            : error ? <div className="list-message error-text">{error}</div>
+            : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "closing" ? "Kaynakta kapanış durumu alanı bulunmuyor." : "Eşleşen maç bulunamadı."}</div>
+            : leagueGroups.map(([league, group]) => (
+              <section className="league-group" key={league}>
+                <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
+                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} />)}
+              </section>
+            ))}
+        </div>
+        <div className="list-footer"><span><i /> Yerel veri bağlantısı</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
+      </aside>
 
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-label">TOPLAM MAÇ</div>
-              <div className="stat-value">{loading ? "…" : matches.length}</div>
-              <div className="stat-description">Bülten kayıtları</div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-label">CANLI MAÇ</div>
-              <div className="stat-value">{loading ? "…" : liveCount}</div>
-              <div className="stat-description">Canlı karşılaşmalar</div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-label">İLK AÇILIŞ ORANI</div>
-              <div className="stat-value">
-                {matches.filter((match) => match.odds?.ms?.opening !== null && match.odds?.ms?.opening !== undefined).length}
-              </div>
-              <div className="stat-description">1X2 açılış verisi bulunan maç</div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-label">SON GÜNCELLEME</div>
-              <div className="stat-value stat-date">
-                {bulletin?.meta.fetched_at
-                  ? formatTime(bulletin.meta.fetched_at)
-                  : "—"}
-              </div>
-              <div className="stat-description">
-                {bulletin?.meta.bulletin_date ?? "Veri yok"}
-              </div>
-            </div>
-          </div>
-
-          <section className="content-panel">
-            <div className="panel-heading">
-              <div>
-                <h2>{activePage}</h2>
-                <p>{pageDescription[activePage]}</p>
-              </div>
-              <span className="panel-tag">
-                {error ? "VERİ HATASI" : "MAÇKOLİK JSON"}
-              </span>
-            </div>
-
-            {loading ? (
-              renderEmpty("Bülten yükleniyor")
-            ) : error ? (
-              <div className="empty-state">
-                <div className="empty-icon">!</div>
-                <h3>Veri dosyası okunamadı</h3>
-                <p>{error}</p>
-                <span className="empty-note">
-                  Beklenen konum: public/data/mackolik-bulletin.json
-                </span>
-              </div>
-            ) : !bulletin ? (
-              renderEmpty("Bülten bulunamadı")
-            ) : activePage === "Bülten" ? (
-              renderBulletin()
-            ) : activePage === "Oran Analizi" ? (
-              renderOdds()
-            ) : (
-              renderStatistics()
-            )}
-          </section>
-
-          <footer className="page-footer">
-            <span>© 2026 OranTahmin</span>
-            <span>
-              Kaynak: {bulletin?.meta.source ?? "—"}
-              {" · "}
-              {bulletin?.meta.version ?? "—"}
-            </span>
-          </footer>
-        </section>
+      <main className="detail-pane">
+        {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
+          : error ? <EmptyData title="Veri yüklenemedi" description={error} />
+          : activeNav !== "matches" ? <EmptyData title={activeNav === "statistics" ? "Genel istatistik görünümü" : "Görünüm ayarları"} description={activeNav === "statistics" ? "Bülten market dolulukları ve doğrulanmamış kayıtlar sonraki aşamada bu alana taşınabilir. Kaynak dışı istatistik gösterilmez." : "Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON."} />
+          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} />
+          : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
       </main>
     </div>
   );

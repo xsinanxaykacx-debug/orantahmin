@@ -1,78 +1,82 @@
-import type {
-  BulletinDocument,
-  Match,
-  MatchFilters
-} from "../types/match";
-
-type BulletinPayload = BulletinDocument | BulletinDocument[];
+import type { BulletinDocument, BulletinMatch, BulletinWarning } from "../types/match";
 
 const DATA_URL = "/data/mackolik-bulletin.json";
 
-function normalizeBulletin(payload: BulletinPayload): BulletinDocument {
-  const bulletin = Array.isArray(payload) ? payload[0] : payload;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
-  if (
-    !bulletin ||
-    !bulletin.meta ||
-    !Array.isArray(bulletin.matches)
-  ) {
-    throw new Error("Maçkolik JSON formatı geçersiz.");
-  }
+function isWarning(value: unknown): value is BulletinWarning {
+  return isRecord(value) &&
+    typeof value.code === "string" &&
+    typeof value.message === "string" &&
+    (typeof value.matchId === "string" || typeof value.matchId === "number") &&
+    typeof value.sourceGroup === "number" &&
+    typeof value.sourceIndex === "number";
+}
 
-  return bulletin;
+function isMatch(value: unknown): value is BulletinMatch {
+  if (!isRecord(value) || !isRecord(value.fields) || !isRecord(value.source)) return false;
+  return (
+    (typeof value.matchId === "string" || typeof value.matchId === "number") &&
+    typeof value.date === "string" &&
+    typeof value.time === "string" &&
+    typeof value.status === "number" &&
+    (typeof value.homeName === "string" || value.homeName === null) &&
+    (typeof value.awayName === "string" || value.awayName === null) &&
+    Array.isArray(value.raw) &&
+    Number.isInteger(value.source.groupIndex) &&
+    Number.isInteger(value.source.matchIndex)
+  );
+}
+
+function isBulletin(value: unknown): value is BulletinDocument {
+  if (!isRecord(value) || !isRecord(value.meta) || !isRecord(value.diagnostics)) return false;
+  const meta = value.meta;
+  const diagnostics = value.diagnostics;
+  return (
+    typeof meta.sourceFile === "string" &&
+    typeof meta.generatedAt === "string" &&
+    typeof meta.schemaVersion === "string" &&
+    typeof meta.sourceFieldCount === "number" &&
+    typeof meta.sourceMatchCount === "number" &&
+    typeof meta.includedMatchCount === "number" &&
+    typeof meta.rejectedMatchCount === "number" &&
+    typeof meta.warningCount === "number" &&
+    Array.isArray(value.matches) &&
+    value.matches.every(isMatch) &&
+    Array.isArray(diagnostics.warnings) &&
+    diagnostics.warnings.every(isWarning)
+  );
 }
 
 export const OddsService = {
   async getBulletin(): Promise<BulletinDocument> {
-    const response = await fetch(DATA_URL, {
-      cache: "no-store"
-    });
+    const response = await fetch(DATA_URL, { cache: "no-store" });
 
     if (!response.ok) {
       throw new Error(
         response.status === 404
-          ? "Maçkolik bülten dosyası henüz bulunamadı."
+          ? "Bülten dosyası bulunamadı: public/data/mackolik-bulletin.json"
           : `Bülten yüklenemedi: HTTP ${response.status}`
       );
     }
 
-    const payload = (await response.json()) as BulletinPayload;
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error("Bülten JSON biçiminde okunamadı.");
+    }
 
-    return normalizeBulletin(payload);
-  },
+    if (!isBulletin(payload)) {
+      throw new Error("Bülten şeması beklenen mackolik-61-v1 formatında değil.");
+    }
 
-  filterMatches(
-    matches: Match[],
-    filters: MatchFilters
-  ): Match[] {
-    const teamQuery = filters.team?.trim().toLocaleLowerCase("tr-TR");
+    if (payload.meta.sourceFieldCount !== 61 || payload.matches.some((match) => match.raw.length !== 61)) {
+      throw new Error("Kaynak satır uzunluğu 61 alanlı şema ile uyuşmuyor.");
+    }
 
-    return matches.filter((match) => {
-      if (
-        filters.status &&
-        filters.status !== "all" &&
-        match.status !== filters.status
-      ) {
-        return false;
-      }
-
-      if (
-        filters.league &&
-        filters.league !== "all" &&
-        match.league.code !== filters.league
-      ) {
-        return false;
-      }
-
-      if (
-        teamQuery &&
-        !match.home_team.toLocaleLowerCase("tr-TR").includes(teamQuery) &&
-        !match.away_team.toLocaleLowerCase("tr-TR").includes(teamQuery)
-      ) {
-        return false;
-      }
-
-      return true;
-    });
+    return payload;
   }
 };
