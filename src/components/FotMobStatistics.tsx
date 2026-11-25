@@ -21,7 +21,9 @@ export function FotMobStatistics() {
   const [leagues, setLeagues] = useState<LeagueOption[]>([]);
   const [leagueId, setLeagueId] = useState(71);
   const [season, setSeason] = useState("");
+  const [seasonOptions, setSeasonOptions] = useState<string[]>([]);
   const [round, setRound] = useState("all");
+  const [roundOptions, setRoundOptions] = useState<string[]>([]);
   const [data, setData] = useState<Breakdown | null>(null);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -62,6 +64,8 @@ export function FotMobStatistics() {
       })
       .then(payload => {
         setData(payload);
+        setSeasonOptions(payload.seasons || []);
+        setRoundOptions(payload.rounds || []);
         if (!season && payload.season) setSeason(payload.season);
       })
       .catch(reason => {
@@ -87,14 +91,14 @@ export function FotMobStatistics() {
     <section className="stats-controls info-card stats-league-controls">
       <label className="stats-control-group stats-league-select">
         <span className="stats-control-label">Lig</span>
-        <select value={leagueId} onChange={event => { setLeagueId(Number(event.target.value)); setSeason(""); setRound("all"); }} disabled={catalogLoading}>
+        <select value={leagueId} onChange={event => { setLeagueId(Number(event.target.value)); setSeason(""); setSeasonOptions([]); setRound("all"); setRoundOptions([]); }} disabled={catalogLoading}>
           {leagues.map(item => <option key={item.id} value={item.id}>{item.name} · {item.country}</option>)}
         </select>
       </label>
       <label className="stats-control-group">
         <span className="stats-control-label">Sezon</span>
         <select value={season || data?.season || ""} onChange={event => { setSeason(event.target.value); setRound("all"); }} disabled={!data && loading}>
-          {(data?.seasons?.length ? data.seasons : [data?.season || ""]).filter(Boolean).map(item => <option key={item} value={item}>{item.replace("/", "/")}</option>)}
+          {seasonOptions.map(item => <option key={item} value={item}>{item}</option>)}
         </select>
       </label>
       <label className="stats-control-group">
