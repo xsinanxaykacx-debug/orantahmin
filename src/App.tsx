@@ -5,16 +5,17 @@ import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils"
 import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
+import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "closing";
 type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
-type NavItem = { id: "matches" | "statistics" | "settings"; label: string; icon: string };
+type NavItem = { id: "matches" | "leagues" | "settings"; label: string; icon: string };
 
 const navItems: NavItem[] = [
-  { id: "matches", label: "Maçlar", icon: "▦" },
-  { id: "statistics", label: "İstatistikler", icon: "▥" },
+  { id: "matches", label: "Maç Merkezi", icon: "▦" },
+  { id: "leagues", label: "Ligler", icon: "▤" },
   { id: "settings", label: "Ayarlar", icon: "⚙" }
 ];
 const detailTabs: { id: MatchDetailTab; label: string }[] = [
@@ -179,6 +180,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
+  const [leagueDirectory, setLeagueDirectory] = useState<LeagueSummary[]>([]);
+  const [leagueDirectoryLoading, setLeagueDirectoryLoading] = useState(false);
+  const [leagueDirectoryError, setLeagueDirectoryError] = useState<string | null>(null);
+  const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -195,6 +200,28 @@ function App() {
     });
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    if (activeNav !== "leagues" || leagueDirectory.length > 0 || leagueDirectoryLoading) return;
+    let active = true;
+    setLeagueDirectoryLoading(true);
+    setLeagueDirectoryError(null);
+    fetch("/api/fotmob-leagues")
+      .then(async response => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "Lig listesi alınamadı.");
+        return payload as { leagues?: LeagueSummary[] };
+      })
+      .then(payload => {
+        if (!active) return;
+        const leagues = payload.leagues || [];
+        setLeagueDirectory(leagues);
+        setSelectedLeagueId(current => current && leagues.some(league => league.id === current) ? current : leagues[0]?.id ?? null);
+      })
+      .catch(reason => { if (active) setLeagueDirectoryError(reason instanceof Error ? reason.message : "Lig listesi alınamadı."); })
+      .finally(() => { if (active) setLeagueDirectoryLoading(false); });
+    return () => { active = false; };
+  }, [activeNav, leagueDirectory.length, leagueDirectoryLoading]);
 
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
   const filteredMatches = useMemo(() => {
@@ -225,6 +252,15 @@ function App() {
     () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
     [matches, selectedId]
   );
+  const filteredLeagues = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase("tr-TR");
+    return leagueDirectory.filter(league => !query || [league.name, league.country].some(value => String(value || "").toLocaleLowerCase("tr-TR").includes(query)));
+  }, [leagueDirectory, search]);
+  const selectedLeague = useMemo(
+    () => leagueDirectory.find(league => league.id === selectedLeagueId) ?? null,
+    [leagueDirectory, selectedLeagueId]
+  );
+
   const liveCount = useMemo(() => matches.filter((match) => match.status > 0 && match.status < 4).length, [matches]);
   const visibleCount = filteredMatches.length;
   const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
@@ -239,6 +275,11 @@ function App() {
     setActiveNav("matches");
   }
 
+  function selectLeague(id: number) {
+    setSelectedLeagueId(id);
+    setActiveNav("leagues");
+  }
+
   return (
     <div className="dashboard-shell">
       <aside className="icon-rail">
@@ -251,17 +292,26 @@ function App() {
 
       <aside className="match-list-pane">
         <div className="list-header">
-          <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "statistics" ? "İstatistikler" : "Ayarlar"}</h1></div><span className="count-pill">{matches.length}</span></div>
-          <div className="status-filters">
+          <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "leagues" ? "Ligler" : "Ayarlar"}</h1></div><span className="count-pill">{activeNav === "leagues" ? leagueDirectory.length : matches.length}</span></div>
+          {activeNav === "matches" && <div className="status-filters">
             <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{matches.length}</b></button>
             <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
             <button className={statusFilter === "closing" ? "active" : ""} onClick={() => setStatusFilter("closing")}>Kapanış</button>
-          </div>
-          <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Takım, lig veya maç ara..." /><kbd>/</kbd></label>
-          <div className="list-caption"><span>{statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{sourceCount} kayıt</span></div>
+          </div>}
+          <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "Günlük maç bültenindeki ligler" : statusFilter === "closing" ? "Kapanış durumu kaynakta yok" : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0) + " maç" : sourceCount + " kayıt"}</span></div>
         </div>
 
-        <div className="match-list-scroll">
+        {activeNav === "leagues" ? <div className="league-directory-scroll">
+          {leagueDirectoryLoading ? <div className="league-directory-empty">Günlük maçlardaki ligler yükleniyor…</div>
+            : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
+            : filteredLeagues.length === 0 ? <div className="league-directory-empty">Bugünkü maç bülteninde eşleşmiş lig bulunamadı.</div>
+            : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
+              <span className="league-directory-logo">{league.name.slice(0, 1).toLocaleUpperCase("tr-TR")}<img src={league.logo} alt="" onError={event => { event.currentTarget.style.display = "none"; }} /></span>
+              <span className="league-directory-name"><b>{league.name}</b><small>{league.country || "Uluslararası"}</small></span>
+              <span className="league-directory-count">{league.matchCount}</span>
+            </button>)}
+        </div> : activeNav === "matches" ? <div className="match-list-scroll">
           {loading ? <div className="list-message">Bülten yükleniyor…</div>
             : error ? <div className="list-message error-text">{error}</div>
             : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "closing" ? "Kaynakta kapanış durumu alanı bulunmuyor." : "Eşleşen maç bulunamadı."}</div>
@@ -271,14 +321,15 @@ function App() {
                 {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} />)}
               </section>
             ))}
-        </div>
-        <div className="list-footer"><span><i /> Yerel veri bağlantısı</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
+        </div> : <div className="league-directory-empty">Ayarlar</div>}
+        <div className="list-footer"><span><i /> {activeNav === "leagues" ? "FotMob lig verisi" : "Yerel veri bağlantısı"}</span><span>{bulletin?.meta.schemaVersion ?? "—"}</span></div>
       </aside>
 
       <main className="detail-pane">
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
-          : activeNav !== "matches" ? <EmptyData title={activeNav === "statistics" ? "Genel istatistik görünümü" : "Görünüm ayarları"} description={activeNav === "statistics" ? "Bülten market dolulukları ve doğrulanmamış kayıtlar sonraki aşamada bu alana taşınabilir. Kaynak dışı istatistik gösterilmez." : "Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON."} />
+          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="Günlük maç bültenindeki ligler FotMob ile eşleştiriliyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="Bugünkü bültende FotMob ile eşleşmiş lig verisi bulunamadı." />
+          : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON." />
           : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
       </main>
