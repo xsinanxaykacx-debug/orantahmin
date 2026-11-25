@@ -6,6 +6,7 @@ import "./index.css";
 import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
+import { settleMarketOutcome, type MatchResult } from "./utils/marketSettlement";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "finished";
@@ -178,24 +179,36 @@ type MackolikMarketsResponse = {
   fetchedAt?: string;
 };
 
-function MackolikMarketCard({ market }: { market: MackolikMarket }) {
+function MackolikMarketCard({ market, result }: { market: MackolikMarket; result: MatchResult | null }) {
   const available = market.outcomes.some(outcome => outcome.odd !== null);
   return (
     <section className={`market-card ${available ? "" : "is-empty"}`}>
       <div className="market-card-title">{market.name}<span>{available ? `Mackolik · ${market.code}` : "Oran yok"}</span></div>
       <div className="market-values">
         {market.outcomes.map((outcome, index) => (
-          <div className="market-value" key={`${market.code}-${index}`}>
-            <span>{outcome.name}</span>
-            <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
-          </div>
+          {(() => {
+            const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
+            return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : ""}`} key={`${market.code}-${index}`}>
+              <span>{outcome.name}</span>
+              <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
+              {settlement !== "unknown" && <em className="settlement-label">{settlement === "won" ? "Kazandı" : "Kaybetti"}</em>}
+            </div>;
+          })()}
         ))}
       </div>
     </section>
   );
 }
 
-function OddsAnalysis({ match }: { match: DisplayMatch }) {
+function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?: FotMobMatchState }) {
+  const finished = isFinishedMatch(match.status, fotmobStatus);
+  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
+  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
+  const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
+  const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
+    ? { home: parsedHome, away: parsedAway, finished: true }
+    : null;
   const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
   const [marketError, setMarketError] = useState<string | null>(null);
@@ -234,13 +247,13 @@ function OddsAnalysis({ match }: { match: DisplayMatch }) {
     <div className="detail-content">
       <div className="section-intro">
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi</h3></div>
-        <p>Mackolik maç detayındaki marketler dinamik okunur. Açılış ve geçmiş oran kayıtları kaynakta henüz doğrulanmadı.</p>
+        <p>Biten maçlarda doğrulanabilen kazanan marketler yeşil, kaybedenler kırmızı gösterilir. İlk yarı ve özel istatistik marketleri ilgili sonuç verisi yoksa renklendirilmez.</p>
       </div>
       {loadingMarkets ? (
         <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
       ) : sourceMarkets.length > 0 ? (
         <div className="market-grid-detail">
-          {sourceMarkets.map(market => <MackolikMarketCard key={market.code} market={market} />)}
+          {sourceMarkets.map(market => <MackolikMarketCard key={market.code} market={market} result={result} />)}
         </div>
       ) : (
         <>
@@ -276,7 +289,7 @@ function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
+      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} fotmobStatus={fotmobStatus} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
     </div>
   );
 }
