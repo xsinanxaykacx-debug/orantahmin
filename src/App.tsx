@@ -261,7 +261,9 @@ function App() {
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
         .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
-    }).sort((a, b) => dateTimeKey(a).localeCompare(dateTimeKey(b)));
+    }).sort((a, b) => statusFilter === "finished"
+      ? dateTimeKey(b).localeCompare(dateTimeKey(a))
+      : dateTimeKey(a).localeCompare(dateTimeKey(b)));
   }, [matches, statusFilter, search, teamLogosByMatch]);
 
   const leagueGroups = useMemo(() => {
