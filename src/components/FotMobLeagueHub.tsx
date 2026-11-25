@@ -123,10 +123,9 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
     return seasonFixtures.filter((match: any) => match.status?.finished)
       .sort((a: any, b: any) => String(b.status?.utcTime || "").localeCompare(String(a.status?.utcTime || ""))).slice(0, 10);
   }, [detail, league.matches]);
-  const topScorers = useMemo(() => {
+  const playerLeaderboards = useMemo(() => {
     const players = detail?.stats?.players || [];
-    const scorer = players.find((item: any) => /goal|gol|scorer/i.test(String(item.header || item.name || ""))) || players[0];
-    return (scorer?.topThree || scorer?.top || []).slice(0, 3);
+    return players.filter((item: any) => Array.isArray(item.top) && item.top.length);
   }, [detail]);
 
   return <div className="league-hub">
@@ -149,8 +148,16 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
         </section>
         <section className="info-card league-panel league-scorers-panel">
           <div className="card-heading"><span>GOL KRALLIĞI</span><small>FotMob</small></div>
-          {topScorers.length ? <div className="league-scorers">{topScorers.map((player: any, index: number) => <div key={player.id || player.name || index}><span>{index + 1}</span><b>{player.name || player.participant?.name || "Oyuncu"}{player.teamId ? <TeamLogo id={player.teamId} name={player.teamName || ""} /> : null}</b><strong>{player.value ?? player.statValue ?? "—"}</strong></div>)}</div>
-            : <div className="league-empty">Gol krallığı verisi bu lig yanıtında bulunmuyor.</div>}
+          {playerLeaderboards.length ? <div className="league-scorer-groups">{playerLeaderboards.map((group: any) => <section className="league-scorer-group" key={group.stat}>
+            <h4>{group.title}</h4>
+            <div className="league-scorers">{group.top.map((player: any, index: number) => <div key={player.id || player.name || index}>
+              <span>{player.rank || index + 1}</span>
+              <b><span className="league-scorer-player"><img src={`https://images.fotmob.com/image_resources/playerimages/${player.id}.png`} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />{player.name}</span>
+                {player.teamId ? <span className="league-scorer-team"><TeamLogo id={player.teamId} name={player.teamName || ""} />{player.teamName}</span> : null}</b>
+              <strong>{player.value}</strong>
+            </div>)}</div>
+          </section>)}</div>
+            : <div className="league-empty">Oyuncu istatistikleri bu sezon için alınamadı.</div>}
         </section>
       </div>}
     <p className="league-source-note">Kaynak: FotMob. Yalnızca kaynakta bulunan lig tablosu ve fikstür bilgileri gösterilir.</p>
