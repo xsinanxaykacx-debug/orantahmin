@@ -1,4 +1,14 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+type VercelRequest = {
+  method?: string;
+  query: Record<string, string | string[] | undefined>;
+};
+
+type VercelResponse = {
+  setHeader(name: string, value: string): void;
+  status(code: number): VercelResponse;
+  json(body: unknown): VercelResponse;
+  end(): void;
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
@@ -11,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const rawId = req.query.eventId;
   const eventId = Array.isArray(rawId) ? rawId[0] : rawId;
-  if (!eventId || !/^\\d{5,12}$/.test(eventId)) {
+  if (!eventId || !/^\d{5,12}$/.test(eventId)) {
     return res.status(400).json({ error: "Geçerli bir Sofascore eventId gerekli." });
   }
 
