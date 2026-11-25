@@ -192,9 +192,9 @@ button { cursor: pointer; }
 .team-crest img, .detail-crest img { width: 100%; height: 100%; padding: 3px; object-fit: contain; }
 .detail-crest img { padding: 7px; }
 
-.market-value.is-winner { border: 1px solid #26734d; background: #153b2d; }
-.market-value.is-winner span, .market-value.is-winner strong { color: #a9e8c5; }
-.market-value.is-loser { border: 1px solid #743c43; background: #3b2027; }
-.market-value.is-loser span, .market-value.is-loser strong { color: #efb1b7; }
-.settlement-label { flex: 0 0 auto; color: #a9e8c5; font-size: 8px; font-style: normal; font-weight: 800; }
-.market-value.is-loser .settlement-label { color: #efb1b7; }
+.market-value.is-winner { border: 1px solid #00ff44; background: #00ff44; }
+.market-value.is-winner span, .market-value.is-winner strong { color: #07140a; }
+.market-value.is-loser { border: 1px solid #f70707; background: #f70707; }
+.market-value.is-loser span, .market-value.is-loser strong { color: #ffffff; }
+.settlement-label { flex: 0 0 auto; color: #737373; font-size: 8px; font-style: normal; font-weight: 800; }
+.market-value.is-loser .settlement-label { color: #ffffff; }
