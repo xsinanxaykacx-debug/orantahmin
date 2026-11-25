@@ -216,7 +216,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     : null;
 
   useEffect(() => {
-    if (!finished || !fotmobStatus?.fotmobMatchId) {
+    if (!finished || !Number.isFinite(parsedHome) || !Number.isFinite(parsedAway)) {
       setFirstHalfScore(null);
       setFirstHalfUnavailable(false);
       return;
@@ -224,7 +224,15 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     const controller = new AbortController();
     setFirstHalfScore(null);
     setFirstHalfUnavailable(false);
-    fetch(`/api/fotmob-match-periods?matchId=${fotmobStatus.fotmobMatchId}&date=${encodeURIComponent((match.date || "").split(".").reverse().join("-"))}&home=${encodeURIComponent(match.homeName || "")}&away=${encodeURIComponent(match.awayName || "")}`, { cache: "force-cache", signal: controller.signal })
+    const params = new URLSearchParams({
+      date: (match.date || "").split(".").reverse().join("-"),
+      home: match.homeName || "",
+      away: match.awayName || "",
+      finalHome: String(parsedHome),
+      finalAway: String(parsedAway)
+    });
+    if (fotmobStatus?.fotmobMatchId) params.set("matchId", String(fotmobStatus.fotmobMatchId));
+    fetch(`/api/fotmob-match-periods?${params.toString()}`, { cache: "force-cache", signal: controller.signal })
       .then(async response => {
         const payload = await response.json() as { available?: boolean; firstHalfHomeScore?: number; firstHalfAwayScore?: number; error?: string };
         if (!response.ok) throw new Error(payload.error || "İlk yarı skoru alınamadı.");
@@ -236,7 +244,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
         if (!(reason instanceof DOMException && reason.name === "AbortError")) setFirstHalfUnavailable(true);
       });
     return () => controller.abort();
-  }, [finished, fotmobStatus?.fotmobMatchId]);
+  }, [finished, fotmobStatus?.fotmobMatchId, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
   const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
   const [marketError, setMarketError] = useState<string | null>(null);
