@@ -310,7 +310,8 @@ function App() {
           <div className="summary-tile"><span>Kaynak kayıt / benzersiz maç</span><strong>{bulletin.meta.sourceMatchCount} / {matches.length}</strong></div>
           <div className="summary-tile"><span>Bültene alınan</span><strong>{bulletin.meta.includedMatchCount}</strong></div>
           <div className="summary-tile"><span>Reddedilen</span><strong>{bulletin.meta.rejectedMatchCount}</strong></div>
-          <div className="summary-tile"><span>Uyarı sayısı</span><strong>{bulletin.meta.warningCount}</strong></div>\n          <div className="summary-tile"><span>Doğrulanmamış handikap</span><strong>{unverifiedHandicaps.length}</strong></div>
+          <div className="summary-tile"><span>Uyarı sayısı</span><strong>{bulletin.meta.warningCount}</strong></div>
+          <div className="summary-tile"><span>Doğrulanmamış handikap</span><strong>{unverifiedHandicaps.length}</strong></div>\n          <div className="summary-tile"><span>Doğrulanmamış handikap</span><strong>{unverifiedHandicaps.length}</strong></div>
         </div>
         <section className="status-panel">
           <div className="section-heading"><div><h3>Market doluluk durumu</h3><p>Oranı bulunan maç sayısı · toplam {matches.length} maç</p></div><span>{activeMarkets}/9 aktif market</span></div>
@@ -348,6 +349,7 @@ function App() {
   const descriptions: Record<Page, string> = {
     Bülten: "Maçları ve mevcut dokuz oran marketini tek ekranda incele.",
     Oranlar: "Kaynakta bulunan oranları karşılaşma bazında karşılaştır.",
+    "Doğrulanmamış": "Market kimliği bulunan ancak çizgi/oran doğrulanamayan kayıtlar.",
     "Veri Durumu": "Şema, market doluluğu ve veri kalitesi uyarıları."
   };
 
@@ -395,6 +397,7 @@ function App() {
               : !bulletin ? <div className="empty-state"><strong>Bülten bulunamadı</strong></div>
               : activePage === "Bülten" ? renderBulletin()
               : activePage === "Oranlar" ? renderOdds()
+              : activePage === "Doğrulanmamış" ? renderUnverified()
               : renderDataStatus()}
           </section>
           <footer className="page-footer"><span>© 2026 OranTahmin</span><span>{bulletin?.meta.schemaVersion ?? "—"} · Son veri üretimi: {bulletin ? formatGeneratedAt(bulletin.meta.generatedAt) : "—"}</span></footer>
