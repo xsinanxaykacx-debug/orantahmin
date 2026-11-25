@@ -83,6 +83,9 @@ const MatchRow = memo(function MatchRow({
   const homeOdds = getOdds(match, "ms1");
   const drawOdds = getOdds(match, "msX");
   const awayOdds = getOdds(match, "ms2");
+  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
+  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined && String(homeScore) !== "" && String(awayScore) !== "";
   const hasMissingName = !match.homeName?.trim() || !match.awayName?.trim();
   return (
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
@@ -95,7 +98,7 @@ const MatchRow = memo(function MatchRow({
           <div className="team-line"><TeamCrest id={homeLogo} name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
           <div className="team-line"><TeamCrest id={awayLogo} name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
         </div>
-        <span className="match-row-score">{fotmobStatus?.homeScore != null && fotmobStatus?.awayScore != null ? `${fotmobStatus.homeScore} – ${fotmobStatus.awayScore}` : "—"}</span>
+        <span className="match-row-score">{hasScore ? `${homeScore} – ${awayScore}` : "—"}</span>
         <div className="row-odds">
           <span className="odds-caption">1 · X · 2</span>
           <div><b>{homeOdds.map(safeOdds).join("/") || "—"}</b><b>{drawOdds.map(safeOdds).join("/") || "—"}</b><b>{awayOdds.map(safeOdds).join("/") || "—"}</b></div>
