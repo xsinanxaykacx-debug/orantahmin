@@ -9,45 +9,6 @@ type FormResponse = { source: string; available: boolean; home?: TeamForm; away?
 function stat(value: number | null, suffix = ""): string {
   return value === null ? "—" : `${value.toLocaleString("tr-TR")}${suffix}`;
 }
-function parseScore(value: unknown): { scored: number; conceded: number } | null {
-  if (typeof value !== "string" && typeof value !== "number") return null;
-  const match = String(value).match(/(\d+)\s*[-–:]\s*(\d+)/);
-  return match ? { scored: Number(match[1]), conceded: Number(match[2]) } : null;
-}
-function normalizeOverviewForm(teamData: any): FormMatch[] {
-  const items = teamData?.overview?.form || teamData?.overview?.teamForm;
-  if (!Array.isArray(items)) return [];
-  return items.map((item: any) => {
-    const score = parseScore(item?.score);
-    if (!score) return null;
-    const rawResult = String(item?.resultString ?? item?.result ?? "").toUpperCase();
-    const result: FormMatch["result"] = ["W", "WIN", "1"].includes(rawResult)
-      ? "W" : ["D", "DRAW", "0", "X"].includes(rawResult)
-        ? "D" : ["L", "LOSS", "-1", "2"].includes(rawResult)
-          ? "L" : score.scored > score.conceded ? "W" : score.scored < score.conceded ? "L" : "D";
-    const dateValue = item?.date?.utcTime || item?.date || null;
-    return {
-      result,
-      score: String(score.scored) + " - " + String(score.conceded),
-      scored: score.scored,
-      conceded: score.conceded,
-      opponent: typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name || null,
-      date: typeof dateValue === "string" ? dateValue : null
-    };
-  }).filter((item: FormMatch | null): item is FormMatch => item !== null);
-}
-function mergeRecentForms(primary: FormMatch[], fallback: FormMatch[]): FormMatch[] {
-  const merged = [...primary];
-  const seen = new Set(merged.map(item => (item.opponent || "").toLocaleLowerCase("tr-TR") + "|" + item.score));
-  for (const item of fallback) {
-    const key = (item.opponent || "").toLocaleLowerCase("tr-TR") + "|" + item.score;
-    if (seen.has(key)) continue;
-    merged.push(item);
-    seen.add(key);
-    if (merged.length === 5) break;
-  }
-  return merged.slice(0, 5);
-}
 function FormSquares({ form }: { form: FormMatch[] }) {
   if (!form.length) return <span className="form-no-data">Veri yok</span>;
   return <div className="form-squares">{form.slice(0, 5).map((item, index) => (
@@ -96,13 +57,7 @@ export function FotMobTeamFormPanel({ matchId }: { matchId: string | number }) {
         const response = await fetch(`/api/fotmob-team-form?matchId=${encodeURIComponent(String(mapping.fotmobMatchId))}`, { cache: "no-store" });
         const payload = await response.json() as FormResponse;
         if (!response.ok) throw new Error(payload.error || `Geçmiş maç verisi alınamadı (HTTP ${response.status}).`);
-        if (active && payload?.available && payload.home && payload.away) {
-          payload.home.form = mergeRecentForms(payload.home.form || [], normalizeOverviewForm(payload.home));
-          payload.away.form = mergeRecentForms(payload.away.form || [], normalizeOverviewForm(payload.away));
-          setData(payload);
-        } else if (active) {
-          setData(payload);
-        }
+        if (active) setData(payload);
       } catch (error) {
         if (active) setData({ source: "FotMob", available: false, error: error instanceof Error ? error.message : "Veri alınamadı." });
       } finally {
