@@ -207,7 +207,8 @@ function App() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");\n  const [liveScores, setLiveScores] = useState<Map<string, FotMobMatchState>>(new Map());
+  const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");
+  const [liveScores, setLiveScores] = useState<Map<string, FotMobMatchState>>(new Map());
 
   useEffect(() => {
     let active = true;
