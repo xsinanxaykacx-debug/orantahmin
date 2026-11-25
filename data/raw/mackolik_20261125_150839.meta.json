@@ -1,0 +1,15 @@
+{
+  "requested_url": "https://arsiv.mackolik.com/AjaxHandlers/ProgramDataHandler.ashx?type=6&sortValue=DATE&day=25.11.2026&sort=-1&sortDir=-1&groupId=-1&np=1&sport=1",
+  "http_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "detected_format": "html",
+  "body_size_bytes": 44913,
+  "saved_raw_file": "data\\raw\\mackolik_20261125_150839.html",
+  "retrieved_at_utc": "2026-11-25T12:08:39.632982+00:00",
+  "http_error": null,
+  "structure": {
+    "document_type": "HTML",
+    "title": null,
+    "html_length": 44870
+  }
+}

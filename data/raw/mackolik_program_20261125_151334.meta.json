@@ -1,0 +1,17 @@
+{
+  "source": "mackolik",
+  "requested_day": "25.11.2026",
+  "match_type": "6",
+  "fetched_at": "2026-11-25T15:13:34.394892+03:00",
+  "success": false,
+  "page_status": 200,
+  "ajax_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "response_url": "https://arsiv.mackolik.com/AjaxHandlers/ProgramDataHandler.ashx?type=6&sortValue=DATE&day=25.11.2026&sort=-1&sortDir=-1&groupId=-1&np=1&sport=1",
+  "raw_file": "data\\raw\\mackolik_program_20261125_151334.raw",
+  "response_bytes": 44913,
+  "is_json": false,
+  "saved_file": "data\\raw\\mackolik_program_20261125_151334.html",
+  "response_preview": "{m:[{d:'25.11.2026',m:[[4560729,'Sabah U19',60053,'Barcelona U19','16212',0,'14:00','25.11.2026','0','0','','','','2','','','17,35','14,35','1,00','5,90','1,00','1,00','0,00','0,00','',{},'UEGL','333','13902','34,50','5,73','2,65','1,45','22,55','5,92','1,00','0,00','0,00','0,00','0,00','0,00','0','0,00','0,00','0,00','0,00','0,00','0,00','0','74142','3324216','90152572','90152573','','90152569','90152574','','','','',''],[4508151,'Kryvbas Kr',13547,'Fc Kharkiv','43695',0,'14:00','25.11.2026','0",
+  "error": "Sunucu JSON yerine farklı bir yanıt döndürdü. Ham yanıt kaydedildi."
+}

@@ -1,0 +1,60 @@
+{
+  "source": "mackolik",
+  "requested_day": "25.11.2026",
+  "match_type": "6",
+  "fetched_at": "2026-11-25T15:14:42.841678+03:00",
+  "success": true,
+  "page_status": 200,
+  "ajax_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "response_url": "https://arsiv.mackolik.com/AjaxHandlers/ProgramDataHandler.ashx?type=6&sortValue=DATE&day=25.11.2026&sort=-1&sortDir=-1&groupId=-1&np=1&sport=1",
+  "raw_file": "data\\raw\\mackolik_program_20261125_151442.raw",
+  "response_bytes": 44913,
+  "saved_file": "data\\raw\\mackolik_program_20261125_151442.json",
+  "data_summary": {
+    "root_type": "dict",
+    "root_keys": [
+      "m"
+    ],
+    "group_count": 2,
+    "total_matches": 107,
+    "groups": [
+      {
+        "date": "25.11.2026",
+        "match_count": 92,
+        "first_match": [
+          4560729,
+          "Sabah U19",
+          60053,
+          "Barcelona U19",
+          "16212",
+          0,
+          "14:00",
+          "25.11.2026",
+          "0",
+          "0",
+          "",
+          ""
+        ]
+      },
+      {
+        "date": "26.11.2026",
+        "match_count": 15,
+        "first_match": [
+          4582790,
+          "Unan Managua",
+          22117,
+          "Export Sebaco",
+          "52917",
+          0,
+          "01:00",
+          "26.11.2026",
+          "0",
+          "0",
+          "",
+          ""
+        ]
+      }
+    ]
+  }
+}

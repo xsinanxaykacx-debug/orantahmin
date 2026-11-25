@@ -1,0 +1,10 @@
+{
+  "name": "OranTahmin",
+  "short_name": "OranTahmin",
+  "description": "Maç oranları ve istatistiksel analiz platformu",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#111827",
+  "lang": "tr"
+}

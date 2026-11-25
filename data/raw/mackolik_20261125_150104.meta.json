@@ -1,0 +1,15 @@
+{
+  "requested_url": "https://arsiv.mackolik.com/Genis-Iddaa-Programi",
+  "http_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "detected_format": "html",
+  "body_size_bytes": 44379,
+  "saved_raw_file": "data\\raw\\mackolik_20261125_150104.html",
+  "retrieved_at_utc": "2026-11-25T12:01:04.697778+00:00",
+  "http_error": null,
+  "structure": {
+    "document_type": "HTML",
+    "title": "Geniş Ekran İddaa Programı @ Mackolik.com",
+    "html_length": 44233
+  }
+}
