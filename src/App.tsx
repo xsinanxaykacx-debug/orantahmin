@@ -118,7 +118,7 @@ const MatchRow = memo(function MatchRow({
   );
 });
 
-function MarketCard({ market, match, result }: { market: MarketDefinition; match: DisplayMatch; result: MatchResult | null }) {
+function MarketCard({ market, match, result = null }: { market: MarketDefinition; match: DisplayMatch; result?: MatchResult | null }) {
   const available = market.selections.some((selection) => getOdds(match, selection.field).length > 0);
   return (
     <section className={`market-card ${available ? "" : "is-empty"}`}>
