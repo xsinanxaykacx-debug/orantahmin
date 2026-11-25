@@ -1,6 +1,12 @@
 export type Settlement = "won" | "lost" | "unknown";
 
-export type MatchResult = {
+export type MatchEventFacts = {
+  corners?: { home: number; away: number; firstHalfHome?: number; firstHalfAway?: number } | null;
+  cards?: { yellow: number; red: number; total: number } | null;
+  firstGoal?: "home" | "away" | "none" | null;
+};
+
+export type MatchResult = MatchEventFacts & {
   home: number;
   away: number;
   finished: boolean;
@@ -30,7 +36,6 @@ function selectionResult(selection: string, home: number, away: number): Settlem
   return "unknown";
 }
 
-// Parse the original title before Turkish punctuation is normalized: 1,5 must stay 1.5.
 function thresholdFromTitle(title: string): number | null {
   const matches = [...title.matchAll(/(\d+(?:[,.]\d+)?)/g)];
   const raw = matches[matches.length - 1]?.[1];
@@ -45,9 +50,18 @@ function rangeFromSelection(selection: string): [number, number] | null {
   return [Number(match[1]), Number(match[2])];
 }
 
-function overUnder(outcome: string, goals: number, threshold: number): Settlement {
-  if (/alt|under/.test(outcome)) return goals < threshold ? "won" : "lost";
-  if (/ust|over/.test(outcome)) return goals > threshold ? "won" : "lost";
+function overUnder(outcome: string, value: number, threshold: number): Settlement {
+  if (/alt|under/.test(outcome)) return value < threshold ? "won" : "lost";
+  if (/ust|over/.test(outcome)) return value > threshold ? "won" : "lost";
+  return "unknown";
+}
+
+function rangeSettlement(outcomeName: string, value: number): Settlement {
+  const outcome = normalize(outcomeName);
+  const range = rangeFromSelection(outcomeName);
+  if (range) return value >= range[0] && value <= range[1] ? "won" : "lost";
+  const plus = outcome.match(/^(\d+)\s*(?:\+|ve uzeri|ustu|ve ustu)$/);
+  if (plus) return value >= Number(plus[1]) ? "won" : "lost";
   return "unknown";
 }
 
@@ -58,12 +72,67 @@ export function settleMarketOutcome(
 ): Settlement {
   if (!result?.finished) return "unknown";
 
-  const { home, away, firstHalf } = result;
+  const { home, away, firstHalf, corners, cards, firstGoal } = result;
   const total = home + away;
   const market = normalize(marketName);
   const outcome = normalize(outcomeName);
 
-  // No period-specific market is settled unless the half-time score is verified.
+  if (/ilk yari mac sonucu|ilk yari\/mac sonucu|ilk yari mac/.test(market)) {
+    if (!firstHalf) return "unknown";
+    const parts = outcomeName.split(/[\/\-]/).map(part => part.trim());
+    if (parts.length !== 2) return "unknown";
+    const firstResult = selectionResult(parts[0], firstHalf.home, firstHalf.away);
+    const fullResult = selectionResult(parts[1], home, away);
+    if (firstResult === "unknown" || fullResult === "unknown") return "unknown";
+    return firstResult === "won" && fullResult === "won" ? "won" : "lost";
+  }
+
+  if (/ilk gol/.test(market)) {
+    if (firstGoal == null) return "unknown";
+    if (/olmaz|gol yok|yok/.test(outcome)) return firstGoal === "none" ? "won" : "lost";
+    if (/^1$/.test(outcome)) return firstGoal === "home" ? "won" : "lost";
+    if (/^2$/.test(outcome)) return firstGoal === "away" ? "won" : "lost";
+    return "unknown";
+  }
+
+  if (/kirmizi kart/.test(market)) {
+    if (!cards) return "unknown";
+    if (/var|olur/.test(outcome)) return cards.red > 0 ? "won" : "lost";
+    if (/yok|olmaz/.test(outcome)) return cards.red === 0 ? "won" : "lost";
+    return "unknown";
+  }
+
+  if (/kart/.test(market) && /alt ust/.test(market)) {
+    if (!cards) return "unknown";
+    const threshold = thresholdFromTitle(marketName);
+    return threshold === null ? "unknown" : overUnder(outcome, cards.total, threshold);
+  }
+
+  if (/korner/.test(market)) {
+    if (!corners) return "unknown";
+    const isFirstHalf = /ilk yari|1 yari|1 y/.test(market);
+    const homeCorners = isFirstHalf ? corners.firstHalfHome : corners.home;
+    const awayCorners = isFirstHalf ? corners.firstHalfAway : corners.away;
+    if (/en cok korner/.test(market)) {
+      if (homeCorners == null || awayCorners == null) return "unknown";
+      return selectionResult(outcomeName, homeCorners, awayCorners);
+    }
+    const cornerTotal = homeCorners != null && awayCorners != null ? homeCorners + awayCorners : null;
+    if (/tek cift/.test(market)) {
+      if (cornerTotal == null) return "unknown";
+      if (/tek/.test(outcome)) return cornerTotal % 2 === 1 ? "won" : "lost";
+      if (/cift/.test(outcome)) return cornerTotal % 2 === 0 ? "won" : "lost";
+    }
+    if (/araligi/.test(market)) {
+      return cornerTotal == null ? "unknown" : rangeSettlement(outcomeName, cornerTotal);
+    }
+    if (/alt ust/.test(market)) {
+      const threshold = thresholdFromTitle(marketName);
+      return cornerTotal == null || threshold === null ? "unknown" : overUnder(outcome, cornerTotal, threshold);
+    }
+    return "unknown";
+  }
+
   if (/daha cok gol olacak yari/.test(market)) {
     if (!firstHalf) return "unknown";
     const firstGoals = firstHalf.home + firstHalf.away;
@@ -144,12 +213,7 @@ export function settleMarketOutcome(
     if (/cift/.test(outcome)) return total % 2 === 0 ? "won" : "lost";
   }
 
-  if (/toplam gol araligi|gol araligi/.test(market)) {
-    const range = rangeFromSelection(outcomeName);
-    if (range) return total >= range[0] && total <= range[1] ? "won" : "lost";
-    if (/^(?:6\s*(?:gol)?|6\s*ve\s*uzeri|6\s*ustu)$/.test(outcome)) return total >= 6 ? "won" : "lost";
-    if (/^(?:7\s*(?:gol)?|7\s*ve\s*uzeri|7\s*ustu)$/.test(outcome)) return total >= 7 ? "won" : "lost";
-  }
+  if (/toplam gol araligi|gol araligi/.test(market)) return rangeSettlement(outcomeName, total);
 
   if (/mac sonucu/.test(market) && !/ilk gol|daha cok gol|alt ust|handikap/.test(market)) {
     return selectionResult(outcomeName, home, away);
