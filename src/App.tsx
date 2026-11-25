@@ -95,7 +95,9 @@ const MatchRow = memo(function MatchRow({
           <div className="team-line"><TeamCrest id={homeLogo} name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
           <div className="team-line"><TeamCrest id={awayLogo} name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
         </div>
-        {fotmobStatus?.homeScore !== null && fotmobStatus?.homeScore !== undefined && fotmobStatus?.awayScore !== null && fotmobStatus?.awayScore !== undefined && <span className="match-row-score">{fotmobStatus.homeScore} – {fotmobStatus.awayScore}</span>}\n        <div className="row-odds">
+        {fotmobStatus?.homeScore !== null && fotmobStatus?.homeScore !== undefined && fotmobStatus?.awayScore !== null && fotmobStatus?.awayScore !== undefined && <span className="match-row-score">{fotmobStatus.homeScore} – {fotmobStatus.awayScore}</span>}
+        <span className="match-row-score">{fotmobStatus?.homeScore !== null && fotmobStatus?.homeScore !== undefined && fotmobStatus?.awayScore !== null && fotmobStatus?.awayScore !== undefined ? `${fotmobStatus.homeScore} – `${fotmobStatus.awayScore} : "—"}</span>
+        <div className="row-odds">
           <span className="odds-caption">1 · X · 2</span>
           <div><b>{homeOdds.map(safeOdds).join("/") || "—"}</b><b>{drawOdds.map(safeOdds).join("/") || "—"}</b><b>{awayOdds.map(safeOdds).join("/") || "—"}</b></div>
           <small>Kaynak oranı</small>
