@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./FotMobTeamFormPanel.css";
 
 type FormMatch = { result: "W" | "D" | "L"; score: string | null; scored: number | null; conceded: number | null; opponent: string | null; date: string | null };
 type TeamStats = { sampleSize: number; scoredMatches: number; goalsForAvg: number | null; goalsAgainstAvg: number | null; over25Pct: number | null; bttsPct: number | null };
