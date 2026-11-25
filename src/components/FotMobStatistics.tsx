@@ -108,7 +108,7 @@ export function FotMobStatistics() {
 
     <section className="stats-league-summary info-card">
       <div><span className="stats-league-name">{data?.league.name || selectedLeague?.name || "Lig seçiliyor…"}</span><span className="stats-league-season">{data?.season || season || "—"}</span></div>
-      <div className="stats-league-meta"><b>{data?.matches ?? "—"} maç</b><span>İstatistik</span><span>Fikstür</span><span>Puan Durumu</span></div>
+      <div className="stats-league-meta"><b>{data?.matches ?? "—"} maç</b><span>Tamamlandı</span></div>
     </section>
 
     {error ? <section className="stats-empty stats-error info-card"><strong>İstatistikler yüklenemedi</strong><p>{error}</p></section>
