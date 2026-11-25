@@ -36,3 +36,29 @@
 .stats-value { color:#dce8f8; font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .stats-detail { min-width:190px; color:#8290a4; font-size:9px; }
 @media (max-width:760px) { .stats-scan-progress { font-size:8px; } .stats-table { min-width:700px; } .stats-table td { padding:9px 7px; } }
+
+
+/* FotMob-style league market breakdown */
+.stats-league-controls { grid-template-columns: minmax(240px, 2fr) minmax(160px, 1fr) minmax(160px, 1fr); }
+.stats-league-summary { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:14px; padding:16px 19px; }
+.stats-league-summary > div:first-child { display:grid; gap:5px; }
+.stats-league-name { color:#e6edf7; font-size:16px; font-weight:800; }
+.stats-league-season { color:#8e9bb0; font-size:11px; }
+.stats-league-meta { display:flex; align-items:center; gap:16px; color:#8e9bb0; font-size:9px; }
+.stats-league-meta b { color:#dce8f8; font-size:12px; }
+.stats-market-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.stats-market-card { min-width:0; padding:15px 17px; }
+.stats-market-card > header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:13px; padding-bottom:10px; border-bottom:1px solid #30394a; }
+.stats-market-card h3 { margin:0; color:#e1e8f2; font-size:12px; font-weight:800; }
+.stats-market-card > header span { color:#8996aa; font-size:9px; white-space:nowrap; }
+.stats-market-items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 18px; }
+.stats-market-item { min-width:0; display:grid; gap:6px; }
+.stats-market-item-top { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#bdc8d8; font-size:10px; }
+.stats-market-item-top b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:650; }
+.stats-market-item-top strong { color:#e3ebf7; font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.stats-market-bar { height:4px; overflow:hidden; border-radius:99px; background:#293343; }
+.stats-market-bar i { display:block; height:100%; border-radius:inherit; background:#6686b4; }
+.stats-market-item > span { color:#7f8da2; font-size:8px; }
+.stats-market-empty { padding:20px 0; color:#8190a5; font-size:10px; text-align:center; }
+@media (max-width:900px) { .stats-league-controls { grid-template-columns:repeat(2,minmax(0,1fr)); } .stats-league-select { grid-column:1/-1; } }
+@media (max-width:600px) { .stats-league-controls { grid-template-columns:1fr 1fr; } .stats-league-select { grid-column:1/-1; } .stats-market-grid { grid-template-columns:1fr; } .stats-league-summary { align-items:flex-start; flex-direction:column; } .stats-league-meta { flex-wrap:wrap; gap:10px; } .stats-market-card { padding:13px; } }
