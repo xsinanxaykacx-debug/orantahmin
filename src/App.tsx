@@ -61,9 +61,16 @@ function formatDate(value: string): string {
 function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
   return uniqueOdds(match.sourceRecords.map((record) => record.fields?.[field]));
 }
-function statusLabel(status: number): string {
-  if (status > 0 && status < 4) return "Canlı";
-  if (status >= 4) return "Tamamlandı";
+ type FotMobMatchState = { started: boolean; finished: boolean };
+function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
+  return fotmob ? fotmob.started && !fotmob.finished : status > 0 && status < 4;
+}
+function isFinishedMatch(status: number, fotmob?: FotMobMatchState): boolean {
+  return fotmob ? fotmob.finished : status >= 4;
+}
+function statusLabel(status: number, fotmob?: FotMobMatchState): string {
+  if (isFinishedMatch(status, fotmob)) return "Tamamlandı";
+  if (isLiveMatch(status, fotmob)) return "Canlı";
   return "Başlamadı";
 }
 function matchKey(match: DisplayMatch): string {
@@ -71,8 +78,8 @@ function matchKey(match: DisplayMatch): string {
 }
 
 const MatchRow = memo(function MatchRow({
-  match, active, onSelect, homeLogo, awayLogo
-}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void; homeLogo?: number | null; awayLogo?: number | null }) {
+  match, active, onSelect, homeLogo, awayLogo, fotmobStatus
+}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void; homeLogo?: number | null; awayLogo?: number | null; fotmobStatus?: FotMobMatchState }) {
   const homeOdds = getOdds(match, "ms1");
   const drawOdds = getOdds(match, "msX");
   const awayOdds = getOdds(match, "ms2");
@@ -81,7 +88,7 @@ const MatchRow = memo(function MatchRow({
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
       <div className="match-row-top">
         <span>{match.time || "Saat yok"}</span>
-        <span className={`match-state ${match.status > 0 && match.status < 4 ? "live" : ""}`}>{statusLabel(match.status)}</span>
+        <span className={`match-state ${isLiveMatch(match.status, fotmobStatus) ? "live" : ""}`}>{statusLabel(match.status, fotmobStatus)}</span>
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
@@ -117,7 +124,7 @@ function EmptyData({ title, description }: { title: string; description: string 
   return <div className="data-empty"><span className="empty-symbol">⌁</span><strong>{title}</strong><p>{description}</p></div>;
 }
 
-function Overview({ match }: { match: DisplayMatch }) {
+function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?: FotMobMatchState }) {
   const hasScore = match.status > 0 && match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
     match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
     String(match.fields.scoreHome) !== "" && String(match.fields.scoreAway) !== "";
@@ -129,7 +136,7 @@ function Overview({ match }: { match: DisplayMatch }) {
           <div className="info-grid">
             <div><span>Lig kodu</span><strong>{match.fields.leagueCode || "—"}</strong></div>
             <div><span>Başlangıç</span><strong>{match.time || "—"}</strong></div>
-            <div><span>Durum</span><strong>{statusLabel(match.status)}</strong></div>
+            <div><span>Durum</span><strong>{statusLabel(match.status, fotmobStatus)}</strong></div>
             <div><span>Skor</span><strong>{hasScore ? `${match.fields.scoreHome} – ${match.fields.scoreAway}` : "—"}</strong></div>
             <div><span>Hakem</span><strong>Veri yok</strong></div>
             <div><span>Hava durumu</span><strong>Veri yok</strong></div>
@@ -158,8 +165,8 @@ function DetailPlaceholder() {
   return <div className="placeholder-wrap"><EmptyData title="AI tahmini oluşturulmadı" description="Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." /></div>;
 }
 
-function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo }: {
-  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void; homeLogo?: number | null; awayLogo?: number | null;
+function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus }: {
+  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void; homeLogo?: number | null; awayLogo?: number | null; fotmobStatus?: FotMobMatchState;
 }) {
   const hasScore = match.fields.scoreHome !== null && match.fields.scoreHome !== undefined &&
     match.fields.scoreAway !== null && match.fields.scoreAway !== undefined &&
@@ -170,14 +177,14 @@ function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo }: {
         <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
         <div className="versus-header">
           <div className="detail-team"><TeamCrest id={homeLogo} name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
-          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${match.fields.scoreHome} : ${match.fields.scoreAway}` : "— : —"}</strong><small>{statusLabel(match.status)}</small></div>
+          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${match.fields.scoreHome} : ${match.fields.scoreAway}` : "— : —"}</strong><small>{statusLabel(match.status, fotmobStatus)}</small></div>
           <div className="detail-team"><TeamCrest id={awayLogo} name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
         </div>
       </header>
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
+      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
     </div>
   );
 }
@@ -247,9 +254,9 @@ function App() {
     const query = search.trim().toLocaleLowerCase("tr-TR");
     return matches.filter((match) => {
       const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-      const live = fotmobStatus ? fotmobStatus.started && !fotmobStatus.finished : match.status > 0 && match.status < 4;
+      const live = isLiveMatch(match.status, fotmobStatus);
       if (statusFilter === "live" && !live) return false;
-      const finished = fotmobStatus ? fotmobStatus.finished : match.status >= 4;
+      const finished = isFinishedMatch(match.status, fotmobStatus);
       if (statusFilter === "finished" && !finished) return false;
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
@@ -269,6 +276,7 @@ function App() {
   }, [filteredMatches]);
 
   const selectedMatchLogos = selectedId ? teamLogosByMatch.get(selectedId) : undefined;
+  const selectedMatchFotMobStatus = selectedMatchLogos;
   const selectedMatch = useMemo(
     () => matches.find((match) => String(match.matchId) === selectedId) ?? null,
     [matches, selectedId]
@@ -284,11 +292,11 @@ function App() {
 
   const liveCount = useMemo(() => matches.filter((match) => {
     const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-    return fotmobStatus ? fotmobStatus.started && !fotmobStatus.finished : match.status > 0 && match.status < 4;
+    return isLiveMatch(match.status, fotmobStatus);
   }).length, [matches, teamLogosByMatch]);
   const finishedCount = useMemo(() => matches.filter((match) => {
     const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-    return fotmobStatus ? fotmobStatus.finished : match.status >= 4;
+    return isFinishedMatch(match.status, fotmobStatus);
   }).length, [matches, teamLogosByMatch]);
   const visibleCount = filteredMatches.length;
   const sourceCount = bulletin?.meta.sourceMatchCount ?? 0;
@@ -346,7 +354,7 @@ function App() {
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
-                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} homeLogo={teamLogosByMatch.get(String(match.matchId))?.home} awayLogo={teamLogosByMatch.get(String(match.matchId))?.away} />)}
+                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} homeLogo={teamLogosByMatch.get(String(match.matchId))?.home} awayLogo={teamLogosByMatch.get(String(match.matchId))?.away} fotmobStatus={teamLogosByMatch.get(String(match.matchId))} />)}
               </section>
             ))}
         </div> : <div className="league-directory-empty">Ayarlar</div>}
@@ -358,7 +366,7 @@ function App() {
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
           : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
           : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve veri kaynağı ayarları bu sürümde sabit: koyu tema ve ücretsiz yerel JSON." />
-          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} />
+          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} fotmobStatus={selectedMatchFotMobStatus} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p><small>61 alanlı kaynak şeması · Ham veri korunur</small></div>}
       </main>
     </div>
