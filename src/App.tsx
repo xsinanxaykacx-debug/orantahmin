@@ -185,16 +185,14 @@ function MackolikMarketCard({ market, result }: { market: MackolikMarket; result
     <section className={`market-card ${available ? "" : "is-empty"}`}>
       <div className="market-card-title">{market.name}<span>{available ? `Mackolik · ${market.code}` : "Oran yok"}</span></div>
       <div className="market-values">
-        {market.outcomes.map((outcome, index) => (
-          {(() => {
-            const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
-            return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : ""}`} key={`${market.code}-${index}`}>
-              <span>{outcome.name}</span>
-              <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
-              {settlement !== "unknown" && <em className="settlement-label">{settlement === "won" ? "Kazandı" : "Kaybetti"}</em>}
-            </div>;
-          })()}
-        ))}
+        {market.outcomes.map((outcome, index) => {
+          const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
+          return <div className={`market-value ${settlement === "won" ? "is-winner" : settlement === "lost" ? "is-loser" : ""}`} key={`${market.code}-${index}`}>
+            <span>{outcome.name}</span>
+            <strong>{outcome.odd !== null ? outcome.odd.toFixed(2).replace(".", ",") : "—"}</strong>
+            {settlement !== "unknown" && <em className="settlement-label">{settlement === "won" ? "Kazandı" : "Kaybetti"}</em>}
+          </div>;
+        })}
       </div>
     </section>
   );
