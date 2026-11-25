@@ -44,14 +44,16 @@ export default async function handler(req: Req, res: Res) {
       return match ? { for: Number(match[1]), against: Number(match[2]) } : null;
     };
     const formByTeam = new Map<number, Array<{ result: "W" | "D" | "L"; score: string; date: string }>>();
-    for (const match of allFixtures) {
+    for (const match of resultFixtures) {
       if (match?.status?.finished !== true || match?.status?.cancelled) continue;
       const homeId = Number(match?.home?.id || match?.homeTeam?.id);
       const awayId = Number(match?.away?.id || match?.awayTeam?.id);
       const scoreText = match?.status?.scoreStr || match?.scoreStr || "";
       const parsed = parseGoals(scoreText);
-      const homeGoals = Number.isFinite(Number(match?.home?.score)) ? Number(match.home.score) : parsed?.for;
-      const awayGoals = Number.isFinite(Number(match?.away?.score)) ? Number(match.away.score) : parsed?.against;
+      const homeScore = match?.home?.score;
+      const awayScore = match?.away?.score;
+      const homeGoals = homeScore !== null && homeScore !== undefined && homeScore !== "" && Number.isFinite(Number(homeScore)) ? Number(homeScore) : parsed?.for;
+      const awayGoals = awayScore !== null && awayScore !== undefined && awayScore !== "" && Number.isFinite(Number(awayScore)) ? Number(awayScore) : parsed?.against;
       if (!homeId || !awayId || homeGoals === undefined || homeGoals === null || awayGoals === undefined || awayGoals === null) continue;
       const date = String(match?.status?.utcTime || match?.status?.utcDate || "");
       const addForm = (teamId: number, scored: number, conceded: number) => {
@@ -82,9 +84,7 @@ export default async function handler(req: Req, res: Res) {
     const recent = allFixtures.filter((match: any) => match?.status?.finished)
       .sort((a: any, b: any) => String(b?.status?.utcTime || "").localeCompare(String(a?.status?.utcTime || "")));
     const fixtureList = (upcoming.length ? upcoming : recent).slice(0, 12);
-    const players = Array.isArray(data?.stats?.players) ? data.stats.players : [];
-    const scorer = players.find((item: any) => /top scorer|goals/i.test(String(item?.header || "")));
-    const topScorer = scorer ? { header: scorer.header, topThree: (scorer.topThree || []).slice(0, 3) } : null;
+    const topScorer = null;
     const seasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
       Array.isArray(data?.seasons) ? data.seasons.map((item: any) => typeof item === "string" ? item : item?.seasonName || item?.name).filter(Boolean) : [];
     return res.status(200).json({
