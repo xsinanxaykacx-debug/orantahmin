@@ -21,7 +21,7 @@ const markets: MarketDefinition[] = [
   { key: "half-time-goals-15", title: "İY 1,5 Gol", selections: [{ label: "Alt", field: "halfTimeGoals15Under" }, { label: "Üst", field: "halfTimeGoals15Over" }] }
 ];
 
-function formatOdds(value: unknown): string {
+function teamName(value: string | null | undefined): string {\n  return value?.trim() || "Eksik takım adı";\n}\n\nfunction formatOdds(value: unknown): string {
   return typeof value === "number" && Number.isFinite(value)
     ? value.toFixed(2).replace(".", ",")
     : "—";
@@ -100,7 +100,7 @@ function App() {
       .filter((match) => dateFilter === "all" || match.date === dateFilter)
       .filter((match) => leagueFilter === "all" || match.fields.leagueCode === leagueFilter)
       .filter((match) => marketFilter === "all" || (marketFilter === "any" ? matchHasAnyOdds(match) : markets.some((market) => market.key === marketFilter && marketHasOdds(match, market))))
-      .filter((match) => !query || [match.homeName, match.awayName, match.fields.leagueCode ?? "", match.matchId].some((value) => value.toLocaleLowerCase("tr-TR").includes(query)))
+      .filter((match) => !query || [match.homeName, match.awayName, match.fields.leagueCode ?? "", match.matchId].some((value) => (value ?? "").toLocaleLowerCase("tr-TR").includes(query)))
       .sort((a, b) => dateSortValue(a).localeCompare(dateSortValue(b)));
   }, [matches, dateFilter, leagueFilter, marketFilter, search]);
 
@@ -179,7 +179,7 @@ function App() {
         ) : (
           <div className="fixture-list">
             {filteredMatches.map((match) => {
-              const missingTeam = !match.homeName.trim() || !match.awayName.trim();
+              const missingTeam = !match.homeName?.trim() || !match.awayName?.trim();
               return (
                 <article className="fixture-card" key={`${match.source.groupIndex}-${match.source.matchIndex}`}>
                   <header className="fixture-heading">
@@ -192,9 +192,9 @@ function App() {
                     <span className="status-pill">Durum kodu {match.status}</span>
                   </header>
                   <div className="teams-line">
-                    <strong>{match.homeName.trim() || "Eksik takım adı"}</strong>
+                    <strong>{teamName(match.homeName)}</strong>
                     <span className="versus">—</span>
-                    <strong>{match.awayName.trim() || "Eksik takım adı"}</strong>
+                    <strong>{teamName(match.awayName)}</strong>
                     {missingTeam && <span className="warning-pill">Takım bilgisi eksik</span>}
                   </div>
                   {renderMarketCards(match)}
@@ -220,7 +220,7 @@ function App() {
             <article className="odds-row" key={`${match.source.groupIndex}-${match.source.matchIndex}`}>
               <div className="odds-match-title">
                 <span>{match.date} · {match.time} · {match.fields.leagueCode || "—"}</span>
-                <strong>{match.homeName || "Eksik takım adı"} – {match.awayName || "Eksik takım adı"}</strong>
+                <strong>{teamName(match.homeName)} – {teamName(match.awayName)}</strong>
                 <small>ID {match.matchId}</small>
               </div>
               <div className="odds-market-strip">
