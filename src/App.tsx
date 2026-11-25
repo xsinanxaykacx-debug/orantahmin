@@ -3,7 +3,7 @@ import { OddsService } from "./services/mackolikOddsService";
 import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
-import { SofascoreLineupPanel } from "./components/SofascoreLineupPanel";
+import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "closing";
@@ -196,7 +196,7 @@ function MatchDetail({ match, tab, onTabChange }: {
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <SofascoreLineupPanel matchId={match.matchId} /> : <DetailPlaceholder tab={tab} />}
+      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder tab={tab} />}
     </div>
   );
 }
