@@ -1,78 +1,35 @@
-import type {
-  BulletinDocument,
-  Match,
-  MatchFilters
-} from "../types/match";
-
-type BulletinPayload = BulletinDocument | BulletinDocument[];
+import type { BulletinDocument } from "../types/match";
 
 const DATA_URL = "/data/mackolik-bulletin.json";
 
-function normalizeBulletin(payload: BulletinPayload): BulletinDocument {
-  const bulletin = Array.isArray(payload) ? payload[0] : payload;
-
-  if (
-    !bulletin ||
-    !bulletin.meta ||
-    !Array.isArray(bulletin.matches)
-  ) {
-    throw new Error("Maçkolik JSON formatı geçersiz.");
-  }
-
-  return bulletin;
+function isBulletin(value: unknown): value is BulletinDocument {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<BulletinDocument>;
+  return Boolean(
+    candidate.meta &&
+    Array.isArray(candidate.matches) &&
+    candidate.diagnostics &&
+    Array.isArray(candidate.diagnostics.warnings)
+  );
 }
 
 export const OddsService = {
   async getBulletin(): Promise<BulletinDocument> {
-    const response = await fetch(DATA_URL, {
-      cache: "no-store"
-    });
+    const response = await fetch(DATA_URL, { cache: "no-store" });
 
     if (!response.ok) {
       throw new Error(
         response.status === 404
-          ? "Maçkolik bülten dosyası henüz bulunamadı."
+          ? "Bülten dosyası bulunamadı: public/data/mackolik-bulletin.json"
           : `Bülten yüklenemedi: HTTP ${response.status}`
       );
     }
 
-    const payload = (await response.json()) as BulletinPayload;
+    const payload: unknown = await response.json();
+    if (!isBulletin(payload)) {
+      throw new Error("Bülten şeması beklenen mackolik-61-v1 formatında değil.");
+    }
 
-    return normalizeBulletin(payload);
-  },
-
-  filterMatches(
-    matches: Match[],
-    filters: MatchFilters
-  ): Match[] {
-    const teamQuery = filters.team?.trim().toLocaleLowerCase("tr-TR");
-
-    return matches.filter((match) => {
-      if (
-        filters.status &&
-        filters.status !== "all" &&
-        match.status !== filters.status
-      ) {
-        return false;
-      }
-
-      if (
-        filters.league &&
-        filters.league !== "all" &&
-        match.league.code !== filters.league
-      ) {
-        return false;
-      }
-
-      if (
-        teamQuery &&
-        !match.home_team.toLocaleLowerCase("tr-TR").includes(teamQuery) &&
-        !match.away_team.toLocaleLowerCase("tr-TR").includes(teamQuery)
-      ) {
-        return false;
-      }
-
-      return true;
-    });
+    return payload;
   }
 };
