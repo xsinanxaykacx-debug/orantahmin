@@ -21,7 +21,11 @@ const markets: MarketDefinition[] = [
   { key: "half-time-goals-15", title: "İY 1,5 Gol", selections: [{ label: "Alt", field: "halfTimeGoals15Under" }, { label: "Üst", field: "halfTimeGoals15Over" }] }
 ];
 
-function teamName(value: string | null | undefined): string {\n  return value?.trim() || "Eksik takım adı";\n}\n\nfunction formatOdds(value: unknown): string {
+function teamName(value: string | null | undefined): string {
+  return value?.trim() || "Eksik takım adı";
+}
+
+function formatOdds(value: unknown): string {
   return typeof value === "number" && Number.isFinite(value)
     ? value.toFixed(2).replace(".", ",")
     : "—";
