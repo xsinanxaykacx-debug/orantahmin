@@ -1,6 +1,10 @@
 :root {
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  color: #e8edf7;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: -0.16px;
+  color: #181b20;
   background: #0f1219;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
