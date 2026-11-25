@@ -88,8 +88,6 @@ function App() {
   const rawMatches = bulletin?.matches ?? [];
   const matches = useMemo(() => uniqueMatches(rawMatches), [rawMatches]);
   const unverifiedHandicaps = useMemo(() => matches.filter(hasUnverifiedHandicap), [matches]);
-  const pageCount = Math.max(1, Math.ceil(filteredMatches.length / PAGE_SIZE));
-  const pagedMatches = useMemo(() => filteredMatches.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE), [filteredMatches, currentPage]);
 
   useEffect(() => { setCurrentPage(1); }, [dateFilter, leagueFilter, marketFilter, search]);
 
@@ -116,6 +114,9 @@ function App() {
       .filter((match) => !query || match.sourceRecords.some((record) => [record.homeName, record.awayName, record.fields.leagueCode ?? "", record.matchId].some((value) => (value ?? "").toLocaleLowerCase("tr-TR").includes(query))))
       .sort((a, b) => dateSortValue(a).localeCompare(dateSortValue(b)));
   }, [matches, dateFilter, leagueFilter, marketFilter, search]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredMatches.length / PAGE_SIZE));
+  const pagedMatches = useMemo(() => filteredMatches.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE), [filteredMatches, currentPage]);
 
   const liveCount = matches.filter((match) => match.status > 0 && match.status < 4).length;
   const activeMarkets = markets.filter((market) => marketCount(matches, market) > 0).length;
