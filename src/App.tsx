@@ -264,6 +264,7 @@ function App() {
         if (!response.ok) throw new Error("Canlı skorlar güncellenemedi.");
         const payload = await response.json() as { matches?: Array<{ fotmobMatchId: number; homeScore: number | null; awayScore: number | null; started: boolean; finished: boolean; status: string | null; minute: string | null }> };
         if (stopped) return;
+        for (const item of payload.matches || []) if (item.finished) pendingIds.delete(item.fotmobMatchId);
         setLiveScores(previous => {
           const next = new Map(previous);
           const idMap = new Map<number, string>();
@@ -273,7 +274,6 @@ function App() {
           for (const item of payload.matches || []) {
             const matchId = idMap.get(item.fotmobMatchId);
             if (matchId) next.set(matchId, item);
-            if (item.finished) pendingIds.delete(item.fotmobMatchId);
           }
           return next;
         });
