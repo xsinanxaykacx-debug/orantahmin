@@ -52,13 +52,23 @@ function TeamLogo({ id, name, className = "" }: { id?: number | null; name: stri
     {(!id || failed) ? <span>{name.slice(0, 1).toLocaleUpperCase("tr-TR")}</span> : null}
   </span>;
 }
+function parseTableGoals(value: unknown): { for: number; against: number } | null {
+  if (typeof value !== "string") return null;
+  const match = value.match(/(\d+)\s*[-–:]\s*(\d+)/);
+  return match ? { for: Number(match[1]), against: Number(match[2]) } : null;
+}
 function Table({ rows }: { rows: TableRow[] }) {
   return <div className="league-table-scroll"><table className="league-table">
     <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>A-Y</th><th>AV</th><th>Son 5</th><th>P</th></tr></thead>
     <tbody>{rows.map((row, index) => <tr key={row.id || row.name || index}>
       <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><TeamLogo id={row.id} name={row.name || "Takım"} /><span>{row.name || "Takım"}</span></td>
       <td>{row.played ?? "—"}</td><td>{row.wins ?? "—"}</td><td>{row.draws ?? "—"}</td><td>{row.losses ?? "—"}</td>
-      <td>{row.goalsFor !== null && row.goalsFor !== undefined && row.goalsAgainst !== null && row.goalsAgainst !== undefined ? `${row.goalsFor}-${row.goalsAgainst}` : "—"}</td>
+      <td>{(() => {
+        const parsed = parseTableGoals(row.scoresStr);
+        const scored = row.goalsFor ?? parsed?.for;
+        const conceded = row.goalsAgainst ?? parsed?.against;
+        return scored !== null && scored !== undefined && conceded !== null && conceded !== undefined ? `${scored}-${conceded}` : "—";
+      })()}</td>
       <td>{row.goalConDiff !== undefined && row.goalConDiff !== null ? row.goalConDiff > 0 ? `+${row.goalConDiff}` : row.goalConDiff : "—"}</td>
       <td><span className="league-form-strip" aria-label="Son beş maç">{(row.recentForm || []).map((item, formIndex) => <i key={`${item.date}-${formIndex}`} className={`league-form-result ${item.result.toLowerCase()}`} title={item.score}>{item.result === "W" ? "G" : item.result === "D" ? "B" : "Y"}</i>)}</span></td>
       <td><b>{row.pts ?? "—"}</b></td>
