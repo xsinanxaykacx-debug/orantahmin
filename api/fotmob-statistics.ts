@@ -1,3 +1,5 @@
+export const config = { maxDuration: 60 };
+
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
 
@@ -31,7 +33,7 @@ function mode(values: string[]) {
   for (const value of values) counts.set(value, (counts.get(value) || 0) + 1);
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0] || null;
 }
-function makeMetrics(matches: Outcome[], xg?: { value: number; matches: number }): Stats {
+function makeMetrics(matches: Outcome[], xg?: { value: number; matches: number }, teamScope = false): Stats {
   const count = matches.length;
   const goals = matches.map(match => match.home + match.away);
   const totalGoals = goals.reduce((sum, value) => sum + value, 0);
@@ -44,13 +46,18 @@ function makeMetrics(matches: Outcome[], xg?: { value: number; matches: number }
   const unavailable = (label: string): MetricValue => ({ value: null, label, detail: "Bu ölçüm için maç bazlı devre verisi gerekiyor." });
   return {
     xg: xg && xg.matches > 0
-      ? { value: xg.value / xg.matches, label: "xG / takım-maç", detail: `${xg.matches} takım-maçından hesaplandı` }
+      ? { value: xg.value / xg.matches, label: teamScope ? "xG / takım-maç" : "xG / maç", detail: `${xg.matches} takım-maçından hesaplandı` }
       : unavailable("xG"),
     "total-goals": count
       ? { value: totalGoals / count, label: "Gol / maç", detail: `${totalGoals} toplam gol · ${count} maç` }
       : { value: null, label: "Gol / maç", detail: "Tamamlanmış maç verisi yok." },
     "match-result": count
-      ? { value: Math.max(homeWins, draws, awayWins) / count * 100, label: homeWins >= draws && homeWins >= awayWins ? "Ev sahibi" : draws >= awayWins ? "Beraberlik" : "Deplasman", detail: `1: ${percent(homeWins, count)!.toFixed(1)}% · X: ${percent(draws, count)!.toFixed(1)}% · 2: ${percent(awayWins, count)!.toFixed(1)}%` }
+      ? { value: Math.max(homeWins, draws, awayWins) / count * 100, label: teamScope
+        ? homeWins >= draws && homeWins >= awayWins ? "Galibiyet" : draws >= awayWins ? "Beraberlik" : "Mağlubiyet"
+        : homeWins >= draws && homeWins >= awayWins ? "Ev sahibi" : draws >= awayWins ? "Beraberlik" : "Deplasman",
+        detail: teamScope
+          ? `Galibiyet: ${percent(homeWins, count)!.toFixed(1)}% · Beraberlik: ${percent(draws, count)!.toFixed(1)}% · Mağlubiyet: ${percent(awayWins, count)!.toFixed(1)}%`
+          : `1: ${percent(homeWins, count)!.toFixed(1)}% · X: ${percent(draws, count)!.toFixed(1)}% · 2: ${percent(awayWins, count)!.toFixed(1)}%` }
       : { value: null, label: "Maç sonucu", detail: "Tamamlanmış maç verisi yok." },
     "goals-25": count
       ? { value: percent(over25, count), label: "Üst 2,5", detail: `Alt 2,5: ${percent(count - over25, count)!.toFixed(1)}% · Üst 2,5: ${percent(over25, count)!.toFixed(1)}%` }
@@ -168,7 +175,7 @@ export default async function handler(req: Req, res: Res) {
         return {
           id, name: item.name, leagueId: league.id, leagueName: league.name, country: league.country,
           matches: item.matches.length,
-          metrics: makeMetrics(item.matches, xg)
+          metrics: makeMetrics(item.matches, xg, true)
         };
       });
       // FotMob's xG leaderboard also includes teams with few or no fixture rows in allMatches.
@@ -177,7 +184,7 @@ export default async function handler(req: Req, res: Res) {
         const statRow = xgRows.find((row: any) => Number(row?.TeamId) === id);
         teamRows.push({
           id, name: String(statRow?.ParticipantName || "Takım"), leagueId: league.id, leagueName: league.name, country: league.country,
-          matches: xg.matches, metrics: makeMetrics([], xg)
+          matches: xg.matches, metrics: makeMetrics([], xg, true)
         });
       }
       const xgValues = [...xgByTeam.values()];
