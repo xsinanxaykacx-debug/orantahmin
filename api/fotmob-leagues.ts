@@ -39,6 +39,10 @@ async function jsonFetch(url: string) {
   if (!response.ok || !contentType.includes("json")) throw new Error(`FotMob yanıtı alınamadı (HTTP ${response.status}).`);
   return response.json();
 }
+function leagueLogo(name: string, id: number) {
+  if (norm(name).includes("super lig")) return "https://media04.ligtv.com.tr/img/news/2024/7/31/original/superliglogodikey.jpg";
+  return `https://images.fotmob.com/image_resources/logo/leaguelogo/${id}.png`;
+}
 function ageMarkers(value: string) {
   return (value.match(/\bU(?:17|18|19|20|21|23)\b/gi) || []).map(item => item.toUpperCase());
 }
@@ -108,7 +112,7 @@ export default async function handler(req: Req, res: Res) {
       if (existing) existing.matches.push(match);
       else matchedLeagueMap.set(fixture.leagueId, {
         id: fixture.leagueId, name: fixture.leagueName, country: fixture.country,
-        logo: `https://images.fotmob.com/image_resources/logo/leaguelogo/${fixture.leagueId}.png`,
+        logo: leagueLogo(fixture.leagueName, fixture.leagueId),
         matches: [match]
       });
     }
@@ -121,7 +125,7 @@ export default async function handler(req: Req, res: Res) {
       const previous = directory.get(id);
       directory.set(id, {
         id, name: item.name, country: item.ccode || country || previous?.country || null,
-        logo: `https://images.fotmob.com/image_resources/logo/leaguelogo/${id}.png`,
+        logo: leagueLogo(item.name, id),
         matches: [], matchCount: 0
       });
     };
