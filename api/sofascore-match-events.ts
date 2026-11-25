@@ -140,7 +140,7 @@ export default async function handler(req: Req, res: Res) {
       away: allCorners.away,
       ...(firstCorners ? { firstHalfHome: firstCorners.home, firstHalfAway: firstCorners.away } : {})
     } : null;
-    const cards = incidentsPayload || statYellow || statRed ? { yellow, red, total: yellow + red } : null;
+    const hasIncidentTimeline = Array.isArray(incidentsPayload?.incidents) && incidentsPayload.incidents.length > 0;\n    const cards = hasIncidentTimeline || statYellow || statRed ? { yellow, red, total: yellow + red } : null;
     const facts = {
       eventId,
       ...(corners ? { corners } : {}),
