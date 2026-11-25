@@ -2,7 +2,7 @@ type Req = { method?: string; query: Record<string, string | string[] | undefine
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128.0.0.0 Safari/537.36";
 export default async function handler(req: Req, res: Res) {
-  res.setHeader("Cache-Control", "s-maxage=1800, stale-while-revalidate=3600");
+  res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
   res.setHeader("Access-Control-Allow-Origin", "*");
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
   const raw = req.query.leagueId;
@@ -31,13 +31,18 @@ export default async function handler(req: Req, res: Res) {
     if (!upstream.ok || !contentType.includes("json")) return res.status(502).json({ error: `FotMob lig verisi alınamadı (HTTP ${upstream.status}).` });
     const data = await upstream.json();
     const allFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
-    const resultFixtures = [
+    // FotMob's canonical season fixture list is fixtures.allMatches. Other
+    // collections can be partial (or contain only a subset of finished games).
+    const fallbackFixtureLists = [
       data?.fixtures?.results,
       data?.fixtures?.finished,
       data?.fixtures?.pastMatches,
-      data?.fixtures?.recentMatches,
-      allFixtures
-    ].find((items: any) => Array.isArray(items) && items.some((item: any) => item?.status?.finished === true)) || [];
+      data?.fixtures?.recentMatches
+    ].filter((items: any) => Array.isArray(items));
+    const sourceFixtures = allFixtures.length ? allFixtures : fallbackFixtureLists.flat();
+    const resultFixtures = sourceFixtures
+      .filter((item: any) => item?.status?.finished === true && !item?.status?.cancelled)
+      .sort((a: any, b: any) => String(a?.status?.utcTime || "").localeCompare(String(b?.status?.utcTime || "")));
     const parseGoals = (value: unknown) => {
       if (typeof value !== "string") return null;
       const match = value.match(/(\d+)\s*[-–:]\s*(\d+)/);
