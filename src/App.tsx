@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { OddsService } from "./services/mackolikOddsService";
 import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
-import { dedupeByMatchId, isUnverifiedHandicap, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
+import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
