@@ -56,10 +56,11 @@ function isFirstHalf(event: any) {
   return Number.isFinite(minute) && minute <= 45;
 }
 function halfTimeScore(events: any[], full: { home: number; away: number }) {
+  if (!Array.isArray(events)) return null;
+  if (events.length === 0 && full.home + full.away > 0) return null;
   let home = 0, away = 0;
   const goals = events.filter(event => String(event?.type || "").toLowerCase() === "goal" && !event?.isPenaltyShootoutEvent)
     .sort((a, b) => Number(a?.time || 0) - Number(b?.time || 0));
-  if (!Array.isArray(events)) return null;
   for (const event of goals) {
     if (!isFirstHalf(event)) continue;
     const homeScoring = Boolean(event?.isHome) !== Boolean(event?.ownGoal);
