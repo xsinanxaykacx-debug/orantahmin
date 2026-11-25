@@ -150,7 +150,8 @@ export default async function handler(req: Req, res: Res) {
         : [];
       const seasons = availableSeasons.length ? availableSeasons : currentSeason ? [currentSeason] : [];
       if (currentSeason && !seasons.includes(currentSeason)) seasons.unshift(currentSeason);
-      const selectedSeasons = season === "current" ? [currentSeason || seasons[0]].filter(Boolean)
+      const currentSelection = currentSeason || seasons[0];
+      const selectedSeasons: string[] = season === "current" ? (currentSelection ? [currentSelection] : [])
         : season === "last2" ? seasons.slice(0, 2)
         : season === "last3" ? seasons.slice(0, 3)
         : seasons;
@@ -180,8 +181,8 @@ export default async function handler(req: Req, res: Res) {
       const teamMatches = new Map<number, { name: string; matches: Outcome[] }>();
       const xgByTeam = new Map<number, { value: number; matches: number; name: string }>();
       for (const payload of seasonPayloads.filter(Boolean) as Array<{ seasonName: string; fixtures: Outcome[]; xgRows: any[] }>) {
-        for (const match of payload.fixtures) {
-          const key = match.matchId ? `match:${match.matchId}` : `${payload.seasonName}:${match.homeId}:${match.awayId}:${match.home}-${match.away}`;
+        for (const [fixtureIndex, match] of payload.fixtures.entries()) {
+          const key = match.matchId ? `match:${match.matchId}` : `${payload.seasonName}:fixture:${fixtureIndex}`;
           if (uniqueMatches.has(key)) continue;
           uniqueMatches.set(key, match);
           const home = teamMatches.get(match.homeId) || { name: match.homeName, matches: [] };
