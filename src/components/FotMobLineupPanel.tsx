@@ -30,6 +30,8 @@ type LineupResponse = {
   hasLineup: boolean;
   home: Team | null;
   away: Team | null;
+  homeTeamId?: number | null;
+  awayTeamId?: number | null;
 };
 
 function PlayerList({ players }: { players: Player[] }) {
@@ -42,10 +44,11 @@ function PlayerList({ players }: { players: Player[] }) {
   ))}</ol>;
 }
 
-function TeamColumn({ title, team }: { title: string; team: Team | null }) {
+function TeamColumn({ title, team, teamId }: { title: string; team: Team | null; teamId?: number | null }) {
+  const [logoFailed, setLogoFailed] = useState(false);
   if (!team) return <section className="fotmob-team"><header><strong>{title}</strong></header><p className="fotmob-muted">Takım kadrosu yok.</p></section>;
   return <section className="fotmob-team">
-    <header><strong>{team.name || title}</strong><span>{team.formation || "Formasyon yok"}</span></header>
+    <header><strong className="fotmob-lineup-team-name">{teamId && !logoFailed ? <img src={`https://images.fotmob.com/image_resources/logo/teamlogo/${teamId}.png`} alt="" loading="lazy" onError={() => setLogoFailed(true)} /> : null}{team.name || title}</strong><span>{team.formation || "Formasyon yok"}</span></header>
     <div className="fotmob-list-heading"><strong>İlk 11</strong><small>{team.starterCount}/11</small></div>
     {team.starters.length ? <PlayerList players={team.starters}/> : <p className="fotmob-muted">İlk 11 açıklanmadı.</p>}
     <div className="fotmob-list-heading"><strong>Yedekler</strong><small>{team.benchCount}</small></div>
@@ -124,8 +127,8 @@ export function FotMobLineupPanel({ matchId }: { matchId: string | number }) {
         {lineup.lineupSource && <span>Kaynak: {lineup.lineupSource}</span>}
       </div>
       <div className="fotmob-lineup-grid">
-        <TeamColumn title="Ev sahibi" team={lineup.home}/>
-        <TeamColumn title="Deplasman" team={lineup.away}/>
+        <TeamColumn title="Ev sahibi" team={lineup.home} teamId={lineup.homeTeamId}/>
+        <TeamColumn title="Deplasman" team={lineup.away} teamId={lineup.awayTeamId}/>
       </div>
     </section>
   </div>;
