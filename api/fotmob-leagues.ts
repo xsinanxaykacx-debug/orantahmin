@@ -17,7 +17,9 @@ export default async function handler(req: Req, res: Res) {
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
   try {
     const mappingUrl = "https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/feature/fotmob-team-form/public/data/fotmob-event-map.json";
-    const mapping = await fetchJson(mappingUrl);
+    const mappingResponse = await fetch(mappingUrl, { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000) });
+    if (!mappingResponse.ok) throw new Error(`Eşleştirme dosyası alınamadı (HTTP ${mappingResponse.status}).`);
+    const mapping = JSON.parse(await mappingResponse.text());
     const mapped = (mapping.matches || []).filter((item: any) => item.state === "matched" && item.fotmobMatchId);
     const dateKeys = [...new Set(mapped.map((item: any) => dateKey(item.date)).filter(Boolean))] as string[];
     const daily = await Promise.all(dateKeys.map(async date => ({ date, data: await fetchJson(`https://www.fotmob.com/api/data/matches?date=${date}`) })));
