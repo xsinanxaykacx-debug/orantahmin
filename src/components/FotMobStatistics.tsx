@@ -64,7 +64,7 @@ export function FotMobStatistics() {
       })
       .then(payload => {
         setData(payload);
-        setSeasonOptions(payload.seasons || []);
+        setSeasonOptions(payload.seasons?.length ? payload.seasons : payload.season ? [payload.season] : []);
         setRoundOptions(payload.rounds || []);
         if (!season && payload.season) setSeason(payload.season);
       })
