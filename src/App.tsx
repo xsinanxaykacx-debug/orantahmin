@@ -135,7 +135,6 @@ function Overview({ match }: { match: DisplayMatch }) {
             <div><span>Hava durumu</span><strong>Veri yok</strong></div>
           </div>
         </article>
-      </div>
         <FotMobTeamFormPanel matchId={match.matchId} />
       </div>
       <section className="info-card">
