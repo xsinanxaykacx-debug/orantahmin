@@ -74,7 +74,7 @@ export function settleMarketOutcome(
     if (/7\+|7 ve uzeri|7 ustu/.test(outcome)) return total >= 7 ? "won" : "lost";
   }
 
-  if (/mac sonucu/.test(market) && !/handikap|ilk gol|daha cok gol|ilk yari|ikinci yari/.test(market)) {
+  if (/mac sonucu/.test(market) && !/handikap|ilk gol|daha cok gol|ilk yari|ikinci yari|alt ust/.test(market)) {
     return selectionResult(outcomeName, home, away);
   }
 
