@@ -97,10 +97,19 @@ export default async function handler(req: Req, res: Res) {
     const selectedSeason = String(data?.details?.selectedSeason || "");
     const availableSeasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
       Array.isArray(data?.seasons) ? data.seasons : [];
+    const seasonStatLinks = Array.isArray(data?.stats?.seasonStatLinks)
+      ? data.stats.seasonStatLinks
+      : [];
+    const seasonLink = seasonStatLinks.find((item: any) =>
+      String(item?.Season || item?.SeasonName || item?.Name || item?.name || "") === selectedSeason
+    ) || seasonStatLinks[0];
     const seasonEntry = availableSeasons.find((season: any) =>
       String(season?.name || season?.seasonName || season?.value || "") === selectedSeason
     ) || availableSeasons[0];
+    // TournamentId is FotMob's authoritative numeric season ID. The
+    // allAvailableSeasons array is not guaranteed to expose that ID.
     const seasonId = Number(
+      seasonLink?.TournamentId || seasonLink?.tournamentId ||
       seasonEntry?.id || seasonEntry?.seasonId || seasonEntry?.value ||
       data?.details?.selectedSeasonId || data?.details?.seasonId
     );
