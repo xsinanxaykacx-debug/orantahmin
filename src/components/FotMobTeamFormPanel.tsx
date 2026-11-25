@@ -62,7 +62,7 @@ export function FotMobTeamFormPanel({ matchId }: { matchId: string | number }) {
       </div>
     </section>
     <section className="info-card stat-card">
-      <div className="card-heading"><span>TAKIM İSTATİSTİKLERİ</span><small>Son 5 maçtan hesaplandı</small></div>
+      <div className="card-heading"><span>TAKIM İSTATİSTİKLERİ</span><small>Geçmiş maç verisine göre</small></div>
       <div className="team-stats-grid">
         <TeamStatColumn team={data.home}/>
         <TeamStatColumn team={data.away}/>
