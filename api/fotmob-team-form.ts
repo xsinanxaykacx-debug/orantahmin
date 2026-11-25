@@ -29,8 +29,13 @@ function normalizeResult(value: unknown, score: { scored: number; conceded: numb
   if (!score) return null;
   return score.scored > score.conceded ? "W" : score.scored < score.conceded ? "L" : "D";
 }
+function scoreNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value >= 0) return value;
+  if (typeof value === "string" && /^\d+$/.test(value.trim())) return Number(value);
+  return null;
+}
 function normalizeForm(teamData: any, teamId: number, beforeDate: string) {
-  const fixtures = teamData?.fixtures?.allFixtures?.fixtures;
+  const fixtures = teamData?.fixtures?.allFixtures?.fixtures || teamData?.fixtures?.recent?.fixtures || teamData?.fixtures?.fixtures;
   if (!Array.isArray(fixtures)) return [];
   return fixtures
     .filter((item: any) => {
@@ -39,17 +44,17 @@ function normalizeForm(teamData: any, teamId: number, beforeDate: string) {
         typeof kickoff === "string" && kickoff < beforeDate;
     })
     .map((item: any) => {
-      const homeId = Number(item?.home?.id);
-      const awayId = Number(item?.away?.id);
-      const homeScore = Number(item?.home?.score);
-      const awayScore = Number(item?.away?.score);
-      if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return null;
+      const homeId = Number(item?.home?.id ?? item?.homeTeam?.id);
+      const awayId = Number(item?.away?.id ?? item?.awayTeam?.id);
+      const homeScore = scoreNumber(item?.home?.score ?? item?.homeScore);
+      const awayScore = scoreNumber(item?.away?.score ?? item?.awayScore);
+      if (homeScore === null || awayScore === null) return null;
       const isHome = homeId === teamId;
       const isAway = awayId === teamId;
       if (!isHome && !isAway) return null;
       const scored = isHome ? homeScore : awayScore;
       const conceded = isHome ? awayScore : homeScore;
-      const opponent = typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name;
+      const opponent = typeof item?.opponent === "string" ? item.opponent : item?.opponent?.name || (isHome ? item?.away?.name : item?.home?.name);
       return {
         result: scored > conceded ? "W" as const : scored < conceded ? "L" as const : "D" as const,
         score: `${scored} - ${conceded}`,
