@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
 
 :root {
-  font-family: "DM Sans", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #e8edf4;
   background: #0b1018;
   font-synthesis: none;
@@ -23,8 +23,8 @@ button { cursor: pointer; }
 .app-shell { min-height: 100vh; display: flex; background: var(--bg); }
 .sidebar { width: 248px; min-height: 100vh; padding: 28px 18px 20px; display: flex; flex-direction: column; flex-shrink: 0; background: #0e151e; border-right: 1px solid #202c39; }
 .brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 39px; }
-.brand-mark { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 10px; color: #fff; background: #2878c9; font-family: Manrope, sans-serif; font-size: 23px; font-weight: 800; }
-.brand strong { display: block; color: #f5f7fa; font-family: Manrope, sans-serif; font-size: 16px; letter-spacing: -.3px; }
+.brand-mark { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 10px; color: #fff; background: #2878c9; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 800; }
+.brand strong { display: block; color: #f5f7fa; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; letter-spacing: -.3px; }
 .brand span { display: block; margin-top: 4px; color: #718195; font-size: 9px; font-weight: 700; letter-spacing: 1.15px; }
 .nav-label { margin: 0 10px 12px; color: #627184; font-size: 9px; font-weight: 700; letter-spacing: 1.2px; }
 .main-nav { display: grid; gap: 6px; }
@@ -44,17 +44,17 @@ button { cursor: pointer; }
 .page-wrap { max-width: 1640px; margin: 0 auto; padding: 34px 38px 28px; }
 .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 25px; }
 .eyebrow { color: #659fe0; font-size: 9px; font-weight: 700; letter-spacing: 1.4px; }
-h1 { margin: 8px 0 6px; color: #f0f4f8; font-family: Manrope, sans-serif; font-size: 29px; font-weight: 800; letter-spacing: -.8px; }
+h1 { margin: 8px 0 6px; color: #f0f4f8; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 29px; font-weight: 800; letter-spacing: -.8px; }
 .page-heading p, .panel-top p { margin: 0; color: var(--muted); font-size: 11px; }
 .data-state { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border: 1px solid #2b3a49; border-radius: 6px; color: #a9b6c5; font-size: 10px; white-space: nowrap; }
 .overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-bottom: 20px; }
 .overview-card { min-height: 112px; padding: 17px 18px; border: 1px solid #263342; border-radius: 8px; background: linear-gradient(145deg, #141f2b, #111923); }
 .overview-card > span { display: block; color: #8292a5; font-size: 9px; font-weight: 700; letter-spacing: .65px; }
-.overview-card strong { display: block; margin-top: 11px; color: #f1f5f8; font-family: Manrope, sans-serif; font-size: 25px; font-weight: 800; }
+.overview-card strong { display: block; margin-top: 11px; color: #f1f5f8; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 25px; font-weight: 800; }
 .overview-card small { display: block; margin-top: 3px; color: #6e7d90; font-size: 9px; }
 .content-panel { overflow: hidden; border: 1px solid #263342; border-radius: 9px; background: #111923; }
 .panel-top { min-height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 20px; border-bottom: 1px solid #263342; }
-.panel-top h2 { margin: 0 0 5px; color: #eaf0f6; font-family: Manrope, sans-serif; font-size: 14px; }
+.panel-top h2 { margin: 0 0 5px; color: #eaf0f6; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; }
 .source-tag { padding: 6px 8px; border: 1px solid #34475a; border-radius: 4px; color: #92a6bc; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
 .filters { display: grid; grid-template-columns: minmax(210px, 1.5fr) repeat(3, minmax(135px, .8fr)) auto; gap: 10px; padding: 15px 18px; border-bottom: 1px solid #263342; background: #121d28; }
 .filters label { display: grid; gap: 6px; min-width: 0; }
