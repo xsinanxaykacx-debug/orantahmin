@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./FotMobLeagueHub.css";
 import "./IddaaLeagueHub.css";
-import { readStandingsGoals, readStandingsPosition, readStandingsStat } from "../lib/iddaaStandings.ts";
+import { readStandingsGoals, readStandingsPosition, readStandingsRows, readStandingsStat } from "../lib/iddaaStandings.ts";
 
 type LeagueSummary = { id: number; name: string; country: string | null; logo: string; matchCount: number };
 type Payload = { source: string; season?: { id: number; name: string }; fetchedAt?: string; data: Record<string, any>; feedErrors?: Record<string, string>; error?: string };
@@ -23,16 +23,6 @@ const number = (v: any) => v === null || v === undefined || v === "" || !Number.
 function form(value: any): string[] {
   const raw = Array.isArray(value) ? value.join("") : txt(value);
   return raw.toUpperCase().split("").filter(x => "WDLGBMY".includes(x)).slice(-5).map(x => x === "W" || x === "G" ? "G" : x === "D" || x === "B" ? "B" : "M");
-}
-function tables(data: any): any[] { return arr(data?.season?.tables || data?.tables); }
-function rowsFor(data: any, mode: Mode): any[] {
-  const list = tables(data);
-  const table = mode === "total"
-    ? list.find(x => /total|overall|toplam/i.test(txt(val(x?.name, x?.tabletype, x?.type)))) || list[0]
-    : list.find(x => mode === "home" ? /home|ev sahibi|iç saha/i.test(txt(val(x?.name, x?.tabletype, x?.type))) : /away|deplasman/i.test(txt(val(x?.name, x?.tabletype, x?.type))));
-  if (table) return arr(table.tablerows || table.rows);
-  if (mode === "total") return arr(data?.season?.tables?.[0]?.tablerows || data?.tablerows || data?.dynamicTable?.rows || data?.rows);
-  return [];
 }
 function dateText(v: any): string {
   if (v == null || v === "") return "—";
@@ -104,7 +94,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
   }, [league.id]);
 
   const data = payload?.data || {};
-  const tableRows = useMemo(() => rowsFor(data.standings, mode), [data.standings, mode]);
+  const tableRows = useMemo(() => readStandingsRows(data.standings, mode), [data.standings, mode]);
   const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => { const recent = arr(r?.form?.total).slice(0, 5).reverse().map(item => item?.value); return [txt(val(r?.team?.name, r?.["Takım"], r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(recent)] as const; })), [data.form]);
   const upcoming = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.schedules || data.fixtures);
   const results = arr(data.results?.matches || data.results?.events || data.results);
@@ -147,7 +137,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
           <thead><tr><th>Poz</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG:YG</th><th>+/-</th><th>P</th><th>Form</th></tr></thead>
           <tbody>{tableRows.map((r:any,i:number)=>{
             const t=val(r?.team,r?.participant,r?.competitor,r?.["Takım"],{}), n=name(t)||txt(r?.teamname)||"Takım", f=form(val(r?.Form,r?.form,r?.recentform,r?.last5,formMap.get(n.toLocaleLowerCase("tr-TR"))));
-            const p=readStandingsPosition(r,i+1);
+            const p=readStandingsPosition(r,i+1,mode);
             const o=readStandingsStat(r,mode,["played","matches","matchplayed","_played","_matches"],"O");
             const g=readStandingsStat(r,mode,["won","wins","win"],"G");
             const b=readStandingsStat(r,mode,["drawn","draws","draw"],"B");
