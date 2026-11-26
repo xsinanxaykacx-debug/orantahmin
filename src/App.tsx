@@ -285,7 +285,13 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     setMarketError(null);
     setSourceMarkets([]);
 
-    fetch(`/api/mackolik-markets?matchId=${encodeURIComponent(String(match.matchId))}`, {
+    const params = new URLSearchParams({
+      matchId: String(match.matchId),
+      date: (match.date || "").split(".").reverse().join("-"),
+      home: match.homeName || "",
+      away: match.awayName || ""
+    });
+    fetch(`/api/mackolik-markets?${params.toString()}`, {
       cache: "no-store",
       signal: controller.signal
     })
@@ -307,13 +313,13 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
       });
 
     return () => controller.abort();
-  }, [match.matchId]);
+  }, [match.matchId, match.date, match.homeName, match.awayName]);
 
   return (
     <div className="detail-content">
       <div className="section-intro">
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi{firstHalfScore && <small className="first-half-inline">İYS: {firstHalfScore.home} - {firstHalfScore.away}</small>}</h3></div>
-        <p>Doğrulanabilen gol, kart ve korner verileriyle market sonuçları hesaplanır.</p>
+        <p>Mackolik’in maç sayfasında yayımlanan tüm oran marketleri listelenir.</p>
       </div>
       {loadingMarkets ? (
         <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
