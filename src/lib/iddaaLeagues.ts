@@ -9,10 +9,32 @@ export type IddaaLeague = {
 };
 
 export const IDDAA_LEAGUES: IddaaLeague[] = [
+  // İddaa ana sayfasındaki puan durumu bağlantıları
   { id: 52, name: "Türkiye Süper Lig", country: "Türkiye", seasonId: 143916, uniqueTournamentId: 52, seasonName: "Süper Lig 26/27", slug: "turkiye-super-lig" },
   { id: 98, name: "Türkiye 1. Lig", country: "Türkiye", seasonId: 143948, uniqueTournamentId: 98, seasonName: "1. Lig 26/27", slug: "turkiye-1-lig" },
   { id: 17, name: "İngiltere Premier Lig", country: "İngiltere", seasonId: 140756, uniqueTournamentId: 17, seasonName: "Premier Lig 26/27", slug: "ingiltere-premier-lig" },
-  { id: 8, name: "İspanya La Liga", country: "İspanya", seasonId: 142176, uniqueTournamentId: 8, seasonName: "La Liga 26/27", slug: "ispanya-la-liga" }
+  { id: 8, name: "İspanya La Liga", country: "İspanya", seasonId: 142176, uniqueTournamentId: 8, seasonName: "La Liga 26/27", slug: "ispanya-la-liga" },
+  { id: 7, name: "UEFA Şampiyonlar Ligi", country: "Avrupa", seasonId: 140786, uniqueTournamentId: 7, seasonName: "Şampiyonlar Ligi 26/27", slug: "uefa-sampiyonlar-ligi" },
+  { id: 679, name: "UEFA Avrupa Ligi", country: "Avrupa", seasonId: 142776, uniqueTournamentId: 679, seasonName: "Avrupa Ligi 26/27", slug: "uefa-avrupa-ligi" },
+  { id: 34480, name: "UEFA Konferans Ligi", country: "Avrupa", seasonId: 142778, uniqueTournamentId: 34480, seasonName: "Konferans Ligi 26/27", slug: "uefa-konferans-ligi" },
+  { id: 23755, name: "UEFA Uluslar Ligi", country: "Avrupa", seasonId: 139802, uniqueTournamentId: 23755, seasonName: "Uluslar Ligi 26/27", slug: "uefa-uluslar-ligi" },
+  { id: 23, name: "İtalya Serie A", country: "İtalya", seasonId: 140782, uniqueTournamentId: 23, seasonName: "Serie A 26/27", slug: "italya-serie-a" },
+  { id: 35, name: "Almanya Bundesliga", country: "Almanya", seasonId: 140768, uniqueTournamentId: 35, seasonName: "Bundesliga 26/27", slug: "almanya-bundesliga" },
+  { id: 34, name: "Fransa Ligue 1", country: "Fransa", seasonId: 140780, uniqueTournamentId: 34, seasonName: "Ligue 1 26/27", slug: "fransa-ligue-1" },
+
+  // İddaa ana sayfasındaki fikstür bağlantıları
+  { id: 238, name: "Portekiz Liga Portugal", country: "Portekiz", seasonId: 143496, uniqueTournamentId: 238, seasonName: "Liga Portugal 26/27", slug: "portekiz-liga-portugal" },
+  { id: 37, name: "Hollanda Eredivisie", country: "Hollanda", seasonId: 142628, uniqueTournamentId: 37, seasonName: "Eredivisie 26/27", slug: "hollanda-eredivisie" },
+  { id: 325, name: "Brezilya Serie A", country: "Brezilya", seasonId: 137706, uniqueTournamentId: 325, seasonName: "Serie A 2026", slug: "brezilya-serie-a" },
+  { id: 38, name: "Belçika Pro Lig", country: "Belçika", seasonId: 142844, uniqueTournamentId: 38, seasonName: "Pro Lig 26/27", slug: "belcika-pro-lig" },
+  { id: 18, name: "İngiltere Championship", country: "İngiltere", seasonId: 140810, uniqueTournamentId: 18, seasonName: "Championship 26/27", slug: "ingiltere-championship" },
+  { id: 44, name: "Almanya 2. Bundesliga", country: "Almanya", seasonId: 140770, uniqueTournamentId: 44, seasonName: "2. Bundesliga 26/27", slug: "almanya-2-bundesliga" },
+  { id: 182, name: "Fransa Ligue 2", country: "Fransa", seasonId: 142622, uniqueTournamentId: 182, seasonName: "Ligue 2 26/27", slug: "fransa-ligue-2" },
+  { id: 54, name: "İspanya La Liga 2", country: "İspanya", seasonId: 143416, uniqueTournamentId: 54, seasonName: "La Liga 2 26/27", slug: "ispanya-la-liga-2" },
+  { id: 25, name: "İngiltere 2. Lig", country: "İngiltere", seasonId: 140814, uniqueTournamentId: 25, seasonName: "League Two 26/27", slug: "ingiltere-2-lig" },
+  { id: 53, name: "İtalya Serie B", country: "İtalya", seasonId: 144488, uniqueTournamentId: 53, seasonName: "Serie B 26/27", slug: "italya-serie-b" },
+  { id: 131, name: "Hollanda Eerste Divisie", country: "Hollanda", seasonId: 142636, uniqueTournamentId: 131, seasonName: "Eerste Divisie 26/27", slug: "hollanda-eerste-divisie" },
+  { id: 96, name: "Türkiye Kupası", country: "Türkiye", seasonId: 145956, uniqueTournamentId: 96, seasonName: "Türkiye Kupası 26/27", slug: "turkiye-kupasi" }
 ];
 
 export function getIddaaLeague(id: number): IddaaLeague | undefined {
