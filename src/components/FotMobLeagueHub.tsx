@@ -148,21 +148,23 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
           <div className="card-heading"><span>LİG MAÇLARI</span><small>{fixtures.length ? `${fixtures.length} karşılaşma` : "Veri yok"}</small></div>
           <FixtureList matches={fixtures} />
         </section>
-        {[
-          { title: "EN GOLCÜLER", players: playerLeaders.scorers, empty: "Gol krallığı verisi bulunmuyor." },
-          { title: "EN ÇOK ASİST", players: playerLeaders.assists, empty: "Asist verisi bulunmuyor." },
-          { title: "EN YÜKSEK PUAN", players: playerLeaders.ratings, empty: "Oyuncu puan verisi bulunmuyor." }
-        ].map(card => <section className="info-card league-panel league-scorers-panel" key={card.title}>
-          <div className="card-heading"><span>{card.title}</span><small>FotMob · İlk 3</small></div>
-          {card.players.length ? <div className="league-scorers">{card.players.map((player: any, index: number) => {
-            const teamId = Number(player.teamId || player.team?.id) || null;
-            return <div key={player.id || player.name || index}>
-              <span>{index + 1}</span>
-              <b>{player.name || player.participant?.name || "Oyuncu"}{teamId ? <TeamLogo id={teamId} name={player.teamName || player.team?.name || ""} /> : null}</b>
-              <strong>{player.value ?? player.statValue ?? "—"}</strong>
-            </div>;
-          })}</div> : <div className="league-empty">{card.empty}</div>}
-        </section>)}
+        <div className="league-leader-grid">
+          {[
+            { title: "EN GOLCÜLER", players: playerLeaders.scorers, empty: "Gol krallığı verisi bulunmuyor." },
+            { title: "EN ÇOK ASİST", players: playerLeaders.assists, empty: "Asist verisi bulunmuyor." },
+            { title: "EN YÜKSEK PUAN", players: playerLeaders.ratings, empty: "Oyuncu puan verisi bulunmuyor." }
+          ].map(card => <section className="info-card league-panel league-scorers-panel" key={card.title}>
+            <div className="card-heading"><span>{card.title}</span><small>FotMob · İlk 3</small></div>
+            {card.players.length ? <div className="league-scorers">{card.players.map((player: any, index: number) => {
+              const teamId = Number(player.teamId || player.team?.id) || null;
+              return <div key={player.id || player.name || index}>
+                <span>{index + 1}</span>
+                <b>{player.name || player.participant?.name || "Oyuncu"}{teamId ? <TeamLogo id={teamId} name={player.teamName || player.team?.name || ""} /> : null}</b>
+                <strong>{player.value ?? player.statValue ?? "—"}</strong>
+              </div>;
+            })}</div> : <div className="league-empty">{card.empty}</div>}
+          </section>)}
+        </div>
       </div>}
     <p className="league-source-note">Kaynak: FotMob. Yalnızca kaynakta bulunan lig tablosu ve fikstür bilgileri gösterilir.</p>
   </div>;
