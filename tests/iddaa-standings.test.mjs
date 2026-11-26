@@ -21,6 +21,7 @@ test("Gismo underscore-prefixed total standings fields are normalized", () => {
   assert.equal(readStandingsStat(row, "total", ["drawn", "draws", "draw"], "B"), 1);
   assert.equal(readStandingsStat(row, "total", ["lost", "losses", "loss"], "M"), 1);
   assert.deepEqual(readStandingsGoals(row, "total"), [29, 16]);
+  assert.deepEqual(readStandingsGoals({ _goals: "29:16" }, "total"), ["29", "16"]);
   assert.equal(readStandingsStat(row, "total", ["goalsdiff", "goaldifference", "goal_diff"], "+/-"), 13);
   assert.equal(readStandingsStat(row, "total", ["points", "pts"], "P"), 31);
 });
