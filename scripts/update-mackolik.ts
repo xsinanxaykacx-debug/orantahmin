@@ -2,10 +2,16 @@ import { writeFile, mkdir, rename } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import JSON5 from "json5";
 import { transformMatches } from "./mackolik/transform.ts";
+import {
+  createFotMobEventMap,
+  fetchFotMobFixtures,
+  getFotMobDates,
+} from "./fotmob/matcher.ts";
 
 const ROOT = process.cwd();
 const RAW_DIR = resolve(ROOT, "data/raw");
 const OUTPUT = resolve(ROOT, "public/data/mackolik-bulletin.json");
+const FOTMOB_OUTPUT = resolve(ROOT, "public/data/fotmob-event-map.json");
 
 function getIstanbulDate(): string {
   const parts = new Intl.DateTimeFormat("en-GB", {
@@ -141,6 +147,26 @@ async function main(): Promise<void> {
   await rename(tempOutput, OUTPUT);
 
   console.log(`Kaynak: ${result.sourceCount} | Bülten: ${result.matches.length} | Reddedilen: ${result.rejected}`);
+
+  // FotMob is independent: an outage must not prevent the Mackolik bulletin refresh.
+  try {
+    const dates = getFotMobDates(result.matches);
+    const fixtures = await fetchFotMobFixtures(dates);
+    const eventMap = createFotMobEventMap(result.matches, fixtures);
+    await mkdir(dirname(FOTMOB_OUTPUT), { recursive: true });
+    const tempMap = `${FOTMOB_OUTPUT}.tmp`;
+    await writeFile(tempMap, JSON.stringify(eventMap, null, 2), "utf-8");
+    await rename(tempMap, FOTMOB_OUTPUT);
+
+    console.log(
+      `FotMob: ${fixtures.length} maç | Eşleşen: ${eventMap.summary.matched} | Belirsiz: ${eventMap.summary.ambiguous} | Eşleşmeyen: ${eventMap.summary.unmatched}`,
+    );
+  } catch (error) {
+    console.warn(
+      "FotMob eşleştirmesi başarısız; önceki fotmob-event-map.json korundu:",
+      error instanceof Error ? error.message : error,
+    );
+  }
 }
 
 main().catch((error: unknown) => {
