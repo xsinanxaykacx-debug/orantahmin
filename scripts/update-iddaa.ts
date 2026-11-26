@@ -75,6 +75,20 @@ async function main():Promise<void> {
   const competitionMap=parseCompetitionMap(competitionPayload);
   const bulletin=transformIddaaPayload(payload,marketConfig,competitionMap);
 
+  const markets=new Map<string,number>();
+  let outcomes=0, matchesWithMarkets=0;
+  for(const match of bulletin.matches) {
+    const rows=(match.fields.iddaaMarkets || []) as Array<{code:string;outcomes:Array<{odd:number|null}>}>;
+    if(rows.length) matchesWithMarkets++;
+    match.fields.marketCount=rows.length;
+    for(const market of rows) {
+      markets.set(market.code,(markets.get(market.code)||0)+1);
+      outcomes+=market.outcomes.filter(item=>item.odd!==null).length;
+    }
+    // Full market details are loaded on demand from /api/iddaa-markets.
+    delete match.fields.iddaaMarkets;
+  }
+
   const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Istanbul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
   const rawName=`iddaa_events_${today.replace(/-/g,"")}_${stamp}.json`;
@@ -86,23 +100,14 @@ async function main():Promise<void> {
   await writeFile(temp,JSON.stringify(bulletin,null,2),"utf-8");
   await rename(temp,OUTPUT);
 
-  const markets=new Map<string,number>();
-  let outcomes=0, matchesWithMarkets=0;
-  for(const match of bulletin.matches) {
-    const rows=(match.fields.iddaaMarkets || []) as Array<{code:string;outcomes:Array<{odd:number|null}>}>;
-    if(rows.length) matchesWithMarkets++;
-    for(const market of rows) {
-      markets.set(market.code,(markets.get(market.code)||0)+1);
-      outcomes+=market.outcomes.filter(item=>item.odd!==null).length;
-    }
-  }
   console.log(`iddaa: ${bulletin.meta.sourceMatchCount} kaynak kaydı | ${bulletin.matches.length} futbol maçı | ${matchesWithMarkets} marketli maç | ${markets.size} farklı market kodu | ${outcomes} fiyatlı sonuç`);
   console.log("MARKET_FREQUENCIES="+JSON.stringify(Object.fromEntries([...markets].sort((a,b)=>a[0].localeCompare(b[0])))));
   console.log(`COMPETITIONS_RESOLVED=${Object.keys(competitionMap).length} | MARKET_NAMES_RESOLVED=${Object.keys(marketConfig).length}`);
   console.log("SAMPLE_MATCHES="+JSON.stringify(bulletin.matches.slice(0,5).map(m=>({
     id:m.matchId,home:m.homeName,away:m.awayName,league:m.fields.leagueCode,
-    date:m.date,time:m.time,marketCount:(m.fields.iddaaMarkets as unknown[]).length
+    date:m.date,time:m.time,marketCount:m.fields.marketCount
   }))));
+
 
   try {
     const dates=getFotMobDates(bulletin.matches);
