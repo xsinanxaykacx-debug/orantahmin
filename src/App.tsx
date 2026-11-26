@@ -174,25 +174,25 @@ function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?:
   );
 }
 
-type MackolikMarket = {
+type IddaaMarket = {
   name: string;
   code: string;
   outcomes: Array<{ name: string; odd: number | null; rawOdd: string }>;
 };
-type MackolikMarketsResponse = {
+type IddaaMarketsResponse = {
   available?: boolean;
-  markets?: MackolikMarket[];
+  markets?: IddaaMarket[];
   marketCount?: number;
   reason?: string;
   error?: string;
   fetchedAt?: string;
 };
 
-function MackolikMarketCard({ market, result }: { market: MackolikMarket; result: MatchResult | null }) {
+function IddaaMarketCard({ market, result }: { market: IddaaMarket; result: MatchResult | null }) {
   const available = market.outcomes.some(outcome => outcome.odd !== null);
   return (
     <section className={`market-card ${available ? "" : "is-empty"}`}>
-      <div className="market-card-title">{market.name}<span>{available ? "Mackolik" : "Oran yok"}</span></div>
+      <div className="market-card-title">{market.name}<span>{available ? "iddaa.com" : "Oran yok"}</span></div>
       <div className="market-values">
         {market.outcomes.map((outcome, index) => {
           const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
@@ -275,62 +275,22 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     return () => controller.abort();
   }, [finished, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
 
-  const [sourceMarkets, setSourceMarkets] = useState<MackolikMarket[]>([]);
-  const [loadingMarkets, setLoadingMarkets] = useState(true);
-  const [marketError, setMarketError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoadingMarkets(true);
-    setMarketError(null);
-    setSourceMarkets([]);
-
-    const params = new URLSearchParams({
-      matchId: String(match.matchId),
-      date: (match.date || "").split(".").reverse().join("-"),
-      home: match.homeName || "",
-      away: match.awayName || ""
-    });
-    fetch(`/api/mackolik-markets?${params.toString()}`, {
-      cache: "no-store",
-      signal: controller.signal
-    })
-      .then(async response => {
-        const payload = await response.json() as MackolikMarketsResponse;
-        if (!response.ok) throw new Error(payload.error || "Mackolik marketleri alınamadı.");
-        if (!payload.available || !Array.isArray(payload.markets) || payload.markets.length === 0) {
-          throw new Error(payload.reason || "Bu maç için ek market verisi bulunamadı.");
-        }
-        setSourceMarkets(payload.markets);
-      })
-      .catch(reason => {
-        if (!(reason instanceof DOMException && reason.name === "AbortError")) {
-          setMarketError(reason instanceof Error ? reason.message : "Mackolik marketleri alınamadı.");
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoadingMarkets(false);
-      });
-
-    return () => controller.abort();
-  }, [match.matchId, match.date, match.homeName, match.awayName]);
+  const sourceMarkets = (Array.isArray(match.fields.iddaaMarkets) ? match.fields.iddaaMarkets : []) as IddaaMarket[];
 
   return (
     <div className="detail-content">
       <div className="section-intro">
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi{firstHalfScore && <small className="first-half-inline">İYS: {firstHalfScore.home} - {firstHalfScore.away}</small>}</h3></div>
-        <p>Mackolik’in maç sayfasında yayımlanan tüm oran marketleri listelenir.</p>
+        <p>iddaa.com bültenindeki oran marketleri listelenir.</p>
       </div>
-      {loadingMarkets ? (
-        <EmptyData title="Mackolik marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
-      ) : sourceMarkets.length > 0 ? (
+      {sourceMarkets.length > 0 ? (
         <div className="market-grid-detail">
-          {sourceMarkets.map(market => <MackolikMarketCard key={market.code} market={market} result={result} />)}
+          {sourceMarkets.map(market => <IddaaMarketCard key={market.code} market={market} result={result} />)}
         </div>
       ) : (
         <div className="data-empty">
-          <strong>Mackolik marketleri alınamadı</strong>
-          <p>{marketError || "Bu maç için Mackolik tarafından yayımlanan okunabilir oran verisi bulunamadı."}</p>
+          <strong>iddaa.com market verisi bulunamadı</strong>
+          <p>Bu maç için iddaa.com bülteninde okunabilir oran verisi bulunamadı.</p>
         </div>)}
     </div>
   );
