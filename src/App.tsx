@@ -1,5 +1,5 @@
 ﻿import { memo, useEffect, useMemo, useState } from "react";
-import { OddsService } from "./services/mackolikOddsService";
+import { OddsService } from "./services/iddaaOddsService";
 import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
@@ -68,7 +68,7 @@ function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
  type FotMobMatchState = { started: boolean; finished: boolean; fotmobMatchId?: number; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
 function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
   // FotMob can return a fixture without reliable started/finished flags.
-  // Only let a positive FotMob state override the Mackolik status.
+  // Only let a positive FotMob state override the iddaa event status.
   if (fotmob?.finished) return false;
   if (fotmob?.started) return true;
   return status > 0 && status < 4;
@@ -396,7 +396,7 @@ function App() {
           const next = new Map(previous);
           const idMap = new Map<number, string>();
           for (const league of leagueDirectory) for (const match of league.matches || []) {
-            idMap.set(match.fotmobMatchId, String(match.mackolikMatchId));
+            idMap.set(match.fotmobMatchId, String(match.iddaaEventId));
           }
           for (const item of payload.matches || []) {
             const matchId = idMap.get(item.fotmobMatchId);
