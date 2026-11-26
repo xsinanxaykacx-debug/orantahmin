@@ -44,6 +44,35 @@ jobs:
       - name: Testleri çalıştır
         run: npm test
 
+      - name: Mackolik market erişimini doğrula
+        run: |
+          node --input-type=module <<'NODE'
+          const fixtures = [
+            ["Lyon", "Lilleström", "https://www.mackolik.com/mac/lyon-vs-lillestr%C3%B6m/iddaa/ef0e4bf4pij9h60axri8f4owk"],
+            ["Pafos", "Midtjylland", "https://www.mackolik.com/mac/pafos-vs-midtjylland/iddaa/d07py8ou9j0tpsmp1vt4xur6c"],
+            ["Ajax", "Thun", "https://www.mackolik.com/mac/ajax-vs-thun/iddaa/cxxvgrsonfifrybqfibgni2vo"],
+            ["Brighton", "Craiova", "https://www.mackolik.com/mac/brighton-vs-univ-craiova/iddaa/cy9hxamyflol3qv0yogrdha1g"],
+            ["Beşiktaş", "HB Sheva", "https://www.mackolik.com/mac/be%C5%9Fikta%C5%9F-vs-hb-sheva/iddaa/edfewvdr86ufd82m2299ivs44"]
+          ];
+          for (const [home, away, url] of fixtures) {
+            try {
+              const response = await fetch(url, {
+                headers: {
+                  "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36",
+                  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                  "referer": "https://www.mackolik.com/"
+                },
+                signal: AbortSignal.timeout(25000)
+              });
+              const html = await response.text();
+              const markets = (html.match(/widget-iddaa-markets__market-item/g) || []).length;
+              console.log(JSON.stringify({ home, away, status: response.status, bytes: html.length, marketCards: markets }));
+            } catch (error) {
+              console.log(JSON.stringify({ home, away, error: error instanceof Error ? error.message : String(error) }));
+            }
+          }
+          NODE
+
       - name: Maçkolik verisini çek ve FotMob ile eşleştir
         run: npm run update:mackolik
 
