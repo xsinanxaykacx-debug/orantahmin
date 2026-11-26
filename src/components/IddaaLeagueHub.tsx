@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import "./FotMobLeagueHub.css";
 import "./IddaaLeagueHub.css";
 import { readStandingsGoals, readStandingsPosition, readStandingsRows, readStandingsStat } from "../lib/iddaaStandings.ts";
 import type { IddaaLeague } from "../lib/iddaaLeagues.ts";
@@ -94,7 +93,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
       .catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "İddaa verisi alınamadı."); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [league.id]);
+  }, [league.id, league.seasonId]);
 
   const data = payload?.data || {};
   const tableRows = useMemo(() => readStandingsRows(data.standings, mode), [data.standings, mode]);
