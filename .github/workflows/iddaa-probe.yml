@@ -1,0 +1,48 @@
+name: iddaa public feed migration test
+
+on:
+  push:
+    branches:
+      - feature/iddaa-source-migration
+    paths:
+      - "scripts/iddaa/**"
+      - "scripts/update-iddaa.ts"
+      - "tests/iddaa-transform.test.mjs"
+      - "package.json"
+      - ".github/workflows/iddaa-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Fetch live iddaa feed and validate data
+        run: node --experimental-strip-types scripts/update-iddaa.ts
+      - name: Verify generated bulletin
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from "node:fs/promises";
+          const b = JSON.parse(await readFile("public/data/football-bulletin.json","utf8"));
+          if (b.meta.sourceProvider !== "iddaa") throw new Error("Wrong source provider");
+          if (b.meta.sourceFieldCount !== 61) throw new Error("61-field compatibility schema changed");
+          if (!b.matches.length) throw new Error("No matches");
+          if (b.matches.some(m => !Array.isArray(m.raw) || m.raw.length !== 61)) throw new Error("Invalid raw row");
+          console.log("BULLETIN_OK", JSON.stringify({
+            matches:b.matches.length,
+            sourceRows:b.meta.sourceMatchCount,
+            source:b.meta.sourceProvider,
+            schema:b.meta.schemaVersion,
+            sample:b.matches.slice(0,3).map(m=>({id:m.matchId,home:m.homeName,away:m.awayName,markets:m.fields.iddaaMarkets.length}))
+          }));
+          NODE
