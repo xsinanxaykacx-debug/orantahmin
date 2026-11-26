@@ -267,7 +267,38 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
     return () => controller.abort();
   }, [finished, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
 
-  const sourceMarkets = (Array.isArray(match.fields.iddaaMarkets) ? match.fields.iddaaMarkets : []) as IddaaMarket[];
+  const [sourceMarkets, setSourceMarkets] = useState<IddaaMarket[]>([]);
+  const [loadingMarkets, setLoadingMarkets] = useState(true);
+  const [marketError, setMarketError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoadingMarkets(true);
+    setMarketError(null);
+    setSourceMarkets([]);
+    fetch(`/api/iddaa-markets?eventId=${encodeURIComponent(String(match.matchId))}`, {
+      cache: "no-store", signal: controller.signal
+    })
+      .then(async response => {
+        const payload = await response.json() as {
+          available?: boolean; markets?: IddaaMarket[]; reason?: string; error?: string
+        };
+        if (!response.ok) throw new Error(payload.error || "iddaa.com marketleri alınamadı.");
+        if (!payload.available || !Array.isArray(payload.markets) || payload.markets.length === 0) {
+          throw new Error(payload.reason || "Bu maç için oran marketi bulunamadı.");
+        }
+        setSourceMarkets(payload.markets);
+      })
+      .catch(reason => {
+        if (!(reason instanceof DOMException && reason.name === "AbortError")) {
+          setMarketError(reason instanceof Error ? reason.message : "iddaa.com marketleri alınamadı.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoadingMarkets(false);
+      });
+    return () => controller.abort();
+  }, [match.matchId]);
 
   return (
     <div className="detail-content">
@@ -275,14 +306,16 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
         <div><span className="eyebrow">PİYASA VERİSİ</span><h3>Oran analizi{firstHalfScore && <small className="first-half-inline">İYS: {firstHalfScore.home} - {firstHalfScore.away}</small>}</h3></div>
         <p>iddaa.com bültenindeki oran marketleri listelenir.</p>
       </div>
-      {sourceMarkets.length > 0 ? (
+      {loadingMarkets ? (
+        <EmptyData title="iddaa.com marketleri yükleniyor" description="Maçın oran detayları kaynaktan okunuyor." />
+      ) : sourceMarkets.length > 0 ? (
         <div className="market-grid-detail">
           {sourceMarkets.map(market => <IddaaMarketCard key={market.code} market={market} result={result} />)}
         </div>
       ) : (
         <div className="data-empty">
           <strong>iddaa.com market verisi bulunamadı</strong>
-          <p>Bu maç için iddaa.com bülteninde okunabilir oran verisi bulunamadı.</p>
+          <p>{marketError || "Bu maç için bültende okunabilir oran verisi bulunamadı."}</p>
         </div>)}
     </div>
   );
