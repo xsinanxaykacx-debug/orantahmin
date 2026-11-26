@@ -56,51 +56,62 @@ function normalizeTeam(team: IdDaaTeam | undefined) {
   };
 }
 
-async function handleLeague(req: Req, res: Res, defaults = { seasonId: IDDAA_SEASON_ID, tournamentId: IDDAA_UNIQUE_TOURNAMENT_ID, name: "Türkiye Süper Lig", seasonName: "Süper Lig 26/27" }) {
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
-  const seasonId = Number(queryValue(req.query.seasonId) || defaults.seasonId);
-  const tournamentId = Number(queryValue(req.query.tournamentId) || defaults.tournamentId);
-  const leagueName = queryValue(req.query.leagueName).trim() || defaults.name;
-  const seasonName = queryValue(req.query.seasonName).trim() || defaults.seasonName;
-  if (!Number.isSafeInteger(seasonId) || seasonId < 1 || !Number.isSafeInteger(tournamentId) || tournamentId < 1) {
-    return res.status(400).json({ source: "iddaa.com", error: "Geçersiz İddaa lig veya sezon kimliği." });
+async function handleLeague(req: VercelRequest, res: VercelResponse) {
+  const seasonId = Number(queryValue(req, "seasonId") || IDDAA_SEASON_ID);
+  const tournamentId = Number(queryValue(req, "tournamentId") || IDDAA_UNIQUE_TOURNAMENT_ID);
+  const includeStandings = queryValue(req, "includeStandings") !== "false";
+  if (!Number.isInteger(seasonId) || seasonId <= 0 || !Number.isInteger(tournamentId) || tournamentId <= 0) {
+    return res.status(400).json({ error: "Geçersiz İddaa lig kimliği." });
   }
-  const feeds = [
-    ["standings", "season_dynamictable", seasonId],
-    ["form", "stats_formtable", seasonId],
-    ["results", "livescore_season_lastx", seasonId],
-    ["goals", "stats_season_topgoals", seasonId],
-    ["assists", "stats_season_topassists", seasonId],
-    ["cards", "stats_season_topcards", seasonId],
-    ["teams", "uniquetournament_teams", tournamentId],
-    ["meta", "stats_season_meta", seasonId]
-  ] as const;
+
+  const feedRequests: Array<[string, Promise<any>]> = includeStandings
+    ? [
+        ["standings", fetchIddaaFeed("season_dynamictable", seasonId)],
+        ["form", fetchIddaaFeed("stats_formtable", seasonId)],
+        ["results", fetchIddaaFeed("livescore_season_lastx", seasonId)],
+        ["goals", fetchIddaaFeed("stats_season_topgoals", seasonId)],
+        ["assists", fetchIddaaFeed("stats_season_topassists", seasonId)],
+        ["cards", fetchIddaaFeed("stats_season_topcards", seasonId)],
+        ["teams", fetchIddaaFeed("uniquetournament_teams", tournamentId)],
+        ["meta", fetchIddaaFeed("stats_season_meta", seasonId)]
+      ]
+    : [
+        ["results", fetchIddaaFeed("livescore_season_lastx", seasonId)]
+      ];
+
+  const settled = await Promise.all(feedRequests.map(async ([key, request]) => {
+    try {
+      return [key, await request] as const;
+    } catch (error) {
+      return [key, { error: error instanceof Error ? error.message : String(error) }] as const;
+    }
+  }));
+  const data: Record<string, any> = {};
+  const feedErrors: Record<string, string> = {};
+  for (const [key, value] of settled) {
+    if (value && typeof value === "object" && "error" in value) feedErrors[key] = String(value.error);
+    else data[key] = value?.data ?? value;
+  }
+
   try {
-    const values = await Promise.all(feeds.map(async ([key, feed, params]) => [key, await optionalFeed(feed, params)] as const));
-    const fixtureResult = await (async () => {
-      try { return { data: await fetchIddaaUpcomingFixtures(seasonId), error: null }; }
-      catch (error) { return { data: null, error: error instanceof Error ? error.message : String(error) }; }
-    })();
-    const data = Object.fromEntries(values.map(([key, value]) => [key, value.data]));
-    data.fixtures = fixtureResult.data;
-    const errors = Object.fromEntries(values.filter(([, value]) => value.error).map(([key, value]) => [key, value.error]));
-    if (fixtureResult.error) errors.fixtures = fixtureResult.error;
-    if (!data.standings) return res.status(502).json({
-      source: "iddaa.com / Sportradar",
-      error: errors.standings || `${leagueName} puan tablosu alınamadı.`,
-      feedErrors: errors
-    });
-    return res.status(200).json({
-      source: "iddaa.com",
-      league: { id: tournamentId, name: leagueName },
-      season: { id: seasonId, name: seasonName },
-      fetchedAt: new Date().toISOString(),
-      data,
-      feedErrors: errors
-    });
+    const fixtureResult = await fetchIddaaUpcomingFixtures(seasonId);
+    data.fixtures = fixtureResult?.data ?? fixtureResult;
   } catch (error) {
-    return res.status(502).json({ source: "iddaa.com", error: error instanceof Error ? error.message : `${leagueName} verileri alınamadı.` });
+    feedErrors.fixtures = error instanceof Error ? error.message : String(error);
   }
+
+  if (includeStandings && !data.standings) {
+    return res.status(502).json({ error: "İddaa lig verisi alınamadı.", feedErrors, data });
+  }
+
+  return res.status(200).json({
+    source: "iddaa",
+    seasonId,
+    tournamentId,
+    data,
+    feedErrors,
+    updatedAt: new Date().toISOString()
+  });
 }
 
 async function handleTeam(req: Req, res: Res) {
