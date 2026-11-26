@@ -56,10 +56,10 @@ function normalizeTeam(team: IdDaaTeam | undefined) {
   };
 }
 
-async function handleLeague(req: VercelRequest, res: VercelResponse) {
-  const seasonId = Number(queryValue(req, "seasonId") || IDDAA_SEASON_ID);
-  const tournamentId = Number(queryValue(req, "tournamentId") || IDDAA_UNIQUE_TOURNAMENT_ID);
-  const includeStandings = queryValue(req, "includeStandings") !== "false";
+async function handleLeague(req: Req, res: Res) {
+  const seasonId = Number(queryValue(req.query.seasonId) || IDDAA_SEASON_ID);
+  const tournamentId = Number(queryValue(req.query.tournamentId) || IDDAA_UNIQUE_TOURNAMENT_ID);
+  const includeStandings = queryValue(req.query.includeStandings) !== "false";
   if (!Number.isInteger(seasonId) || seasonId <= 0 || !Number.isInteger(tournamentId) || tournamentId <= 0) {
     return res.status(400).json({ error: "Geçersiz İddaa lig kimliği." });
   }
