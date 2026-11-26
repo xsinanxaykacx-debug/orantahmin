@@ -85,7 +85,7 @@ const MatchRow = memo(function MatchRow({
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
       <div className="match-row-top">
         <span>{match.time || "Saat yok"}</span>
-        <span className={`match-state ${isLiveMatch(match.status) ? "live" : ""}`}>{isLiveMatch(match.status, fotmobStatus) && statusLabel(match.status)}</span>
+        <span className={`match-state ${isLiveMatch(match.status) ? "live" : ""}`}>{isLiveMatch(match.status) && statusLabel(match.status)}</span>
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
