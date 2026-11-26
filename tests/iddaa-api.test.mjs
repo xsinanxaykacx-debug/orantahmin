@@ -17,7 +17,7 @@ test("iddaa market API returns every market for a requested public event",async(
     };
     return {ok:true,json:async()=>({isSuccess:true,data:[{events:[event]}]})};
   };
-  const response:any = {
+  const response = {
     headers:{},statusCode:200,body:null,
     setHeader(name,value){this.headers[name]=value;},
     status(code){this.statusCode=code;return this;},
