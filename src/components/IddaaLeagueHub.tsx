@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./FotMobLeagueHub.css";
 import "./IddaaLeagueHub.css";
+import { readStandingsGoals, readStandingsPosition, readStandingsStat } from "../lib/iddaaStandings.ts";
 
 type LeagueSummary = { id: number; name: string; country: string | null; logo: string; matchCount: number };
 type Payload = { source: string; season?: { id: number; name: string }; fetchedAt?: string; data: Record<string, any>; feedErrors?: Record<string, string>; error?: string };
@@ -24,30 +25,6 @@ function form(value: any): string[] {
   return raw.toUpperCase().split("").filter(x => "WDLGBMY".includes(x)).slice(-5).map(x => x === "W" || x === "G" ? "G" : x === "D" || x === "B" ? "B" : "M");
 }
 function tables(data: any): any[] { return arr(data?.season?.tables || data?.tables); }
-function field(row: any, mode: Mode, keys: string[], localized?: string): any {
-  const group = mode === "total"
-    ? val(row?.total, row?.overall, row?.stats, row)
-    : mode === "home"
-      ? val(row?.home, row?.homestats, row?.homeStats)
-      : val(row?.away, row?.awaystats, row?.awayStats);
-  const nested = group && typeof group === "object"
-    ? val(...keys.map(k => group[k]), localized ? group[localized] : undefined)
-    : undefined;
-  return val(nested, ...keys.map(k => row?.[k]), localized ? row?.[localized] : undefined);
-}
-function goalsPair(row: any, mode: Mode): [any, any] {
-  const group = mode === "total"
-    ? val(row?.total, row?.overall, row?.stats, row)
-    : mode === "home"
-      ? val(row?.home, row?.homestats, row?.homeStats)
-      : val(row?.away, row?.awaystats, row?.awayStats);
-  const raw = txt(val(group?.["AG:YG"], group?.goals, group?.goalsForAgainst, row?.["AG:YG"], row?.goals, row?.goalsForAgainst));
-  const m = raw.match(/(-?\d+)\s*:\s*(-?\d+)/);
-  return m ? [m[1], m[2]] : [
-    val(group?.goalsfor, group?.goals_for, row?.goalsfor, row?.goals_for),
-    val(group?.goalsagainst, group?.goals_against, group?.goalsconceded, row?.goalsagainst, row?.goals_against)
-  ];
-}
 function rowsFor(data: any, mode: Mode): any[] {
   const list = tables(data);
   const table = mode === "total"
@@ -170,9 +147,14 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
           <thead><tr><th>Poz</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG:YG</th><th>+/-</th><th>P</th><th>Form</th></tr></thead>
           <tbody>{tableRows.map((r:any,i:number)=>{
             const t=val(r?.team,r?.participant,r?.competitor,r?.["Takım"],{}), n=name(t)||txt(r?.teamname)||"Takım", f=form(val(r?.Form,r?.form,r?.recentform,r?.last5,formMap.get(n.toLocaleLowerCase("tr-TR"))));
-            const p=val(r?.position,r?.pos,r?.rank,r?.Poz,i+1);
-            const o=field(r,mode,["played","matches","matchplayed"],"O"), g=field(r,mode,["won","wins","win"],"G"), b=field(r,mode,["drawn","draws","draw"],"B"), l=field(r,mode,["lost","losses","loss"],"M");
-            const [gf,ga]=goalsPair(r,mode), gd=field(r,mode,["goalsdiff","goaldifference","goal_diff"],"+/-"), pts=field(r,mode,["points","pts"],"P");
+            const p=readStandingsPosition(r,i+1);
+            const o=readStandingsStat(r,mode,["played","matches","matchplayed","_played","_matches"],"O");
+            const g=readStandingsStat(r,mode,["won","wins","win"],"G");
+            const b=readStandingsStat(r,mode,["drawn","draws","draw"],"B");
+            const l=readStandingsStat(r,mode,["lost","losses","loss"],"M");
+            const [gf,ga]=readStandingsGoals(r,mode);
+            const gd=readStandingsStat(r,mode,["goalsdiff","goaldifference","goal_diff"],"+/-");
+            const pts=readStandingsStat(r,mode,["points","pts"],"P");
             return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td>{txt(g)||"—"}</td><td>{txt(b)||"—"}</td><td>{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
           })}</tbody>
         </table></div> : <div className="league-empty">{mode==="total"?"Puan tablosu verisi bulunamadı.":"Kaynak bu görünüm için ayrı bir tablo sağlamadı."}</div>}
