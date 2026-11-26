@@ -15,7 +15,7 @@ test("iddaa market API returns every market for a requested public event",async(
     if(String(url).includes("get_market_config")) return {
       ok:true,json:async()=>({isSuccess:true,data:{m:{"1_1":{n:"Maç Sonucu"},"2_89":{n:"Karşılıklı Gol"}}}})
     };
-    return {ok:true,json:async()=>({isSuccess:true,data:[{events:[event]}]})};
+    return {ok:true,json:async()=>({isSuccess:true,data:event})};
   };
   const response = {
     headers:{},statusCode:200,body:null,
