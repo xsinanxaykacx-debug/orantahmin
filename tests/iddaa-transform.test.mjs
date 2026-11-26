@@ -70,5 +70,5 @@ test("event detail replaces listview markets with the complete event market payl
   assert.equal(enriched.m.length,6);
   assert.equal(enriched.m[4].st,48);
   assert.equal(enriched.m[5].st,718);
-  assert.throws(()=>mergeIddaaEventDetail(event,{isSuccess:true,data:{m:[]}}),/tam market listesi/);
+  assert.throws(()=>mergeIddaaEventDetail(event,{isSuccess:true,data:{m:null}}),/tam market listesi/);
 });
