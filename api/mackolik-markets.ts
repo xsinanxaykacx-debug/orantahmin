@@ -32,6 +32,7 @@ function normalizeName(value: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US")
+    .replace(/\bolympiacos\b/g, "olympiakos")
     .replace(/\b(fc|ac|cf|sc|fk|sk|afc|club|the)\b/g, " ")
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
@@ -47,7 +48,23 @@ function sameTeam(source: string, requested: string): boolean {
   const aTokens = new Set(a.split(" "));
   const bTokens = new Set(b.split(" "));
   const common = [...aTokens].filter(token => bTokens.has(token));
-  return common.length > 0 && common.length / Math.min(aTokens.size, bTokens.size) >= 0.6;
+  if (common.length > 0 && common.length / Math.min(aTokens.size, bTokens.size) >= 0.6) return true;
+
+  if (Math.min(a.length, b.length) < 6) return false;
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let row = 1; row <= a.length; row++) {
+    const current = [row];
+    for (let column = 1; column <= b.length; column++) {
+      current[column] = Math.min(
+        current[column - 1] + 1,
+        previous[column] + 1,
+        previous[column - 1] + (a[row - 1] === b[column - 1] ? 0 : 1)
+      );
+    }
+    previous = current;
+  }
+  const similarity = 1 - previous[b.length] / Math.max(a.length, b.length);
+  return similarity >= 0.78;
 }
 
 function decodeEntities(value: string): string {
