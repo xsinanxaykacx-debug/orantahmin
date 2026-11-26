@@ -27,7 +27,9 @@ jobs:
       - run: npm ci
       - name: Run tests
         run: npm test
-      - name: Typecheck and build\n        run: npm run build\n      - name: Fetch live iddaa feed and validate data
+      - name: Typecheck and build
+        run: npm run build
+      - name: Fetch live iddaa feed and validate data
         run: node --experimental-strip-types scripts/update-iddaa.ts
       - name: Verify generated bulletin
         run: |
