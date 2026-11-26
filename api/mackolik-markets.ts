@@ -109,6 +109,12 @@ function slugify(value: string): string {
   return normalizeName(value).replace(/\s+/g, "-") || "market";
 }
 
+function pageTeamSlug(value: string): string {
+  return normalizeName(value)
+    .replace(/\buniv\b/g, "universidad")
+    .replace(/\s+/g, "-");
+}
+
 function parseMarkets(html: string): MackolikMarket[] {
   const headings = [...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)];
   const markets: MackolikMarket[] = [];
@@ -205,24 +211,32 @@ export default async function handler(req: Req, res: Res) {
       });
     }
 
-    const matchUrl = new URL(`/mac/${match.matchSlug}/iddaa/${match.id}`, "https://www.mackolik.com");
+    const pageSlugs = [...new Set([
+      match.matchSlug,
+      `${pageTeamSlug(home)}-vs-${pageTeamSlug(away)}`,
+      `${pageTeamSlug(match.homeTeam?.name || "")}-vs-${pageTeamSlug(match.awayTeam?.name || "")}`
+    ].filter(Boolean))];
     let pageResponse: Response | null = null;
     let lastPageStatus = 0;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      pageResponse = await fetch(matchUrl, {
-        headers: {
-          ...commonHeaders,
-          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache"
-        },
-        redirect: "follow",
-        signal: AbortSignal.timeout(20000)
-      });
-      if (pageResponse.ok) break;
-      lastPageStatus = pageResponse.status;
-      if (![403, 408, 429, 500, 502, 503, 504].includes(pageResponse.status)) break;
-      await new Promise(resolve => setTimeout(resolve, 350 * (attempt + 1)));
+    for (const pageSlug of pageSlugs) {
+      const matchUrl = new URL(`/mac/${pageSlug}/iddaa/${match.id}`, "https://www.mackolik.com");
+      for (let attempt = 0; attempt < 2; attempt++) {
+        pageResponse = await fetch(matchUrl, {
+          headers: {
+            ...commonHeaders,
+            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache"
+          },
+          redirect: "follow",
+          signal: AbortSignal.timeout(20000)
+        });
+        if (pageResponse.ok) break;
+        lastPageStatus = pageResponse.status;
+        if (![403, 408, 429, 500, 502, 503, 504].includes(pageResponse.status)) break;
+        await new Promise(resolve => setTimeout(resolve, 350 * (attempt + 1)));
+      }
+      if (pageResponse?.ok) break;
     }
     if (!pageResponse?.ok) {
       return res.status(502).json({
