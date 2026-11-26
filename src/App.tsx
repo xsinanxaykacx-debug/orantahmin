@@ -432,7 +432,7 @@ function App() {
   const teamLogosByMatch = useMemo(() => {
     const map = new Map<string, { home: number | null; away: number | null; homeName: string | null; awayName: string | null } & FotMobMatchState>();
     for (const league of leagueDirectory) for (const match of league.matches || []) {
-      map.set(String(match.mackolikMatchId), {
+      map.set(String(match.iddaaEventId), {
         home: match.homeTeamId || null,
         away: match.awayTeamId || null,
         homeName: match.home?.trim() || null,
