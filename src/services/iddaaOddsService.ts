@@ -24,7 +24,7 @@ function isMatch(value: unknown): value is BulletinMatch {
     typeof value.status === "number" &&
     (typeof value.homeName === "string" || value.homeName === null) &&
     (typeof value.awayName === "string" || value.awayName === null) &&
-    Array.isArray(value.raw) &&
+    (value.raw === undefined || Array.isArray(value.raw)) &&
     Number.isInteger(value.source.groupIndex) &&
     Number.isInteger(value.source.matchIndex)
   );
@@ -73,8 +73,8 @@ export const OddsService = {
       throw new Error("Bülten şeması beklenen orantahmin-61-v1 formatında değil.");
     }
 
-    if (payload.meta.sourceFieldCount !== 61 || payload.matches.some((match) => match.raw.length !== 61)) {
-      throw new Error("Kaynak satır uzunluğu 61 alanlı şema ile uyuşmuyor.");
+    if (payload.meta.sourceProvider === "iddaa" && payload.meta.schemaVersion !== "orantahmin-iddaa-dynamic-v2") {
+      throw new Error("Bülten dinamik iddaa market şemasıyla uyuşmuyor.");
     }
 
     return payload;
