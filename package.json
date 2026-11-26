@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "update:mackolik": "node --experimental-strip-types scripts/update-mackolik.ts"
+    "update:iddaa": "node --experimental-strip-types scripts/update-iddaa.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

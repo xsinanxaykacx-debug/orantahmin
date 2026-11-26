@@ -372,7 +372,7 @@ export function matchBulletinToFotMob(
   return internal.map(({ row, state, confidence, leagueMatch, selected, candidates }) => {
     const leagueCode = String(row.fields?.leagueCode || "");
     const base = {
-      mackolikMatchId:
+      iddaaEventId:
         row.matchId === null || row.matchId === undefined
           ? null
           : String(row.matchId),
@@ -452,7 +452,7 @@ export function createFotMobEventMap(
   };
 
   return {
-    source: "Mackolik 61-field bulletin + FotMob",
+    source: "iddaa 61-field bulletin + FotMob",
     generatedAt: new Date().toISOString(),
     summary,
     matches,

@@ -1,5 +1,6 @@
 export interface BulletinMeta {
   sourceFile: string;
+  sourceProvider?: "iddaa";
   generatedAt: string;
   schemaVersion: string;
   sourceFieldCount: number;
@@ -75,7 +76,7 @@ export interface BulletinMatch {
   time: string;
   status: number;
   fields: MatchFields;
-  /** Original 61-value source row. Never normalize or mutate this array. */
+  /** Stable 61-slot compatibility projection mapped from the active odds provider. */
   raw: unknown[];
   source: {
     groupIndex: number;

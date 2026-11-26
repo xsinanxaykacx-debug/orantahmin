@@ -8,7 +8,7 @@ export type LeagueSummary = {
   logo: string;
   matchCount: number;
   matches: Array<{
-    mackolikMatchId: string;
+    iddaaEventId: string;
     fotmobMatchId: number;
     date: string;
     time: string;

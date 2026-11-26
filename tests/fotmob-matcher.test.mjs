@@ -27,7 +27,7 @@ const fixture = (overrides = {}) => ({
   ...overrides,
 });
 
-test("Mackolik date is validated and converted to FotMob YYYYMMDD", () => {
+test("iddaa date is validated and converted to FotMob YYYYMMDD", () => {
   assert.equal(toFotMobDate("26.11.2026"), "20261126");
   assert.equal(toFotMobDate("31.02.2026"), null);
   assert.equal(toFotMobDate("2026-11-26"), null);
@@ -93,7 +93,7 @@ test("near-identical top candidates are marked ambiguous without an ID", () => {
   assert.equal(result[0].candidates.length, 2);
 });
 
-test("one FotMob event cannot be assigned to two Mackolik rows", () => {
+test("one FotMob event cannot be assigned to two iddaa rows", () => {
   const result = matchBulletinToFotMob(
     [row({ matchId: "100" }), row({ matchId: "101" })],
     [fixture()],
@@ -139,7 +139,7 @@ test("FotMob fetch rejects malformed responses instead of writing false unmatche
   );
 });
 
-test("two high-confidence matches establish a league guard for their Mackolik group", () => {
+test("two high-confidence matches establish a league guard for their iddaa group", () => {
   const groupRow = (matchId, homeName, awayName) =>
     row({
       matchId,
