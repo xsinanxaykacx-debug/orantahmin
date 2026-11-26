@@ -6,6 +6,7 @@ import "./index.css";
 import { IddaaLineupPanel } from "./components/IddaaLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
+import { IddaaLeagueHub } from "./components/IddaaLeagueHub";
 import { FotMobStatistics } from "./components/FotMobStatistics";
 import { LeagueLogo } from "./components/LeagueLogo";
 import { settleMarketOutcome, type MatchEventFacts, type MatchResult } from "./utils/marketSettlement";
@@ -597,7 +598,7 @@ function App() {
             <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
           </div>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
-          <div className="list-caption"><span>{activeNav === "leagues" ? "FotMob lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} lig kataloğu · ${leagueDirectory.filter(league => league.matchCount > 0).length} bültenle eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
+          <div className="list-caption"><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} lig kataloğu · ${leagueDirectory.filter(league => league.matchCount > 0).length} bültenle eşleşen · ${leagueDirectory.reduce((sum, league) => sum + league.matchCount, 0)} maç` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
         </div>
 
         {activeNav === "statistics" ? <div className="statistics-nav-options">
@@ -623,7 +624,7 @@ function App() {
             <span className="statistics-nav-arrow">›</span>
           </button>
         </div> : activeNav === "leagues" ? <div className="league-directory-scroll">
-          {leagueDirectoryLoading ? <div className="league-directory-empty">FotMob lig kataloğu yükleniyor…</div>
+          {leagueDirectoryLoading ? <div className="league-directory-empty">Lig kataloğu yükleniyor…</div>
             : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
             : filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
             : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
@@ -647,7 +648,7 @@ function App() {
       <main className="detail-pane">
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
-          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="FotMob lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? <FotMobLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="FotMob lig kataloğunda seçilebilir lig bulunamadı." />
+          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="Lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? (selectedLeague.id === 71 || (/süper|super/i.test(selectedLeague.name) && /turkey|türkiye|turkiye/i.test(String(selectedLeague.country || ""))) ? <IddaaLeagueHub league={selectedLeague} /> : <FotMobLeagueHub league={selectedLeague} />) : <EmptyData title="Lig bulunamadı" description="Lig kataloğunda seçilebilir lig bulunamadı." />
           : activeNav === "statistics" ? <FotMobStatistics view={statisticsView} /> : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
           : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} fotmobStatus={selectedMatchFotMobStatus} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p></div>}
