@@ -1,12 +1,12 @@
 {
   "meta": {
-    "sourceFile": "iddaa_events_20261126_20261126T135647Z.json",
-    "generatedAt": "2026-11-26T13:56:47.895Z",
+    "sourceFile": "iddaa_events_20261126_20261126T140035Z.json",
+    "generatedAt": "2026-11-26T14:00:35.158Z",
     "schemaVersion": "orantahmin-61-v1",
     "sourceProvider": "iddaa",
     "sourceFieldCount": 61,
-    "sourceMatchCount": 993,
-    "includedMatchCount": 989,
+    "sourceMatchCount": 991,
+    "includedMatchCount": 987,
     "rejectedMatchCount": 4,
     "warningCount": 0
   },
@@ -25043,32 +25043,32 @@
         "time": "17:00",
         "date": "28.11.2026",
         "mbs": 3,
-        "ms1": 1.61,
-        "msX": 3.3,
-        "ms2": 3.6,
-        "doubleChance1X": 1.09,
-        "doubleChance12": 1.12,
-        "doubleChanceX2": 1.66,
+        "ms1": 1.65,
+        "msX": 3.24,
+        "ms2": 3.49,
+        "doubleChance1X": 1.1,
+        "doubleChance12": 1.13,
+        "doubleChanceX2": 1.63,
         "goals25Under": 1.56,
         "goals25Over": 1.79,
         "leagueCode": "İsveç Superettan, Küme Düşme/Yükselm",
         "groupId": "1963",
         "subgroupId": "0",
-        "totalGoals01": 2.82,
+        "totalGoals01": 2.83,
         "totalGoals23": 1.76,
-        "totalGoals46": 3.9,
-        "totalGoals7Plus": 17.75,
-        "halfTimeResult1": 2.22,
+        "totalGoals46": 3.89,
+        "totalGoals7Plus": 17.65,
+        "halfTimeResult1": 2.25,
         "halfTimeResultX": 1.92,
-        "halfTimeResult2": 4.32,
-        "handicapMs1": 2.84,
-        "handicapMsX": 3.13,
-        "handicapMs2": 1.71,
-        "bttsYes": 1.72,
-        "bttsNo": 1.61,
+        "halfTimeResult2": 4.19,
+        "handicapMs1": 2.93,
+        "handicapMsX": 3.17,
+        "handicapMs2": 1.66,
+        "bttsYes": 1.7,
+        "bttsNo": 1.63,
         "halfTimeGoals15Under": 1.23,
-        "halfTimeGoals15Over": 2.6,
-        "goals15Under": 2.78,
+        "halfTimeGoals15Over": 2.59,
+        "goals15Under": 2.79,
         "goals15Over": 1.18,
         "goals35Under": 1.13,
         "goals35Over": 3.13,
@@ -25105,12 +25105,12 @@
         3,
         null,
         null,
-        1.61,
-        3.3,
-        3.6,
-        1.09,
-        1.12,
-        1.66,
+        1.65,
+        3.24,
+        3.49,
+        1.1,
+        1.13,
+        1.63,
         1.56,
         1.79,
         null,
@@ -25118,22 +25118,22 @@
         "İsveç Superettan, Küme Düşme/Yükselm",
         "1963",
         "0",
-        2.82,
+        2.83,
         1.76,
-        3.9,
-        17.75,
-        2.22,
+        3.89,
+        17.65,
+        2.25,
         1.92,
-        4.32,
-        2.84,
-        3.13,
-        1.71,
-        1.72,
-        1.61,
+        4.19,
+        2.93,
+        3.17,
+        1.66,
+        1.7,
+        1.63,
         null,
         1.23,
-        2.6,
-        2.78,
+        2.59,
+        2.79,
         1.18,
         1.13,
         3.13,
@@ -35761,12 +35761,12 @@
         "time": "18:00",
         "date": "28.11.2026",
         "mbs": 3,
-        "ms1": 1.35,
-        "msX": 3.88,
-        "ms2": 4.81,
+        "ms1": 1.34,
+        "msX": 3.91,
+        "ms2": 5.07,
         "doubleChance1X": 1,
         "doubleChance12": 1.07,
-        "doubleChanceX2": 2.02,
+        "doubleChanceX2": 2.06,
         "goals25Under": 2.01,
         "goals25Over": 1.42,
         "leagueCode": "İngiltere Ulusal Lig",
@@ -35776,15 +35776,15 @@
         "totalGoals23": 1.88,
         "totalGoals46": 2.88,
         "totalGoals7Plus": 8.42,
-        "halfTimeResult1": 1.78,
-        "halfTimeResultX": 2.27,
-        "halfTimeResult2": 4.96,
-        "handicapMs1": 2.05,
-        "handicapMsX": 3.33,
-        "handicapMs2": 2.13,
-        "bttsYes": 1.52,
-        "bttsNo": 1.83,
-        "halfTimeGoals15Under": 1.41,
+        "halfTimeResult1": 1.75,
+        "halfTimeResultX": 2.29,
+        "halfTimeResult2": 5.14,
+        "handicapMs1": 1.99,
+        "handicapMsX": 3.34,
+        "handicapMs2": 2.18,
+        "bttsYes": 1.54,
+        "bttsNo": 1.82,
+        "halfTimeGoals15Under": 1.42,
         "halfTimeGoals15Over": 2.03,
         "goals15Under": 3.94,
         "goals15Over": 1.05,
@@ -35823,12 +35823,12 @@
         3,
         null,
         null,
-        1.35,
-        3.88,
-        4.81,
+        1.34,
+        3.91,
+        5.07,
         1,
         1.07,
-        2.02,
+        2.06,
         2.01,
         1.42,
         null,
@@ -35840,16 +35840,16 @@
         1.88,
         2.88,
         8.42,
-        1.78,
-        2.27,
-        4.96,
-        2.05,
-        3.33,
-        2.13,
-        1.52,
-        1.83,
+        1.75,
+        2.29,
+        5.14,
+        1.99,
+        3.34,
+        2.18,
+        1.54,
+        1.82,
         null,
-        1.41,
+        1.42,
         2.03,
         3.94,
         1.05,
@@ -42219,12 +42219,12 @@
         "time": "18:00",
         "date": "28.11.2026",
         "mbs": 3,
-        "ms1": 1.99,
-        "msX": 3.3,
-        "ms2": 2.51,
-        "doubleChance1X": 1.24,
-        "doubleChance12": 1.13,
-        "doubleChanceX2": 1.41,
+        "ms1": 1.91,
+        "msX": 3.36,
+        "ms2": 2.62,
+        "doubleChance1X": 1.22,
+        "doubleChance12": 1.12,
+        "doubleChanceX2": 1.44,
         "goals25Under": 2.23,
         "goals25Over": 1.33,
         "leagueCode": "İngiltere Ulusal Lig",
@@ -42234,19 +42234,19 @@
         "totalGoals23": 1.97,
         "totalGoals46": 2.66,
         "totalGoals7Plus": 6.6,
-        "halfTimeResult1": 2.44,
+        "halfTimeResult1": 2.37,
         "halfTimeResultX": 2.22,
-        "halfTimeResult2": 2.93,
-        "handicapMs1": 3.43,
-        "handicapMsX": 3.86,
-        "handicapMs2": 1.42,
+        "halfTimeResult2": 3.04,
+        "handicapMs1": 3.24,
+        "handicapMsX": 3.79,
+        "handicapMs2": 1.46,
         "bttsYes": 1.29,
-        "bttsNo": 2.35,
+        "bttsNo": 2.33,
         "halfTimeGoals15Under": 1.48,
         "halfTimeGoals15Over": 1.9,
         "goals15Under": 4.53,
         "goals15Over": 1,
-        "goals35Under": 1.45,
+        "goals35Under": 1.46,
         "goals35Over": 1.94,
         "eventId": "3331907",
         "marketMs": "1:1:",
@@ -42281,12 +42281,12 @@
         3,
         null,
         null,
-        1.99,
-        3.3,
-        2.51,
-        1.24,
-        1.13,
-        1.41,
+        1.91,
+        3.36,
+        2.62,
+        1.22,
+        1.12,
+        1.44,
         2.23,
         1.33,
         null,
@@ -42298,20 +42298,20 @@
         1.97,
         2.66,
         6.6,
-        2.44,
+        2.37,
         2.22,
-        2.93,
-        3.43,
-        3.86,
-        1.42,
+        3.04,
+        3.24,
+        3.79,
+        1.46,
         1.29,
-        2.35,
+        2.33,
         null,
         1.48,
         1.9,
         4.53,
         1,
-        1.45,
+        1.46,
         1.94,
         null,
         null,
@@ -58197,6 +58197,202 @@
       }
     },
     {
+      "matchId": "3336222",
+      "homeName": "Mexico FC",
+      "awayName": "Rayo Ciudad Alcobendas",
+      "date": "28.11.2026",
+      "time": "19:00",
+      "status": 0,
+      "fields": {
+        "matchId": "3336222",
+        "homeName": "Mexico FC",
+        "awayName": "Rayo Ciudad Alcobendas",
+        "status": 0,
+        "time": "19:00",
+        "date": "28.11.2026",
+        "mbs": 3,
+        "ms1": 2.06,
+        "msX": 3.01,
+        "ms2": 2.61,
+        "doubleChance1X": 1.22,
+        "doubleChance12": 1.17,
+        "doubleChanceX2": 1.38,
+        "leagueCode": "İspanya Amatör Tercera Rfef, Group 7",
+        "groupId": "23883",
+        "subgroupId": "0",
+        "eventId": "3336222",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "competitionId": 23883,
+        "competitionName": "İspanya Amatör Tercera Rfef, Group 7",
+        "isLive": false,
+        "marketCount": 2
+      },
+      "raw": [
+        "3336222",
+        "Mexico FC",
+        null,
+        "Rayo Ciudad Alcobendas",
+        null,
+        0,
+        "19:00",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        2.06,
+        3.01,
+        2.61,
+        1.22,
+        1.17,
+        1.38,
+        null,
+        null,
+        null,
+        null,
+        "İspanya Amatör Tercera Rfef, Group 7",
+        "23883",
+        "0",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "3336222",
+        "1:1:",
+        "2:92:",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 477
+      }
+    },
+    {
+      "matchId": "3351712",
+      "homeName": "Elgin City",
+      "awayName": "P. Thistle",
+      "date": "28.11.2026",
+      "time": "18:00",
+      "status": 0,
+      "fields": {
+        "matchId": "3351712",
+        "homeName": "Elgin City",
+        "awayName": "P. Thistle",
+        "status": 0,
+        "time": "18:00",
+        "date": "28.11.2026",
+        "mbs": 3,
+        "ms1": 5.29,
+        "msX": 4.31,
+        "ms2": 1.28,
+        "leagueCode": "İskoçya Kupası",
+        "groupId": "599",
+        "subgroupId": "0",
+        "eventId": "3351712",
+        "marketMs": "1:1:",
+        "competitionId": 599,
+        "competitionName": "İskoçya Kupası",
+        "isLive": false,
+        "marketCount": 1
+      },
+      "raw": [
+        "3351712",
+        "Elgin City",
+        null,
+        "P. Thistle",
+        null,
+        0,
+        "18:00",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        5.29,
+        4.31,
+        1.28,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "İskoçya Kupası",
+        "599",
+        "0",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "3351712",
+        "1:1:",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 478
+      }
+    },
+    {
       "matchId": "3336556",
       "homeName": "CE Manresa",
       "awayName": "Girona FC B",
@@ -58310,7 +58506,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 477
+        "matchIndex": 479
       }
     },
     {
@@ -58427,7 +58623,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 478
+        "matchIndex": 480
       }
     },
     {
@@ -58537,7 +58733,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 479
+        "matchIndex": 481
       }
     },
     {
@@ -58665,7 +58861,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 480
+        "matchIndex": 482
       }
     },
     {
@@ -58793,7 +58989,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 481
+        "matchIndex": 483
       }
     },
     {
@@ -58921,7 +59117,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 482
+        "matchIndex": 484
       }
     },
     {
@@ -59035,7 +59231,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 483
+        "matchIndex": 485
       }
     },
     {
@@ -59152,7 +59348,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 484
+        "matchIndex": 486
       }
     },
     {
@@ -59266,7 +59462,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 485
+        "matchIndex": 487
       }
     },
     {
@@ -59394,7 +59590,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 486
+        "matchIndex": 488
       }
     },
     {
@@ -59511,7 +59707,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 487
+        "matchIndex": 489
       }
     },
     {
@@ -59532,9 +59728,9 @@
         "ms1": 1.88,
         "msX": 3.53,
         "ms2": 2.92,
-        "doubleChance1X": 1.21,
+        "doubleChance1X": 1.23,
         "doubleChance12": 1.16,
-        "doubleChanceX2": 1.6,
+        "doubleChanceX2": 1.58,
         "goals25Under": 2.3,
         "goals25Over": 1.39,
         "leagueCode": "UEFA Avrupa Ligi",
@@ -59544,14 +59740,14 @@
         "totalGoals23": 1.98,
         "totalGoals46": 2.79,
         "totalGoals7Plus": 7.24,
-        "halfTimeResult1": 2.33,
+        "halfTimeResult1": 2.37,
         "halfTimeResultX": 2.29,
-        "halfTimeResult2": 3.43,
+        "halfTimeResult2": 3.36,
         "handicapMs1": 3.2,
         "handicapMsX": 3.88,
         "handicapMs2": 1.56,
-        "bttsYes": 1.36,
-        "bttsNo": 2.38,
+        "bttsYes": 1.35,
+        "bttsNo": 2.39,
         "halfTimeGoals15Under": 1.5,
         "halfTimeGoals15Over": 2.03,
         "goals15Under": 4.93,
@@ -59594,9 +59790,9 @@
         1.88,
         3.53,
         2.92,
-        1.21,
+        1.23,
         1.16,
-        1.6,
+        1.58,
         2.3,
         1.39,
         null,
@@ -59608,14 +59804,14 @@
         1.98,
         2.79,
         7.24,
-        2.33,
+        2.37,
         2.29,
-        3.43,
+        3.36,
         3.2,
         3.88,
         1.56,
-        1.36,
-        2.38,
+        1.35,
+        2.39,
         null,
         1.5,
         2.03,
@@ -59639,7 +59835,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 488
+        "matchIndex": 490
       }
     },
     {
@@ -59756,7 +59952,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 489
+        "matchIndex": 491
       }
     },
     {
@@ -59884,7 +60080,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 490
+        "matchIndex": 492
       }
     },
     {
@@ -60012,7 +60208,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 491
+        "matchIndex": 493
       }
     },
     {
@@ -60129,7 +60325,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 492
+        "matchIndex": 494
       }
     },
     {
@@ -60257,7 +60453,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 493
+        "matchIndex": 495
       }
     },
     {
@@ -60385,903 +60581,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 494
-      }
-    },
-    {
-      "matchId": "3423867",
-      "homeName": "Instituto AC Cordoba",
-      "awayName": "River Plate",
-      "date": "29.11.2026",
-      "time": "04:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3423867",
-        "homeName": "Instituto AC Cordoba",
-        "awayName": "River Plate",
-        "status": 0,
-        "time": "04:00",
-        "date": "29.11.2026",
-        "mbs": 2,
-        "ms1": 3.28,
-        "msX": 2.81,
-        "ms2": 2.01,
-        "doubleChance1X": 1.5,
-        "doubleChance12": 1.25,
-        "doubleChanceX2": 1.17,
-        "goals25Under": 1.33,
-        "goals25Over": 2.47,
-        "leagueCode": "Arjantin Primera LPF, Clausura Playoffs",
-        "groupId": "57500",
-        "subgroupId": "0",
-        "totalGoals01": 2.17,
-        "totalGoals23": 1.83,
-        "totalGoals46": 5.8,
-        "totalGoals7Plus": 35.5,
-        "halfTimeResult1": 4.25,
-        "halfTimeResultX": 1.76,
-        "halfTimeResult2": 2.82,
-        "handicapMs1": 1.48,
-        "handicapMsX": 3.35,
-        "handicapMs2": 4.2,
-        "bttsYes": 2.07,
-        "bttsNo": 1.48,
-        "halfTimeGoals15Under": 1.14,
-        "halfTimeGoals15Over": 3.56,
-        "goals15Under": 2.23,
-        "goals15Over": 1.41,
-        "goals35Under": 1,
-        "goals35Over": 5.08,
-        "eventId": "3423867",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 57500,
-        "competitionName": "Arjantin Primera LPF, Clausura Playoffs",
-        "isLive": false,
-        "marketCount": 27
-      },
-      "raw": [
-        "3423867",
-        "Instituto AC Cordoba",
-        null,
-        "River Plate",
-        null,
-        0,
-        "04:00",
-        "29.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        2,
-        null,
-        null,
-        3.28,
-        2.81,
-        2.01,
-        1.5,
-        1.25,
-        1.17,
-        1.33,
-        2.47,
-        null,
-        null,
-        "Arjantin Primera LPF, Clausura Playoffs",
-        "57500",
-        "0",
-        2.17,
-        1.83,
-        5.8,
-        35.5,
-        4.25,
-        1.76,
-        2.82,
-        1.48,
-        3.35,
-        4.2,
-        2.07,
-        1.48,
-        null,
-        1.14,
-        3.56,
-        2.23,
-        1.41,
-        1,
-        5.08,
-        null,
-        null,
-        "3423867",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 495
-      }
-    },
-    {
-      "matchId": "3337280",
-      "homeName": "CD Extremadura",
-      "awayName": "CP Cacereno Sad",
-      "date": "28.11.2026",
-      "time": "23:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3337280",
-        "homeName": "CD Extremadura",
-        "awayName": "CP Cacereno Sad",
-        "status": 0,
-        "time": "23:00",
-        "date": "28.11.2026",
-        "mbs": 3,
-        "ms1": 1.6,
-        "msX": 3.18,
-        "ms2": 3.8,
-        "doubleChance1X": 1.08,
-        "doubleChance12": 1.14,
-        "doubleChanceX2": 1.66,
-        "goals25Under": 1.68,
-        "goals25Over": 1.65,
-        "leagueCode": "İspanya Primera RFEF",
-        "groupId": "90700",
-        "subgroupId": "0",
-        "totalGoals01": 3.26,
-        "totalGoals23": 1.78,
-        "totalGoals46": 3.43,
-        "totalGoals7Plus": 13.15,
-        "halfTimeResult1": 2.11,
-        "halfTimeResultX": 2.03,
-        "halfTimeResult2": 4.26,
-        "handicapMs1": 2.7,
-        "handicapMsX": 3.3,
-        "handicapMs2": 1.71,
-        "bttsYes": 1.58,
-        "bttsNo": 1.75,
-        "halfTimeGoals15Under": 1.28,
-        "halfTimeGoals15Over": 2.36,
-        "goals15Under": 3.15,
-        "goals15Over": 1.13,
-        "goals35Under": 1.2,
-        "goals35Over": 2.71,
-        "eventId": "3337280",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:-1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 90700,
-        "competitionName": "İspanya Primera RFEF",
-        "isLive": false,
-        "marketCount": 23
-      },
-      "raw": [
-        "3337280",
-        "CD Extremadura",
-        null,
-        "CP Cacereno Sad",
-        null,
-        0,
-        "23:00",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        1.6,
-        3.18,
-        3.8,
-        1.08,
-        1.14,
-        1.66,
-        1.68,
-        1.65,
-        null,
-        null,
-        "İspanya Primera RFEF",
-        "90700",
-        "0",
-        3.26,
-        1.78,
-        3.43,
-        13.15,
-        2.11,
-        2.03,
-        4.26,
-        2.7,
-        3.3,
-        1.71,
-        1.58,
-        1.75,
-        null,
-        1.28,
-        2.36,
-        3.15,
-        1.13,
-        1.2,
-        2.71,
-        null,
-        null,
-        "3337280",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:-1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
         "matchIndex": 496
-      }
-    },
-    {
-      "matchId": "3321842",
-      "homeName": "FC Orenburg",
-      "awayName": "Spartak Moskova",
-      "date": "26.11.2026",
-      "time": "17:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3321842",
-        "homeName": "FC Orenburg",
-        "awayName": "Spartak Moskova",
-        "status": 0,
-        "time": "17:00",
-        "date": "26.11.2026",
-        "mbs": 2,
-        "ms1": 4.84,
-        "msX": 3.9,
-        "ms2": 1.35,
-        "doubleChance1X": 2.03,
-        "doubleChance12": 1.07,
-        "doubleChanceX2": 1,
-        "goals25Under": 2.06,
-        "goals25Over": 1.39,
-        "leagueCode": "Rusya Kupası",
-        "groupId": "243000",
-        "subgroupId": "0",
-        "totalGoals01": 4.4,
-        "totalGoals23": 1.9,
-        "totalGoals46": 2.82,
-        "totalGoals7Plus": 7.89,
-        "halfTimeResult1": 4.93,
-        "halfTimeResultX": 2.31,
-        "halfTimeResult2": 1.77,
-        "handicapMs1": 2.14,
-        "handicapMsX": 3.36,
-        "handicapMs2": 2.03,
-        "bttsYes": 1.5,
-        "bttsNo": 1.88,
-        "halfTimeGoals15Under": 1.43,
-        "halfTimeGoals15Over": 1.99,
-        "goals15Under": 4.09,
-        "goals15Over": 1,
-        "goals35Under": 1.37,
-        "goals35Over": 2.12,
-        "eventId": "3321842",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 243000,
-        "competitionName": "Rusya Kupası",
-        "isLive": false,
-        "marketCount": 24
-      },
-      "raw": [
-        "3321842",
-        "FC Orenburg",
-        null,
-        "Spartak Moskova",
-        null,
-        0,
-        "17:00",
-        "26.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        2,
-        null,
-        null,
-        4.84,
-        3.9,
-        1.35,
-        2.03,
-        1.07,
-        1,
-        2.06,
-        1.39,
-        null,
-        null,
-        "Rusya Kupası",
-        "243000",
-        "0",
-        4.4,
-        1.9,
-        2.82,
-        7.89,
-        4.93,
-        2.31,
-        1.77,
-        2.14,
-        3.36,
-        2.03,
-        1.5,
-        1.88,
-        null,
-        1.43,
-        1.99,
-        4.09,
-        1,
-        1.37,
-        2.12,
-        null,
-        null,
-        "3321842",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 497
-      }
-    },
-    {
-      "matchId": "3337392",
-      "homeName": "Lugo",
-      "awayName": "UD Ourense",
-      "date": "28.11.2026",
-      "time": "20:45",
-      "status": 0,
-      "fields": {
-        "matchId": "3337392",
-        "homeName": "Lugo",
-        "awayName": "UD Ourense",
-        "status": 0,
-        "time": "20:45",
-        "date": "28.11.2026",
-        "mbs": 3,
-        "ms1": 1.34,
-        "msX": 3.82,
-        "ms2": 5.22,
-        "doubleChance1X": 1,
-        "doubleChance12": 1.08,
-        "doubleChanceX2": 2.06,
-        "goals25Under": 1.79,
-        "goals25Over": 1.56,
-        "leagueCode": "İspanya Primera RFEF",
-        "groupId": "90700",
-        "subgroupId": "0",
-        "totalGoals01": 3.52,
-        "totalGoals23": 1.81,
-        "totalGoals46": 3.23,
-        "totalGoals7Plus": 11.35,
-        "halfTimeResult1": 1.79,
-        "halfTimeResultX": 2.18,
-        "halfTimeResult2": 5.43,
-        "handicapMs1": 2.06,
-        "handicapMsX": 3.19,
-        "handicapMs2": 2.18,
-        "bttsYes": 1.68,
-        "bttsNo": 1.65,
-        "halfTimeGoals15Under": 1.33,
-        "halfTimeGoals15Over": 2.23,
-        "goals15Under": 3.38,
-        "goals15Over": 1.1,
-        "goals35Under": 1.24,
-        "goals35Over": 2.53,
-        "eventId": "3337392",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:-1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 90700,
-        "competitionName": "İspanya Primera RFEF",
-        "isLive": false,
-        "marketCount": 23
-      },
-      "raw": [
-        "3337392",
-        "Lugo",
-        null,
-        "UD Ourense",
-        null,
-        0,
-        "20:45",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        1.34,
-        3.82,
-        5.22,
-        1,
-        1.08,
-        2.06,
-        1.79,
-        1.56,
-        null,
-        null,
-        "İspanya Primera RFEF",
-        "90700",
-        "0",
-        3.52,
-        1.81,
-        3.23,
-        11.35,
-        1.79,
-        2.18,
-        5.43,
-        2.06,
-        3.19,
-        2.18,
-        1.68,
-        1.65,
-        null,
-        1.33,
-        2.23,
-        3.38,
-        1.1,
-        1.24,
-        2.53,
-        null,
-        null,
-        "3337392",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:-1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 498
-      }
-    },
-    {
-      "matchId": "3336047",
-      "homeName": "Alcorcon",
-      "awayName": "Zaragoza",
-      "date": "28.11.2026",
-      "time": "20:45",
-      "status": 0,
-      "fields": {
-        "matchId": "3336047",
-        "homeName": "Alcorcon",
-        "awayName": "Zaragoza",
-        "status": 0,
-        "time": "20:45",
-        "date": "28.11.2026",
-        "mbs": 3,
-        "ms1": 1.88,
-        "msX": 3.04,
-        "ms2": 2.93,
-        "doubleChance1X": 1.17,
-        "doubleChance12": 1.16,
-        "doubleChanceX2": 1.46,
-        "goals25Under": 1.67,
-        "goals25Over": 1.66,
-        "leagueCode": "İspanya Primera RFEF",
-        "groupId": "90700",
-        "subgroupId": "0",
-        "totalGoals01": 3.22,
-        "totalGoals23": 1.78,
-        "totalGoals46": 3.45,
-        "totalGoals7Plus": 13.45,
-        "halfTimeResult1": 2.43,
-        "halfTimeResultX": 1.98,
-        "halfTimeResult2": 3.51,
-        "handicapMs1": 3.39,
-        "handicapMsX": 3.47,
-        "handicapMs2": 1.48,
-        "bttsYes": 1.53,
-        "bttsNo": 1.82,
-        "halfTimeGoals15Under": 1.27,
-        "halfTimeGoals15Over": 2.39,
-        "goals15Under": 3.13,
-        "goals15Over": 1.13,
-        "goals35Under": 1.19,
-        "goals35Over": 2.74,
-        "eventId": "3336047",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:-1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 90700,
-        "competitionName": "İspanya Primera RFEF",
-        "isLive": false,
-        "marketCount": 22
-      },
-      "raw": [
-        "3336047",
-        "Alcorcon",
-        null,
-        "Zaragoza",
-        null,
-        0,
-        "20:45",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        1.88,
-        3.04,
-        2.93,
-        1.17,
-        1.16,
-        1.46,
-        1.67,
-        1.66,
-        null,
-        null,
-        "İspanya Primera RFEF",
-        "90700",
-        "0",
-        3.22,
-        1.78,
-        3.45,
-        13.45,
-        2.43,
-        1.98,
-        3.51,
-        3.39,
-        3.47,
-        1.48,
-        1.53,
-        1.82,
-        null,
-        1.27,
-        2.39,
-        3.13,
-        1.13,
-        1.19,
-        2.74,
-        null,
-        null,
-        "3336047",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:-1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 499
-      }
-    },
-    {
-      "matchId": "3336683",
-      "homeName": "Leganes",
-      "awayName": "CE Sabadell FC",
-      "date": "27.11.2026",
-      "time": "22:30",
-      "status": 0,
-      "fields": {
-        "matchId": "3336683",
-        "homeName": "Leganes",
-        "awayName": "CE Sabadell FC",
-        "status": 0,
-        "time": "22:30",
-        "date": "27.11.2026",
-        "mbs": 1,
-        "ms1": 2.2,
-        "msX": 2.8,
-        "ms2": 2.88,
-        "doubleChance1X": 1.24,
-        "doubleChance12": 1.25,
-        "doubleChanceX2": 1.42,
-        "goals25Under": 1.43,
-        "goals25Over": 2.18,
-        "leagueCode": "İspanya La Liga 2",
-        "groupId": "1951",
-        "subgroupId": "0",
-        "totalGoals01": 2.48,
-        "totalGoals23": 1.8,
-        "totalGoals46": 4.82,
-        "totalGoals7Plus": 27,
-        "halfTimeResult1": 2.93,
-        "halfTimeResultX": 1.84,
-        "halfTimeResult2": 3.67,
-        "handicapMs1": 4.57,
-        "handicapMsX": 3.64,
-        "handicapMs2": 1.39,
-        "bttsYes": 1.84,
-        "bttsNo": 1.63,
-        "halfTimeGoals15Under": 1.19,
-        "halfTimeGoals15Over": 3.16,
-        "goals15Under": 2.55,
-        "goals15Over": 1.31,
-        "goals35Under": 1.09,
-        "goals35Over": 4.16,
-        "eventId": "3336683",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:-1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 1951,
-        "competitionName": "İspanya La Liga 2",
-        "isLive": false,
-        "marketCount": 29
-      },
-      "raw": [
-        "3336683",
-        "Leganes",
-        null,
-        "CE Sabadell FC",
-        null,
-        0,
-        "22:30",
-        "27.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        1,
-        null,
-        null,
-        2.2,
-        2.8,
-        2.88,
-        1.24,
-        1.25,
-        1.42,
-        1.43,
-        2.18,
-        null,
-        null,
-        "İspanya La Liga 2",
-        "1951",
-        "0",
-        2.48,
-        1.8,
-        4.82,
-        27,
-        2.93,
-        1.84,
-        3.67,
-        4.57,
-        3.64,
-        1.39,
-        1.84,
-        1.63,
-        null,
-        1.19,
-        3.16,
-        2.55,
-        1.31,
-        1.09,
-        4.16,
-        null,
-        null,
-        "3336683",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:-1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 500
-      }
-    },
-    {
-      "matchId": "3337368",
-      "homeName": "Elche",
-      "awayName": "Atletico Madrid",
-      "date": "28.11.2026",
-      "time": "20:30",
-      "status": 0,
-      "fields": {
-        "matchId": "3337368",
-        "homeName": "Elche",
-        "awayName": "Atletico Madrid",
-        "status": 0,
-        "time": "20:30",
-        "date": "28.11.2026",
-        "mbs": 1,
-        "ms1": 5.89,
-        "msX": 4.52,
-        "ms2": 1.31,
-        "doubleChance1X": 2.47,
-        "doubleChance12": 1.08,
-        "doubleChanceX2": 1,
-        "goals25Under": 2.23,
-        "goals25Over": 1.42,
-        "leagueCode": "İspanya La Liga",
-        "groupId": "129",
-        "subgroupId": "0",
-        "totalGoals01": 4.67,
-        "totalGoals23": 1.95,
-        "totalGoals46": 2.87,
-        "totalGoals7Plus": 7.88,
-        "halfTimeResult1": 5.76,
-        "halfTimeResultX": 2.47,
-        "halfTimeResult2": 1.73,
-        "handicapMs1": 2.47,
-        "handicapMsX": 3.51,
-        "handicapMs2": 1.91,
-        "bttsYes": 1.59,
-        "bttsNo": 1.89,
-        "halfTimeGoals15Under": 1.5,
-        "halfTimeGoals15Over": 2.05,
-        "goals15Under": 4.66,
-        "goals15Over": 1.06,
-        "goals35Under": 1.43,
-        "goals35Over": 2.18,
-        "eventId": "3337368",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 129,
-        "competitionName": "İspanya La Liga",
-        "isLive": false,
-        "marketCount": 27
-      },
-      "raw": [
-        "3337368",
-        "Elche",
-        null,
-        "Atletico Madrid",
-        null,
-        0,
-        "20:30",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        1,
-        null,
-        null,
-        5.89,
-        4.52,
-        1.31,
-        2.47,
-        1.08,
-        1,
-        2.23,
-        1.42,
-        null,
-        null,
-        "İspanya La Liga",
-        "129",
-        "0",
-        4.67,
-        1.95,
-        2.87,
-        7.88,
-        5.76,
-        2.47,
-        1.73,
-        2.47,
-        3.51,
-        1.91,
-        1.59,
-        1.89,
-        null,
-        1.5,
-        2.05,
-        4.66,
-        1.06,
-        1.43,
-        2.18,
-        null,
-        null,
-        "3337368",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:1",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 501
       }
     },
     {
@@ -61409,7 +60709,775 @@
       ],
       "source": {
         "groupIndex": 0,
+        "matchIndex": 497
+      }
+    },
+    {
+      "matchId": "3423867",
+      "homeName": "Instituto AC Cordoba",
+      "awayName": "River Plate",
+      "date": "29.11.2026",
+      "time": "04:00",
+      "status": 0,
+      "fields": {
+        "matchId": "3423867",
+        "homeName": "Instituto AC Cordoba",
+        "awayName": "River Plate",
+        "status": 0,
+        "time": "04:00",
+        "date": "29.11.2026",
+        "mbs": 2,
+        "ms1": 3.28,
+        "msX": 2.81,
+        "ms2": 2.01,
+        "doubleChance1X": 1.5,
+        "doubleChance12": 1.25,
+        "doubleChanceX2": 1.17,
+        "goals25Under": 1.33,
+        "goals25Over": 2.47,
+        "leagueCode": "Arjantin Primera LPF, Clausura Playoffs",
+        "groupId": "57500",
+        "subgroupId": "0",
+        "totalGoals01": 2.17,
+        "totalGoals23": 1.83,
+        "totalGoals46": 5.8,
+        "totalGoals7Plus": 35.5,
+        "halfTimeResult1": 4.25,
+        "halfTimeResultX": 1.76,
+        "halfTimeResult2": 2.82,
+        "handicapMs1": 1.48,
+        "handicapMsX": 3.35,
+        "handicapMs2": 4.2,
+        "bttsYes": 2.07,
+        "bttsNo": 1.48,
+        "halfTimeGoals15Under": 1.14,
+        "halfTimeGoals15Over": 3.56,
+        "goals15Under": 2.23,
+        "goals15Over": 1.41,
+        "goals35Under": 1,
+        "goals35Over": 5.08,
+        "eventId": "3423867",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 57500,
+        "competitionName": "Arjantin Primera LPF, Clausura Playoffs",
+        "isLive": false,
+        "marketCount": 27
+      },
+      "raw": [
+        "3423867",
+        "Instituto AC Cordoba",
+        null,
+        "River Plate",
+        null,
+        0,
+        "04:00",
+        "29.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        2,
+        null,
+        null,
+        3.28,
+        2.81,
+        2.01,
+        1.5,
+        1.25,
+        1.17,
+        1.33,
+        2.47,
+        null,
+        null,
+        "Arjantin Primera LPF, Clausura Playoffs",
+        "57500",
+        "0",
+        2.17,
+        1.83,
+        5.8,
+        35.5,
+        4.25,
+        1.76,
+        2.82,
+        1.48,
+        3.35,
+        4.2,
+        2.07,
+        1.48,
+        null,
+        1.14,
+        3.56,
+        2.23,
+        1.41,
+        1,
+        5.08,
+        null,
+        null,
+        "3423867",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 498
+      }
+    },
+    {
+      "matchId": "3337280",
+      "homeName": "CD Extremadura",
+      "awayName": "CP Cacereno Sad",
+      "date": "28.11.2026",
+      "time": "23:00",
+      "status": 0,
+      "fields": {
+        "matchId": "3337280",
+        "homeName": "CD Extremadura",
+        "awayName": "CP Cacereno Sad",
+        "status": 0,
+        "time": "23:00",
+        "date": "28.11.2026",
+        "mbs": 3,
+        "ms1": 1.6,
+        "msX": 3.18,
+        "ms2": 3.8,
+        "doubleChance1X": 1.08,
+        "doubleChance12": 1.14,
+        "doubleChanceX2": 1.66,
+        "goals25Under": 1.68,
+        "goals25Over": 1.65,
+        "leagueCode": "İspanya Primera RFEF",
+        "groupId": "90700",
+        "subgroupId": "0",
+        "totalGoals01": 3.26,
+        "totalGoals23": 1.78,
+        "totalGoals46": 3.43,
+        "totalGoals7Plus": 13.15,
+        "halfTimeResult1": 2.11,
+        "halfTimeResultX": 2.03,
+        "halfTimeResult2": 4.26,
+        "handicapMs1": 2.7,
+        "handicapMsX": 3.3,
+        "handicapMs2": 1.71,
+        "bttsYes": 1.58,
+        "bttsNo": 1.75,
+        "halfTimeGoals15Under": 1.28,
+        "halfTimeGoals15Over": 2.36,
+        "goals15Under": 3.15,
+        "goals15Over": 1.13,
+        "goals35Under": 1.2,
+        "goals35Over": 2.71,
+        "eventId": "3337280",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:-1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 90700,
+        "competitionName": "İspanya Primera RFEF",
+        "isLive": false,
+        "marketCount": 23
+      },
+      "raw": [
+        "3337280",
+        "CD Extremadura",
+        null,
+        "CP Cacereno Sad",
+        null,
+        0,
+        "23:00",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        1.6,
+        3.18,
+        3.8,
+        1.08,
+        1.14,
+        1.66,
+        1.68,
+        1.65,
+        null,
+        null,
+        "İspanya Primera RFEF",
+        "90700",
+        "0",
+        3.26,
+        1.78,
+        3.43,
+        13.15,
+        2.11,
+        2.03,
+        4.26,
+        2.7,
+        3.3,
+        1.71,
+        1.58,
+        1.75,
+        null,
+        1.28,
+        2.36,
+        3.15,
+        1.13,
+        1.2,
+        2.71,
+        null,
+        null,
+        "3337280",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:-1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 499
+      }
+    },
+    {
+      "matchId": "3337392",
+      "homeName": "Lugo",
+      "awayName": "UD Ourense",
+      "date": "28.11.2026",
+      "time": "20:45",
+      "status": 0,
+      "fields": {
+        "matchId": "3337392",
+        "homeName": "Lugo",
+        "awayName": "UD Ourense",
+        "status": 0,
+        "time": "20:45",
+        "date": "28.11.2026",
+        "mbs": 3,
+        "ms1": 1.34,
+        "msX": 3.82,
+        "ms2": 5.22,
+        "doubleChance1X": 1,
+        "doubleChance12": 1.08,
+        "doubleChanceX2": 2.06,
+        "goals25Under": 1.79,
+        "goals25Over": 1.56,
+        "leagueCode": "İspanya Primera RFEF",
+        "groupId": "90700",
+        "subgroupId": "0",
+        "totalGoals01": 3.52,
+        "totalGoals23": 1.81,
+        "totalGoals46": 3.23,
+        "totalGoals7Plus": 11.35,
+        "halfTimeResult1": 1.79,
+        "halfTimeResultX": 2.18,
+        "halfTimeResult2": 5.43,
+        "handicapMs1": 2.06,
+        "handicapMsX": 3.19,
+        "handicapMs2": 2.18,
+        "bttsYes": 1.68,
+        "bttsNo": 1.65,
+        "halfTimeGoals15Under": 1.33,
+        "halfTimeGoals15Over": 2.23,
+        "goals15Under": 3.38,
+        "goals15Over": 1.1,
+        "goals35Under": 1.24,
+        "goals35Over": 2.53,
+        "eventId": "3337392",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:-1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 90700,
+        "competitionName": "İspanya Primera RFEF",
+        "isLive": false,
+        "marketCount": 23
+      },
+      "raw": [
+        "3337392",
+        "Lugo",
+        null,
+        "UD Ourense",
+        null,
+        0,
+        "20:45",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        1.34,
+        3.82,
+        5.22,
+        1,
+        1.08,
+        2.06,
+        1.79,
+        1.56,
+        null,
+        null,
+        "İspanya Primera RFEF",
+        "90700",
+        "0",
+        3.52,
+        1.81,
+        3.23,
+        11.35,
+        1.79,
+        2.18,
+        5.43,
+        2.06,
+        3.19,
+        2.18,
+        1.68,
+        1.65,
+        null,
+        1.33,
+        2.23,
+        3.38,
+        1.1,
+        1.24,
+        2.53,
+        null,
+        null,
+        "3337392",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:-1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 500
+      }
+    },
+    {
+      "matchId": "3336047",
+      "homeName": "Alcorcon",
+      "awayName": "Zaragoza",
+      "date": "28.11.2026",
+      "time": "20:45",
+      "status": 0,
+      "fields": {
+        "matchId": "3336047",
+        "homeName": "Alcorcon",
+        "awayName": "Zaragoza",
+        "status": 0,
+        "time": "20:45",
+        "date": "28.11.2026",
+        "mbs": 3,
+        "ms1": 1.88,
+        "msX": 3.04,
+        "ms2": 2.93,
+        "doubleChance1X": 1.17,
+        "doubleChance12": 1.16,
+        "doubleChanceX2": 1.46,
+        "goals25Under": 1.67,
+        "goals25Over": 1.66,
+        "leagueCode": "İspanya Primera RFEF",
+        "groupId": "90700",
+        "subgroupId": "0",
+        "totalGoals01": 3.22,
+        "totalGoals23": 1.78,
+        "totalGoals46": 3.45,
+        "totalGoals7Plus": 13.45,
+        "halfTimeResult1": 2.43,
+        "halfTimeResultX": 1.98,
+        "halfTimeResult2": 3.51,
+        "handicapMs1": 3.39,
+        "handicapMsX": 3.47,
+        "handicapMs2": 1.48,
+        "bttsYes": 1.53,
+        "bttsNo": 1.82,
+        "halfTimeGoals15Under": 1.27,
+        "halfTimeGoals15Over": 2.39,
+        "goals15Under": 3.13,
+        "goals15Over": 1.13,
+        "goals35Under": 1.19,
+        "goals35Over": 2.74,
+        "eventId": "3336047",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:-1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 90700,
+        "competitionName": "İspanya Primera RFEF",
+        "isLive": false,
+        "marketCount": 22
+      },
+      "raw": [
+        "3336047",
+        "Alcorcon",
+        null,
+        "Zaragoza",
+        null,
+        0,
+        "20:45",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        1.88,
+        3.04,
+        2.93,
+        1.17,
+        1.16,
+        1.46,
+        1.67,
+        1.66,
+        null,
+        null,
+        "İspanya Primera RFEF",
+        "90700",
+        "0",
+        3.22,
+        1.78,
+        3.45,
+        13.45,
+        2.43,
+        1.98,
+        3.51,
+        3.39,
+        3.47,
+        1.48,
+        1.53,
+        1.82,
+        null,
+        1.27,
+        2.39,
+        3.13,
+        1.13,
+        1.19,
+        2.74,
+        null,
+        null,
+        "3336047",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:-1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 501
+      }
+    },
+    {
+      "matchId": "3336683",
+      "homeName": "Leganes",
+      "awayName": "CE Sabadell FC",
+      "date": "27.11.2026",
+      "time": "22:30",
+      "status": 0,
+      "fields": {
+        "matchId": "3336683",
+        "homeName": "Leganes",
+        "awayName": "CE Sabadell FC",
+        "status": 0,
+        "time": "22:30",
+        "date": "27.11.2026",
+        "mbs": 1,
+        "ms1": 2.2,
+        "msX": 2.8,
+        "ms2": 2.88,
+        "doubleChance1X": 1.24,
+        "doubleChance12": 1.25,
+        "doubleChanceX2": 1.42,
+        "goals25Under": 1.43,
+        "goals25Over": 2.18,
+        "leagueCode": "İspanya La Liga 2",
+        "groupId": "1951",
+        "subgroupId": "0",
+        "totalGoals01": 2.48,
+        "totalGoals23": 1.8,
+        "totalGoals46": 4.82,
+        "totalGoals7Plus": 27,
+        "halfTimeResult1": 2.93,
+        "halfTimeResultX": 1.84,
+        "halfTimeResult2": 3.67,
+        "handicapMs1": 4.57,
+        "handicapMsX": 3.64,
+        "handicapMs2": 1.39,
+        "bttsYes": 1.84,
+        "bttsNo": 1.63,
+        "halfTimeGoals15Under": 1.19,
+        "halfTimeGoals15Over": 3.16,
+        "goals15Under": 2.55,
+        "goals15Over": 1.31,
+        "goals35Under": 1.09,
+        "goals35Over": 4.16,
+        "eventId": "3336683",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:-1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 1951,
+        "competitionName": "İspanya La Liga 2",
+        "isLive": false,
+        "marketCount": 29
+      },
+      "raw": [
+        "3336683",
+        "Leganes",
+        null,
+        "CE Sabadell FC",
+        null,
+        0,
+        "22:30",
+        "27.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        2.2,
+        2.8,
+        2.88,
+        1.24,
+        1.25,
+        1.42,
+        1.43,
+        2.18,
+        null,
+        null,
+        "İspanya La Liga 2",
+        "1951",
+        "0",
+        2.48,
+        1.8,
+        4.82,
+        27,
+        2.93,
+        1.84,
+        3.67,
+        4.57,
+        3.64,
+        1.39,
+        1.84,
+        1.63,
+        null,
+        1.19,
+        3.16,
+        2.55,
+        1.31,
+        1.09,
+        4.16,
+        null,
+        null,
+        "3336683",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:-1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
         "matchIndex": 502
+      }
+    },
+    {
+      "matchId": "3337368",
+      "homeName": "Elche",
+      "awayName": "Atletico Madrid",
+      "date": "28.11.2026",
+      "time": "20:30",
+      "status": 0,
+      "fields": {
+        "matchId": "3337368",
+        "homeName": "Elche",
+        "awayName": "Atletico Madrid",
+        "status": 0,
+        "time": "20:30",
+        "date": "28.11.2026",
+        "mbs": 1,
+        "ms1": 5.89,
+        "msX": 4.52,
+        "ms2": 1.31,
+        "doubleChance1X": 2.47,
+        "doubleChance12": 1.08,
+        "doubleChanceX2": 1,
+        "goals25Under": 2.23,
+        "goals25Over": 1.42,
+        "leagueCode": "İspanya La Liga",
+        "groupId": "129",
+        "subgroupId": "0",
+        "totalGoals01": 4.67,
+        "totalGoals23": 1.95,
+        "totalGoals46": 2.87,
+        "totalGoals7Plus": 7.88,
+        "halfTimeResult1": 5.76,
+        "halfTimeResultX": 2.47,
+        "halfTimeResult2": 1.73,
+        "handicapMs1": 2.47,
+        "handicapMsX": 3.51,
+        "handicapMs2": 1.91,
+        "bttsYes": 1.59,
+        "bttsNo": 1.89,
+        "halfTimeGoals15Under": 1.5,
+        "halfTimeGoals15Over": 2.05,
+        "goals15Under": 4.66,
+        "goals15Over": 1.06,
+        "goals35Under": 1.43,
+        "goals35Over": 2.18,
+        "eventId": "3337368",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 129,
+        "competitionName": "İspanya La Liga",
+        "isLive": false,
+        "marketCount": 27
+      },
+      "raw": [
+        "3337368",
+        "Elche",
+        null,
+        "Atletico Madrid",
+        null,
+        0,
+        "20:30",
+        "28.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        5.89,
+        4.52,
+        1.31,
+        2.47,
+        1.08,
+        1,
+        2.23,
+        1.42,
+        null,
+        null,
+        "İspanya La Liga",
+        "129",
+        "0",
+        4.67,
+        1.95,
+        2.87,
+        7.88,
+        5.76,
+        2.47,
+        1.73,
+        2.47,
+        3.51,
+        1.91,
+        1.59,
+        1.89,
+        null,
+        1.5,
+        2.05,
+        4.66,
+        1.06,
+        1.43,
+        2.18,
+        null,
+        null,
+        "3337368",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 503
       }
     },
     {
@@ -61523,7 +61591,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 503
+        "matchIndex": 504
       }
     },
     {
@@ -61648,7 +61716,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 504
+        "matchIndex": 505
       }
     },
     {
@@ -61773,7 +61841,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 505
+        "matchIndex": 506
       }
     },
     {
@@ -61901,7 +61969,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 506
+        "matchIndex": 507
       }
     },
     {
@@ -62026,7 +62094,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 507
+        "matchIndex": 508
       }
     },
     {
@@ -62151,7 +62219,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 508
+        "matchIndex": 509
       }
     },
     {
@@ -62279,7 +62347,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 509
+        "matchIndex": 510
       }
     },
     {
@@ -62407,7 +62475,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 510
+        "matchIndex": 511
       }
     },
     {
@@ -62535,7 +62603,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 511
+        "matchIndex": 512
       }
     },
     {
@@ -62660,7 +62728,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 512
+        "matchIndex": 513
       }
     },
     {
@@ -62774,7 +62842,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 513
+        "matchIndex": 514
       }
     },
     {
@@ -62891,7 +62959,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 514
+        "matchIndex": 515
       }
     },
     {
@@ -62987,7 +63055,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 515
+        "matchIndex": 516
       }
     },
     {
@@ -63101,7 +63169,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 516
+        "matchIndex": 517
       }
     },
     {
@@ -63218,7 +63286,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 517
+        "matchIndex": 518
       }
     },
     {
@@ -63327,7 +63395,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 518
+        "matchIndex": 519
       }
     },
     {
@@ -63455,7 +63523,135 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 519
+        "matchIndex": 520
+      }
+    },
+    {
+      "matchId": "3339200",
+      "homeName": "Casa Pia AC",
+      "awayName": "Braga",
+      "date": "30.11.2026",
+      "time": "23:15",
+      "status": 0,
+      "fields": {
+        "matchId": "3339200",
+        "homeName": "Casa Pia AC",
+        "awayName": "Braga",
+        "status": 0,
+        "time": "23:15",
+        "date": "30.11.2026",
+        "mbs": 1,
+        "ms1": 6.9,
+        "msX": 4.11,
+        "ms2": 1.3,
+        "doubleChance1X": 2.48,
+        "doubleChance12": 1.09,
+        "doubleChanceX2": 1,
+        "goals25Under": 1.69,
+        "goals25Over": 1.77,
+        "leagueCode": "Portekiz Premier Lig",
+        "groupId": "566",
+        "subgroupId": "0",
+        "totalGoals01": 3.13,
+        "totalGoals23": 1.81,
+        "totalGoals46": 3.75,
+        "totalGoals7Plus": 15.7,
+        "halfTimeResult1": 6.96,
+        "halfTimeResultX": 2.22,
+        "halfTimeResult2": 1.78,
+        "handicapMs1": 2.49,
+        "handicapMsX": 3.19,
+        "handicapMs2": 2.01,
+        "bttsYes": 2.02,
+        "bttsNo": 1.5,
+        "halfTimeGoals15Under": 1.31,
+        "halfTimeGoals15Over": 2.55,
+        "goals15Under": 3.2,
+        "goals15Over": 1.18,
+        "goals35Under": 1.19,
+        "goals35Over": 3.12,
+        "eventId": "3339200",
+        "marketMs": "1:1:",
+        "marketDoubleChance": "2:92:",
+        "marketGoals25": "2:101:2.5",
+        "marketHalfTimeResult": "2:88:",
+        "marketTotalGoals": "2:4:",
+        "marketBtts": "2:89:",
+        "marketHandicapMs": "2:100:1",
+        "marketGoals15": "2:101:1.5",
+        "marketGoals35": "2:101:3.5",
+        "marketHalfTimeGoals15": "2:60:1.5",
+        "competitionId": 566,
+        "competitionName": "Portekiz Premier Lig",
+        "isLive": false,
+        "marketCount": 27
+      },
+      "raw": [
+        "3339200",
+        "Casa Pia AC",
+        null,
+        "Braga",
+        null,
+        0,
+        "23:15",
+        "30.11.2026",
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        6.9,
+        4.11,
+        1.3,
+        2.48,
+        1.09,
+        1,
+        1.69,
+        1.77,
+        null,
+        null,
+        "Portekiz Premier Lig",
+        "566",
+        "0",
+        3.13,
+        1.81,
+        3.75,
+        15.7,
+        6.96,
+        2.22,
+        1.78,
+        2.49,
+        3.19,
+        2.01,
+        2.02,
+        1.5,
+        null,
+        1.31,
+        2.55,
+        3.2,
+        1.18,
+        1.19,
+        3.12,
+        null,
+        null,
+        "3339200",
+        "1:1:",
+        "2:92:",
+        "2:101:2.5",
+        "2:88:",
+        "2:4:",
+        "2:89:",
+        "2:100:1",
+        "2:101:1.5",
+        "2:101:3.5",
+        "2:60:1.5"
+      ],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 521
       }
     },
     {
@@ -63569,7 +63765,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 520
+        "matchIndex": 522
       }
     },
     {
@@ -63697,7 +63893,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 521
+        "matchIndex": 523
       }
     },
     {
@@ -63825,7 +64021,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 522
+        "matchIndex": 524
       }
     },
     {
@@ -63939,7 +64135,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 523
+        "matchIndex": 525
       }
     },
     {
@@ -64056,7 +64252,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 524
+        "matchIndex": 526
       }
     },
     {
@@ -64184,7 +64380,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 525
+        "matchIndex": 527
       }
     },
     {
@@ -64301,7 +64497,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 526
+        "matchIndex": 528
       }
     },
     {
@@ -64418,7 +64614,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 527
+        "matchIndex": 529
       }
     },
     {
@@ -64527,7 +64723,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 528
+        "matchIndex": 530
       }
     },
     {
@@ -64655,7 +64851,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 529
+        "matchIndex": 531
       }
     },
     {
@@ -64783,7 +64979,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 530
+        "matchIndex": 532
       }
     },
     {
@@ -64911,7 +65107,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 531
+        "matchIndex": 533
       }
     },
     {
@@ -65028,7 +65224,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 532
+        "matchIndex": 534
       }
     },
     {
@@ -65142,7 +65338,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 533
+        "matchIndex": 535
       }
     },
     {
@@ -65270,7 +65466,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 534
+        "matchIndex": 536
       }
     },
     {
@@ -65387,7 +65583,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 535
+        "matchIndex": 537
       }
     },
     {
@@ -65501,7 +65697,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 536
+        "matchIndex": 538
       }
     },
     {
@@ -65629,7 +65825,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 537
+        "matchIndex": 539
       }
     },
     {
@@ -65757,7 +65953,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 538
+        "matchIndex": 540
       }
     },
     {
@@ -65885,7 +66081,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 539
+        "matchIndex": 541
       }
     },
     {
@@ -66013,7 +66209,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 540
+        "matchIndex": 542
       }
     },
     {
@@ -66141,7 +66337,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 541
+        "matchIndex": 543
       }
     },
     {
@@ -66255,7 +66451,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 542
+        "matchIndex": 544
       }
     },
     {
@@ -66373,7 +66569,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 543
+        "matchIndex": 545
       }
     },
     {
@@ -66482,7 +66678,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 544
+        "matchIndex": 546
       }
     },
     {
@@ -66610,7 +66806,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 545
+        "matchIndex": 547
       }
     },
     {
@@ -66738,7 +66934,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 546
+        "matchIndex": 548
       }
     },
     {
@@ -66866,7 +67062,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 547
+        "matchIndex": 549
       }
     },
     {
@@ -66994,7 +67190,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 548
+        "matchIndex": 550
       }
     },
     {
@@ -67111,7 +67307,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 549
+        "matchIndex": 551
       }
     },
     {
@@ -67239,7 +67435,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 550
+        "matchIndex": 552
       }
     },
     {
@@ -67367,7 +67563,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 551
+        "matchIndex": 553
       }
     },
     {
@@ -67495,7 +67691,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 552
+        "matchIndex": 554
       }
     },
     {
@@ -67623,7 +67819,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 553
+        "matchIndex": 555
       }
     },
     {
@@ -67751,7 +67947,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 554
+        "matchIndex": 556
       }
     },
     {
@@ -67879,7 +68075,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 555
+        "matchIndex": 557
       }
     },
     {
@@ -68007,7 +68203,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 556
+        "matchIndex": 558
       }
     },
     {
@@ -68135,7 +68331,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 557
+        "matchIndex": 559
       }
     },
     {
@@ -68263,7 +68459,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 558
+        "matchIndex": 560
       }
     },
     {
@@ -68391,7 +68587,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 559
+        "matchIndex": 561
       }
     },
     {
@@ -68519,7 +68715,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 560
+        "matchIndex": 562
       }
     },
     {
@@ -68633,7 +68829,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 561
+        "matchIndex": 563
       }
     },
     {
@@ -68761,7 +68957,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 562
+        "matchIndex": 564
       }
     },
     {
@@ -68889,7 +69085,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 563
+        "matchIndex": 565
       }
     },
     {
@@ -69006,7 +69202,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 564
+        "matchIndex": 566
       }
     },
     {
@@ -69134,7 +69330,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 565
+        "matchIndex": 567
       }
     },
     {
@@ -69262,7 +69458,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 566
+        "matchIndex": 568
       }
     },
     {
@@ -69390,7 +69586,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 567
+        "matchIndex": 569
       }
     },
     {
@@ -69518,7 +69714,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 568
+        "matchIndex": 570
       }
     },
     {
@@ -69646,7 +69842,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 569
+        "matchIndex": 571
       }
     },
     {
@@ -69763,7 +69959,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 570
+        "matchIndex": 572
       }
     },
     {
@@ -69891,7 +70087,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 571
+        "matchIndex": 573
       }
     },
     {
@@ -70001,124 +70197,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 572
-      }
-    },
-    {
-      "matchId": "3321861",
-      "homeName": "FC Ural",
-      "awayName": "Arsenal Tula",
-      "date": "26.11.2026",
-      "time": "17:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3321861",
-        "homeName": "FC Ural",
-        "awayName": "Arsenal Tula",
-        "status": 0,
-        "time": "17:00",
-        "date": "26.11.2026",
-        "mbs": 3,
-        "ms1": 1.15,
-        "msX": 4.74,
-        "ms2": 8.21,
-        "doubleChance1X": 1,
-        "doubleChance12": 1,
-        "doubleChanceX2": 2.7,
-        "goals25Under": 1.86,
-        "goals25Over": 1.5,
-        "leagueCode": "Rusya Futbol Ulusal Ligi",
-        "groupId": "1918",
-        "subgroupId": "0",
-        "halfTimeResult1": 1.54,
-        "halfTimeResultX": 2.36,
-        "halfTimeResult2": 7.71,
-        "handicapMs1": 2.79,
-        "handicapMsX": 3.48,
-        "handicapMs2": 1.63,
-        "bttsYes": 1.92,
-        "bttsNo": 1.46,
-        "halfTimeGoals15Under": 1.36,
-        "halfTimeGoals15Over": 2.14,
-        "eventId": "3321861",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:-2",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 1918,
-        "competitionName": "Rusya Futbol Ulusal Ligi",
-        "isLive": false,
-        "marketCount": 15
-      },
-      "raw": [
-        "3321861",
-        "FC Ural",
-        null,
-        "Arsenal Tula",
-        null,
-        0,
-        "17:00",
-        "26.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        1.15,
-        4.74,
-        8.21,
-        1,
-        1,
-        2.7,
-        1.86,
-        1.5,
-        null,
-        null,
-        "Rusya Futbol Ulusal Ligi",
-        "1918",
-        "0",
-        null,
-        null,
-        null,
-        null,
-        1.54,
-        2.36,
-        7.71,
-        2.79,
-        3.48,
-        1.63,
-        1.92,
-        1.46,
-        null,
-        1.36,
-        2.14,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        "3321861",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        null,
-        "2:89:",
-        "2:100:-2",
-        null,
-        null,
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 573
+        "matchIndex": 574
       }
     },
     {
@@ -70246,7 +70325,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 574
+        "matchIndex": 575
       }
     },
     {
@@ -70374,7 +70453,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 575
+        "matchIndex": 576
       }
     },
     {
@@ -70502,7 +70581,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 576
+        "matchIndex": 577
       }
     },
     {
@@ -70630,7 +70709,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 577
+        "matchIndex": 578
       }
     },
     {
@@ -70758,7 +70837,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 578
+        "matchIndex": 579
       }
     },
     {
@@ -70886,7 +70965,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 579
+        "matchIndex": 580
       }
     },
     {
@@ -71000,7 +71079,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 580
+        "matchIndex": 581
       }
     },
     {
@@ -71117,7 +71196,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 581
+        "matchIndex": 582
       }
     },
     {
@@ -71234,7 +71313,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 582
+        "matchIndex": 583
       }
     },
     {
@@ -71351,7 +71430,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 583
+        "matchIndex": 584
       }
     },
     {
@@ -71479,7 +71558,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 584
+        "matchIndex": 585
       }
     },
     {
@@ -71607,7 +71686,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 585
+        "matchIndex": 586
       }
     },
     {
@@ -71721,7 +71800,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 586
+        "matchIndex": 587
       }
     },
     {
@@ -71849,7 +71928,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 587
+        "matchIndex": 588
       }
     },
     {
@@ -71955,7 +72034,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 588
+        "matchIndex": 589
       }
     },
     {
@@ -72065,7 +72144,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 589
+        "matchIndex": 590
       }
     },
     {
@@ -72190,7 +72269,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 590
+        "matchIndex": 591
       }
     },
     {
@@ -72208,35 +72287,35 @@
         "time": "17:25",
         "date": "26.11.2026",
         "mbs": 2,
-        "ms1": 2.08,
-        "msX": 3.2,
-        "ms2": 2.45,
-        "doubleChance1X": 1.25,
-        "doubleChance12": 1.14,
-        "doubleChanceX2": 1.37,
+        "ms1": 2.13,
+        "msX": 3.17,
+        "ms2": 2.4,
+        "doubleChance1X": 1.26,
+        "doubleChance12": 1.15,
+        "doubleChanceX2": 1.35,
         "goals25Under": 1.94,
         "goals25Over": 1.45,
         "leagueCode": "Suudi Arabistan Pro Lig",
         "groupId": "402",
         "subgroupId": "0",
-        "totalGoals01": 4.04,
+        "totalGoals01": 4.05,
         "totalGoals23": 1.85,
         "totalGoals46": 2.95,
         "totalGoals7Plus": 8.99,
-        "halfTimeResult1": 2.59,
+        "halfTimeResult1": 2.63,
         "halfTimeResultX": 2.09,
-        "halfTimeResult2": 2.95,
-        "handicapMs1": 3.76,
-        "handicapMsX": 3.78,
-        "handicapMs2": 1.37,
+        "halfTimeResult2": 2.9,
+        "handicapMs1": 3.87,
+        "handicapMsX": 3.83,
+        "handicapMs2": 1.35,
         "bttsYes": 1.38,
-        "bttsNo": 2.09,
+        "bttsNo": 2.1,
         "halfTimeGoals15Under": 1.37,
         "halfTimeGoals15Over": 2.11,
-        "goals15Under": 3.8,
+        "goals15Under": 3.81,
         "goals15Over": 1.07,
         "goals35Under": 1.32,
-        "goals35Over": 2.26,
+        "goals35Over": 2.25,
         "eventId": "3389702",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -72270,12 +72349,12 @@
         2,
         null,
         null,
-        2.08,
-        3.2,
-        2.45,
-        1.25,
-        1.14,
-        1.37,
+        2.13,
+        3.17,
+        2.4,
+        1.26,
+        1.15,
+        1.35,
         1.94,
         1.45,
         null,
@@ -72283,25 +72362,25 @@
         "Suudi Arabistan Pro Lig",
         "402",
         "0",
-        4.04,
+        4.05,
         1.85,
         2.95,
         8.99,
-        2.59,
+        2.63,
         2.09,
-        2.95,
-        3.76,
-        3.78,
-        1.37,
+        2.9,
+        3.87,
+        3.83,
+        1.35,
         1.38,
-        2.09,
+        2.1,
         null,
         1.37,
         2.11,
-        3.8,
+        3.81,
         1.07,
         1.32,
-        2.26,
+        2.25,
         null,
         null,
         "3389702",
@@ -72318,7 +72397,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 591
+        "matchIndex": 592
       }
     },
     {
@@ -72435,7 +72514,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 592
+        "matchIndex": 593
       }
     },
     {
@@ -72563,7 +72642,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 593
+        "matchIndex": 594
       }
     },
     {
@@ -72691,7 +72770,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 594
+        "matchIndex": 595
       }
     },
     {
@@ -72801,7 +72880,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 595
+        "matchIndex": 596
       }
     },
     {
@@ -72911,7 +72990,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 596
+        "matchIndex": 597
       }
     },
     {
@@ -73039,7 +73118,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 597
+        "matchIndex": 598
       }
     },
     {
@@ -73167,7 +73246,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 598
+        "matchIndex": 599
       }
     },
     {
@@ -73295,7 +73374,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 599
+        "matchIndex": 600
       }
     },
     {
@@ -73423,7 +73502,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 600
+        "matchIndex": 601
       }
     },
     {
@@ -73551,7 +73630,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 601
+        "matchIndex": 602
       }
     },
     {
@@ -73668,7 +73747,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 602
+        "matchIndex": 603
       }
     },
     {
@@ -73785,7 +73864,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 603
+        "matchIndex": 604
       }
     },
     {
@@ -73913,7 +73992,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 604
+        "matchIndex": 605
       }
     },
     {
@@ -74041,7 +74120,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 605
+        "matchIndex": 606
       }
     },
     {
@@ -74162,7 +74241,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 606
+        "matchIndex": 607
       }
     },
     {
@@ -74290,7 +74369,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 607
+        "matchIndex": 608
       }
     },
     {
@@ -74404,7 +74483,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 608
+        "matchIndex": 609
       }
     },
     {
@@ -74521,7 +74600,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 609
+        "matchIndex": 610
       }
     },
     {
@@ -74638,7 +74717,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 610
+        "matchIndex": 611
       }
     },
     {
@@ -74748,7 +74827,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 611
+        "matchIndex": 612
       }
     },
     {
@@ -74858,7 +74937,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 612
+        "matchIndex": 613
       }
     },
     {
@@ -74986,7 +75065,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 613
+        "matchIndex": 614
       }
     },
     {
@@ -75114,7 +75193,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 614
+        "matchIndex": 615
       }
     },
     {
@@ -75242,7 +75321,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 615
+        "matchIndex": 616
       }
     },
     {
@@ -75367,7 +75446,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 616
+        "matchIndex": 617
       }
     },
     {
@@ -75495,7 +75574,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 617
+        "matchIndex": 618
       }
     },
     {
@@ -75623,7 +75702,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 618
+        "matchIndex": 619
       }
     },
     {
@@ -75751,7 +75830,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 619
+        "matchIndex": 620
       }
     },
     {
@@ -75865,7 +75944,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 620
+        "matchIndex": 621
       }
     },
     {
@@ -75979,7 +76058,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 621
+        "matchIndex": 622
       }
     },
     {
@@ -76107,7 +76186,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 622
+        "matchIndex": 623
       }
     },
     {
@@ -76235,7 +76314,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 623
+        "matchIndex": 624
       }
     },
     {
@@ -76363,7 +76442,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 624
+        "matchIndex": 625
       }
     },
     {
@@ -76491,7 +76570,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 625
+        "matchIndex": 626
       }
     },
     {
@@ -76601,7 +76680,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 626
+        "matchIndex": 627
       }
     },
     {
@@ -76729,7 +76808,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 627
+        "matchIndex": 628
       }
     },
     {
@@ -76857,7 +76936,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 628
+        "matchIndex": 629
       }
     },
     {
@@ -76982,7 +77061,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 629
+        "matchIndex": 630
       }
     },
     {
@@ -77092,7 +77171,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 630
+        "matchIndex": 631
       }
     },
     {
@@ -77202,7 +77281,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 631
+        "matchIndex": 632
       }
     },
     {
@@ -77330,7 +77409,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 632
+        "matchIndex": 633
       }
     },
     {
@@ -77458,7 +77537,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 633
+        "matchIndex": 634
       }
     },
     {
@@ -77586,7 +77665,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 634
+        "matchIndex": 635
       }
     },
     {
@@ -77714,7 +77793,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 635
+        "matchIndex": 636
       }
     },
     {
@@ -77824,7 +77903,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 636
+        "matchIndex": 637
       }
     },
     {
@@ -77952,7 +78031,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 637
+        "matchIndex": 638
       }
     },
     {
@@ -78080,7 +78159,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 638
+        "matchIndex": 639
       }
     },
     {
@@ -78205,7 +78284,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 639
+        "matchIndex": 640
       }
     },
     {
@@ -78330,7 +78409,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 640
+        "matchIndex": 641
       }
     },
     {
@@ -78458,7 +78537,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 641
+        "matchIndex": 642
       }
     },
     {
@@ -78586,7 +78665,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 642
+        "matchIndex": 643
       }
     },
     {
@@ -78703,7 +78782,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 643
+        "matchIndex": 644
       }
     },
     {
@@ -78831,7 +78910,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 644
+        "matchIndex": 645
       }
     },
     {
@@ -78941,7 +79020,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 645
+        "matchIndex": 646
       }
     },
     {
@@ -79069,7 +79148,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 646
+        "matchIndex": 647
       }
     },
     {
@@ -79093,29 +79172,29 @@
         "doubleChance1X": 1,
         "doubleChance12": 1.06,
         "doubleChanceX2": 2.7,
-        "goals25Under": 2.28,
-        "goals25Over": 1.4,
+        "goals25Under": 2.31,
+        "goals25Over": 1.38,
         "leagueCode": "UEFA Avrupa Ligi",
         "groupId": "46195",
         "subgroupId": "0",
-        "totalGoals01": 4.82,
-        "totalGoals23": 1.97,
-        "totalGoals46": 2.82,
-        "totalGoals7Plus": 7.53,
+        "totalGoals01": 4.95,
+        "totalGoals23": 1.98,
+        "totalGoals46": 2.79,
+        "totalGoals7Plus": 7.27,
         "halfTimeResult1": 1.65,
-        "halfTimeResultX": 2.55,
-        "halfTimeResult2": 6.34,
-        "handicapMs1": 1.78,
-        "handicapMsX": 3.55,
+        "halfTimeResultX": 2.56,
+        "halfTimeResult2": 6.3,
+        "handicapMs1": 1.77,
+        "handicapMsX": 3.58,
         "handicapMs2": 2.71,
-        "bttsYes": 1.64,
-        "bttsNo": 1.83,
-        "halfTimeGoals15Under": 1.51,
-        "halfTimeGoals15Over": 2.01,
-        "goals15Under": 4.8,
+        "bttsYes": 1.62,
+        "bttsNo": 1.85,
+        "halfTimeGoals15Under": 1.53,
+        "halfTimeGoals15Over": 1.99,
+        "goals15Under": 4.9,
         "goals15Over": 1.05,
-        "goals35Under": 1.45,
-        "goals35Over": 2.13,
+        "goals35Under": 1.47,
+        "goals35Over": 2.09,
         "eventId": "3326534",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -79155,32 +79234,32 @@
         1,
         1.06,
         2.7,
-        2.28,
-        1.4,
+        2.31,
+        1.38,
         null,
         null,
         "UEFA Avrupa Ligi",
         "46195",
         "0",
-        4.82,
-        1.97,
-        2.82,
-        7.53,
+        4.95,
+        1.98,
+        2.79,
+        7.27,
         1.65,
-        2.55,
-        6.34,
-        1.78,
-        3.55,
+        2.56,
+        6.3,
+        1.77,
+        3.58,
         2.71,
-        1.64,
-        1.83,
+        1.62,
+        1.85,
         null,
-        1.51,
-        2.01,
-        4.8,
+        1.53,
+        1.99,
+        4.9,
         1.05,
-        1.45,
-        2.13,
+        1.47,
+        2.09,
         null,
         null,
         "3326534",
@@ -79197,7 +79276,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 647
+        "matchIndex": 648
       }
     },
     {
@@ -79307,7 +79386,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 648
+        "matchIndex": 649
       }
     },
     {
@@ -79417,7 +79496,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 649
+        "matchIndex": 650
       }
     },
     {
@@ -79545,7 +79624,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 650
+        "matchIndex": 651
       }
     },
     {
@@ -79670,7 +79749,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 651
+        "matchIndex": 652
       }
     },
     {
@@ -79795,7 +79874,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 652
+        "matchIndex": 653
       }
     },
     {
@@ -79912,7 +79991,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 653
+        "matchIndex": 654
       }
     },
     {
@@ -80040,7 +80119,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 654
+        "matchIndex": 655
       }
     },
     {
@@ -80165,7 +80244,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 655
+        "matchIndex": 656
       }
     },
     {
@@ -80293,7 +80372,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 656
+        "matchIndex": 657
       }
     },
     {
@@ -80421,7 +80500,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 657
+        "matchIndex": 658
       }
     },
     {
@@ -80531,7 +80610,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 658
+        "matchIndex": 659
       }
     },
     {
@@ -80641,7 +80720,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 659
+        "matchIndex": 660
       }
     },
     {
@@ -80769,7 +80848,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 660
+        "matchIndex": 661
       }
     },
     {
@@ -80897,7 +80976,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 661
+        "matchIndex": 662
       }
     },
     {
@@ -81025,7 +81104,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 662
+        "matchIndex": 663
       }
     },
     {
@@ -81153,7 +81232,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 663
+        "matchIndex": 664
       }
     },
     {
@@ -81281,7 +81360,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 664
+        "matchIndex": 665
       }
     },
     {
@@ -81409,7 +81488,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 665
+        "matchIndex": 666
       }
     },
     {
@@ -81537,7 +81616,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 666
+        "matchIndex": 667
       }
     },
     {
@@ -81665,7 +81744,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 667
+        "matchIndex": 668
       }
     },
     {
@@ -81775,7 +81854,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 668
+        "matchIndex": 669
       }
     },
     {
@@ -81903,7 +81982,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 669
+        "matchIndex": 670
       }
     },
     {
@@ -82028,7 +82107,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 670
+        "matchIndex": 671
       }
     },
     {
@@ -82156,7 +82235,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 671
+        "matchIndex": 672
       }
     },
     {
@@ -82273,7 +82352,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 672
+        "matchIndex": 673
       }
     },
     {
@@ -82401,7 +82480,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 673
+        "matchIndex": 674
       }
     },
     {
@@ -82529,7 +82608,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 674
+        "matchIndex": 675
       }
     },
     {
@@ -82657,7 +82736,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 676
+        "matchIndex": 677
       }
     },
     {
@@ -82785,7 +82864,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 677
+        "matchIndex": 678
       }
     },
     {
@@ -82913,7 +82992,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 678
+        "matchIndex": 679
       }
     },
     {
@@ -83030,7 +83109,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 679
+        "matchIndex": 680
       }
     },
     {
@@ -83158,7 +83237,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 680
+        "matchIndex": 681
       }
     },
     {
@@ -83283,7 +83362,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 681
+        "matchIndex": 682
       }
     },
     {
@@ -83411,7 +83490,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 682
+        "matchIndex": 683
       }
     },
     {
@@ -83539,7 +83618,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 683
+        "matchIndex": 684
       }
     },
     {
@@ -83667,7 +83746,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 684
+        "matchIndex": 685
       }
     },
     {
@@ -83795,7 +83874,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 685
+        "matchIndex": 686
       }
     },
     {
@@ -83923,7 +84002,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 686
+        "matchIndex": 687
       }
     },
     {
@@ -84051,7 +84130,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 687
+        "matchIndex": 688
       }
     },
     {
@@ -84179,7 +84258,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 688
+        "matchIndex": 689
       }
     },
     {
@@ -84307,7 +84386,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 689
+        "matchIndex": 690
       }
     },
     {
@@ -84424,7 +84503,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 690
+        "matchIndex": 691
       }
     },
     {
@@ -84541,7 +84620,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 691
+        "matchIndex": 692
       }
     },
     {
@@ -84666,7 +84745,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 692
+        "matchIndex": 693
       }
     },
     {
@@ -84794,7 +84873,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 693
+        "matchIndex": 694
       }
     },
     {
@@ -84904,7 +84983,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 694
+        "matchIndex": 695
       }
     },
     {
@@ -85021,7 +85100,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 695
+        "matchIndex": 696
       }
     },
     {
@@ -85149,7 +85228,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 696
+        "matchIndex": 697
       }
     },
     {
@@ -85277,7 +85356,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 697
+        "matchIndex": 698
       }
     },
     {
@@ -85380,7 +85459,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 698
+        "matchIndex": 699
       }
     },
     {
@@ -85497,7 +85576,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 699
+        "matchIndex": 700
       }
     },
     {
@@ -85625,7 +85704,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 700
+        "matchIndex": 701
       }
     },
     {
@@ -85753,7 +85832,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 701
+        "matchIndex": 702
       }
     },
     {
@@ -85878,7 +85957,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 702
+        "matchIndex": 703
       }
     },
     {
@@ -86006,7 +86085,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 703
+        "matchIndex": 704
       }
     },
     {
@@ -86134,7 +86213,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 704
+        "matchIndex": 705
       }
     },
     {
@@ -86262,7 +86341,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 705
+        "matchIndex": 706
       }
     },
     {
@@ -86379,7 +86458,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 706
+        "matchIndex": 707
       }
     },
     {
@@ -86493,7 +86572,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 708
+        "matchIndex": 709
       }
     },
     {
@@ -86618,7 +86697,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 709
+        "matchIndex": 710
       }
     },
     {
@@ -86746,7 +86825,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 710
+        "matchIndex": 711
       }
     },
     {
@@ -86874,7 +86953,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 711
+        "matchIndex": 712
       }
     },
     {
@@ -87002,7 +87081,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 712
+        "matchIndex": 713
       }
     },
     {
@@ -87127,7 +87206,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 713
+        "matchIndex": 714
       }
     },
     {
@@ -87241,7 +87320,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 714
+        "matchIndex": 715
       }
     },
     {
@@ -87366,7 +87445,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 715
+        "matchIndex": 716
       }
     },
     {
@@ -87483,7 +87562,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 716
+        "matchIndex": 717
       }
     },
     {
@@ -87611,7 +87690,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 717
+        "matchIndex": 718
       }
     },
     {
@@ -87736,7 +87815,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 718
+        "matchIndex": 719
       }
     },
     {
@@ -87850,7 +87929,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 719
+        "matchIndex": 720
       }
     },
     {
@@ -87975,7 +88054,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 720
+        "matchIndex": 721
       }
     },
     {
@@ -88103,7 +88182,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 721
+        "matchIndex": 722
       }
     },
     {
@@ -88231,7 +88310,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 722
+        "matchIndex": 723
       }
     },
     {
@@ -88356,7 +88435,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 723
+        "matchIndex": 724
       }
     },
     {
@@ -88473,7 +88552,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 724
+        "matchIndex": 725
       }
     },
     {
@@ -88583,7 +88662,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 725
+        "matchIndex": 726
       }
     },
     {
@@ -88711,7 +88790,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 726
+        "matchIndex": 727
       }
     },
     {
@@ -88839,7 +88918,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 727
+        "matchIndex": 728
       }
     },
     {
@@ -88953,7 +89032,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 728
+        "matchIndex": 729
       }
     },
     {
@@ -89081,7 +89160,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 729
+        "matchIndex": 730
       }
     },
     {
@@ -89209,7 +89288,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 730
+        "matchIndex": 731
       }
     },
     {
@@ -89326,7 +89405,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 731
+        "matchIndex": 732
       }
     },
     {
@@ -89451,7 +89530,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 732
+        "matchIndex": 733
       }
     },
     {
@@ -89579,7 +89658,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 733
+        "matchIndex": 734
       }
     },
     {
@@ -89693,7 +89772,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 734
+        "matchIndex": 735
       }
     },
     {
@@ -89818,7 +89897,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 735
+        "matchIndex": 736
       }
     },
     {
@@ -89946,7 +90025,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 736
+        "matchIndex": 737
       }
     },
     {
@@ -90074,7 +90153,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 737
+        "matchIndex": 738
       }
     },
     {
@@ -90184,7 +90263,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 738
+        "matchIndex": 739
       }
     },
     {
@@ -90309,7 +90388,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 739
+        "matchIndex": 740
       }
     },
     {
@@ -90437,7 +90516,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 740
+        "matchIndex": 741
       }
     },
     {
@@ -90547,7 +90626,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 741
+        "matchIndex": 742
       }
     },
     {
@@ -90675,7 +90754,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 742
+        "matchIndex": 743
       }
     },
     {
@@ -90792,7 +90871,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 743
+        "matchIndex": 744
       }
     },
     {
@@ -90920,7 +90999,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 744
+        "matchIndex": 745
       }
     },
     {
@@ -91048,7 +91127,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 745
+        "matchIndex": 746
       }
     },
     {
@@ -91176,7 +91255,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 746
+        "matchIndex": 747
       }
     },
     {
@@ -91293,7 +91372,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 747
+        "matchIndex": 748
       }
     },
     {
@@ -91410,7 +91489,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 748
+        "matchIndex": 749
       }
     },
     {
@@ -91527,7 +91606,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 749
+        "matchIndex": 750
       }
     },
     {
@@ -91655,7 +91734,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 750
+        "matchIndex": 751
       }
     },
     {
@@ -91772,7 +91851,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 751
+        "matchIndex": 752
       }
     },
     {
@@ -91889,7 +91968,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 752
+        "matchIndex": 753
       }
     },
     {
@@ -92006,7 +92085,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 753
+        "matchIndex": 754
       }
     },
     {
@@ -92123,7 +92202,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 754
+        "matchIndex": 755
       }
     },
     {
@@ -92240,7 +92319,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 755
+        "matchIndex": 756
       }
     },
     {
@@ -92357,7 +92436,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 756
+        "matchIndex": 757
       }
     },
     {
@@ -92482,7 +92561,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 757
+        "matchIndex": 758
       }
     },
     {
@@ -92610,7 +92689,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 758
+        "matchIndex": 759
       }
     },
     {
@@ -92738,7 +92817,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 759
+        "matchIndex": 760
       }
     },
     {
@@ -92863,7 +92942,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 760
+        "matchIndex": 761
       }
     },
     {
@@ -92977,7 +93056,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 761
+        "matchIndex": 762
       }
     },
     {
@@ -93105,7 +93184,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 762
+        "matchIndex": 763
       }
     },
     {
@@ -93222,7 +93301,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 763
+        "matchIndex": 764
       }
     },
     {
@@ -93350,7 +93429,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 764
+        "matchIndex": 765
       }
     },
     {
@@ -93478,7 +93557,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 765
+        "matchIndex": 766
       }
     },
     {
@@ -93592,7 +93671,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 766
+        "matchIndex": 767
       }
     },
     {
@@ -93720,7 +93799,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 767
+        "matchIndex": 768
       }
     },
     {
@@ -93830,7 +93909,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 768
+        "matchIndex": 769
       }
     },
     {
@@ -93944,7 +94023,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 769
+        "matchIndex": 770
       }
     },
     {
@@ -94058,7 +94137,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 770
+        "matchIndex": 771
       }
     },
     {
@@ -94172,7 +94251,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 771
+        "matchIndex": 772
       }
     },
     {
@@ -94282,7 +94361,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 772
+        "matchIndex": 773
       }
     },
     {
@@ -94404,7 +94483,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 773
+        "matchIndex": 774
       }
     },
     {
@@ -94514,7 +94593,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 774
+        "matchIndex": 775
       }
     },
     {
@@ -94642,7 +94721,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 775
+        "matchIndex": 776
       }
     },
     {
@@ -94770,7 +94849,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 776
+        "matchIndex": 777
       }
     },
     {
@@ -94898,7 +94977,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 777
+        "matchIndex": 778
       }
     },
     {
@@ -95026,7 +95105,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 778
+        "matchIndex": 779
       }
     },
     {
@@ -95154,7 +95233,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 779
+        "matchIndex": 780
       }
     },
     {
@@ -95264,7 +95343,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 780
+        "matchIndex": 781
       }
     },
     {
@@ -95392,7 +95471,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 781
+        "matchIndex": 782
       }
     },
     {
@@ -95509,7 +95588,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 782
+        "matchIndex": 783
       }
     },
     {
@@ -95637,7 +95716,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 783
+        "matchIndex": 784
       }
     },
     {
@@ -95765,7 +95844,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 784
+        "matchIndex": 785
       }
     },
     {
@@ -95893,7 +95972,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 785
+        "matchIndex": 786
       }
     },
     {
@@ -96021,7 +96100,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 786
+        "matchIndex": 787
       }
     },
     {
@@ -96146,7 +96225,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 787
+        "matchIndex": 788
       }
     },
     {
@@ -96274,7 +96353,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 788
+        "matchIndex": 789
       }
     },
     {
@@ -96384,7 +96463,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 789
+        "matchIndex": 790
       }
     },
     {
@@ -96509,7 +96588,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 790
+        "matchIndex": 791
       }
     },
     {
@@ -96637,7 +96716,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 791
+        "matchIndex": 792
       }
     },
     {
@@ -96765,7 +96844,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 792
+        "matchIndex": 793
       }
     },
     {
@@ -96893,7 +96972,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 793
+        "matchIndex": 794
       }
     },
     {
@@ -97003,7 +97082,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 794
+        "matchIndex": 795
       }
     },
     {
@@ -97113,7 +97192,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 795
+        "matchIndex": 796
       }
     },
     {
@@ -97241,7 +97320,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 796
+        "matchIndex": 797
       }
     },
     {
@@ -97369,7 +97448,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 797
+        "matchIndex": 798
       }
     },
     {
@@ -97497,7 +97576,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 798
+        "matchIndex": 799
       }
     },
     {
@@ -97625,7 +97704,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 799
+        "matchIndex": 800
       }
     },
     {
@@ -97742,7 +97821,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 800
+        "matchIndex": 801
       }
     },
     {
@@ -97870,7 +97949,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 801
+        "matchIndex": 802
       }
     },
     {
@@ -97980,7 +98059,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 802
+        "matchIndex": 803
       }
     },
     {
@@ -98090,7 +98169,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 803
+        "matchIndex": 804
       }
     },
     {
@@ -98218,7 +98297,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 804
+        "matchIndex": 805
       }
     },
     {
@@ -98346,7 +98425,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 805
+        "matchIndex": 806
       }
     },
     {
@@ -98471,7 +98550,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 806
+        "matchIndex": 807
       }
     },
     {
@@ -98596,7 +98675,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 807
+        "matchIndex": 808
       }
     },
     {
@@ -98713,7 +98792,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 808
+        "matchIndex": 809
       }
     },
     {
@@ -98841,7 +98920,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 809
+        "matchIndex": 810
       }
     },
     {
@@ -98958,7 +99037,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 810
+        "matchIndex": 811
       }
     },
     {
@@ -99086,7 +99165,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 811
+        "matchIndex": 812
       }
     },
     {
@@ -99214,7 +99293,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 812
+        "matchIndex": 813
       }
     },
     {
@@ -99331,7 +99410,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 813
+        "matchIndex": 814
       }
     },
     {
@@ -99448,7 +99527,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 814
+        "matchIndex": 815
       }
     },
     {
@@ -99573,7 +99652,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 815
+        "matchIndex": 816
       }
     },
     {
@@ -99701,7 +99780,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 816
+        "matchIndex": 817
       }
     },
     {
@@ -99829,7 +99908,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 817
+        "matchIndex": 818
       }
     },
     {
@@ -99954,7 +100033,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 818
+        "matchIndex": 819
       }
     },
     {
@@ -100082,7 +100161,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 819
+        "matchIndex": 820
       }
     },
     {
@@ -100196,7 +100275,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 820
+        "matchIndex": 821
       }
     },
     {
@@ -100318,134 +100397,6 @@
         "2:4:",
         "2:89:",
         "2:100:-2",
-        "2:101:1.5",
-        "2:101:3.5",
-        "2:60:1.5"
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 821
-      }
-    },
-    {
-      "matchId": "3339200",
-      "homeName": "Casa Pia AC",
-      "awayName": "Braga",
-      "date": "30.11.2026",
-      "time": "23:15",
-      "status": 0,
-      "fields": {
-        "matchId": "3339200",
-        "homeName": "Casa Pia AC",
-        "awayName": "Braga",
-        "status": 0,
-        "time": "23:15",
-        "date": "30.11.2026",
-        "mbs": 1,
-        "ms1": 6.32,
-        "msX": 4.01,
-        "ms2": 1.34,
-        "doubleChance1X": 2.37,
-        "doubleChance12": 1.1,
-        "doubleChanceX2": 1,
-        "goals25Under": 1.69,
-        "goals25Over": 1.77,
-        "leagueCode": "Portekiz Premier Lig",
-        "groupId": "566",
-        "subgroupId": "0",
-        "totalGoals01": 3.13,
-        "totalGoals23": 1.81,
-        "totalGoals46": 3.75,
-        "totalGoals7Plus": 15.7,
-        "halfTimeResult1": 6.52,
-        "halfTimeResultX": 2.19,
-        "halfTimeResult2": 1.82,
-        "handicapMs1": 2.37,
-        "handicapMsX": 3.2,
-        "handicapMs2": 2.09,
-        "bttsYes": 1.97,
-        "bttsNo": 1.54,
-        "halfTimeGoals15Under": 1.31,
-        "halfTimeGoals15Over": 2.56,
-        "goals15Under": 3.2,
-        "goals15Over": 1.18,
-        "goals35Under": 1.19,
-        "goals35Over": 3.12,
-        "eventId": "3339200",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "marketGoals25": "2:101:2.5",
-        "marketHalfTimeResult": "2:88:",
-        "marketTotalGoals": "2:4:",
-        "marketBtts": "2:89:",
-        "marketHandicapMs": "2:100:1",
-        "marketGoals15": "2:101:1.5",
-        "marketGoals35": "2:101:3.5",
-        "marketHalfTimeGoals15": "2:60:1.5",
-        "competitionId": 566,
-        "competitionName": "Portekiz Premier Lig",
-        "isLive": false,
-        "marketCount": 27
-      },
-      "raw": [
-        "3339200",
-        "Casa Pia AC",
-        null,
-        "Braga",
-        null,
-        0,
-        "23:15",
-        "30.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        1,
-        null,
-        null,
-        6.32,
-        4.01,
-        1.34,
-        2.37,
-        1.1,
-        1,
-        1.69,
-        1.77,
-        null,
-        null,
-        "Portekiz Premier Lig",
-        "566",
-        "0",
-        3.13,
-        1.81,
-        3.75,
-        15.7,
-        6.52,
-        2.19,
-        1.82,
-        2.37,
-        3.2,
-        2.09,
-        1.97,
-        1.54,
-        null,
-        1.31,
-        2.56,
-        3.2,
-        1.18,
-        1.19,
-        3.12,
-        null,
-        null,
-        "3339200",
-        "1:1:",
-        "2:92:",
-        "2:101:2.5",
-        "2:88:",
-        "2:4:",
-        "2:89:",
-        "2:100:1",
         "2:101:1.5",
         "2:101:3.5",
         "2:60:1.5"
@@ -101341,202 +101292,6 @@
       }
     },
     {
-      "matchId": "3351712",
-      "homeName": "Elgin City",
-      "awayName": "P. Thistle",
-      "date": "28.11.2026",
-      "time": "18:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3351712",
-        "homeName": "Elgin City",
-        "awayName": "P. Thistle",
-        "status": 0,
-        "time": "18:00",
-        "date": "28.11.2026",
-        "mbs": 3,
-        "ms1": 5.29,
-        "msX": 4.31,
-        "ms2": 1.28,
-        "leagueCode": "İskoçya Kupası",
-        "groupId": "599",
-        "subgroupId": "0",
-        "eventId": "3351712",
-        "marketMs": "1:1:",
-        "competitionId": 599,
-        "competitionName": "İskoçya Kupası",
-        "isLive": false,
-        "marketCount": 1
-      },
-      "raw": [
-        "3351712",
-        "Elgin City",
-        null,
-        "P. Thistle",
-        null,
-        0,
-        "18:00",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        5.29,
-        4.31,
-        1.28,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        "İskoçya Kupası",
-        "599",
-        "0",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        "3351712",
-        "1:1:",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 830
-      }
-    },
-    {
-      "matchId": "3336222",
-      "homeName": "Mexico FC",
-      "awayName": "Rayo Ciudad Alcobendas",
-      "date": "28.11.2026",
-      "time": "19:00",
-      "status": 0,
-      "fields": {
-        "matchId": "3336222",
-        "homeName": "Mexico FC",
-        "awayName": "Rayo Ciudad Alcobendas",
-        "status": 0,
-        "time": "19:00",
-        "date": "28.11.2026",
-        "mbs": 3,
-        "ms1": 2.06,
-        "msX": 3.01,
-        "ms2": 2.61,
-        "doubleChance1X": 1.22,
-        "doubleChance12": 1.17,
-        "doubleChanceX2": 1.38,
-        "leagueCode": "İspanya Amatör Tercera Rfef, Group 7",
-        "groupId": "23883",
-        "subgroupId": "0",
-        "eventId": "3336222",
-        "marketMs": "1:1:",
-        "marketDoubleChance": "2:92:",
-        "competitionId": 23883,
-        "competitionName": "İspanya Amatör Tercera Rfef, Group 7",
-        "isLive": false,
-        "marketCount": 2
-      },
-      "raw": [
-        "3336222",
-        "Mexico FC",
-        null,
-        "Rayo Ciudad Alcobendas",
-        null,
-        0,
-        "19:00",
-        "28.11.2026",
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        null,
-        2.06,
-        3.01,
-        2.61,
-        1.22,
-        1.17,
-        1.38,
-        null,
-        null,
-        null,
-        null,
-        "İspanya Amatör Tercera Rfef, Group 7",
-        "23883",
-        "0",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        "3336222",
-        "1:1:",
-        "2:92:",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 831
-      }
-    },
-    {
       "matchId": "3336011",
       "homeName": "Logrones",
       "awayName": "Barakaldo CF",
@@ -101661,7 +101416,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 832
+        "matchIndex": 830
       }
     },
     {
@@ -101789,7 +101544,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 833
+        "matchIndex": 831
       }
     },
     {
@@ -101917,7 +101672,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 834
+        "matchIndex": 832
       }
     },
     {
@@ -102045,7 +101800,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 835
+        "matchIndex": 833
       }
     },
     {
@@ -102162,7 +101917,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 836
+        "matchIndex": 834
       }
     },
     {
@@ -102279,7 +102034,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 837
+        "matchIndex": 835
       }
     },
     {
@@ -102407,7 +102162,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 838
+        "matchIndex": 836
       }
     },
     {
@@ -102521,7 +102276,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 839
+        "matchIndex": 837
       }
     },
     {
@@ -102638,7 +102393,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 840
+        "matchIndex": 838
       }
     },
     {
@@ -102766,7 +102521,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 841
+        "matchIndex": 839
       }
     },
     {
@@ -102891,7 +102646,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 842
+        "matchIndex": 840
       }
     },
     {
@@ -103019,7 +102774,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 843
+        "matchIndex": 841
       }
     },
     {
@@ -103129,7 +102884,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 844
+        "matchIndex": 842
       }
     },
     {
@@ -103246,7 +103001,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 845
+        "matchIndex": 843
       }
     },
     {
@@ -103356,7 +103111,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 846
+        "matchIndex": 844
       }
     },
     {
@@ -103484,7 +103239,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 847
+        "matchIndex": 845
       }
     },
     {
@@ -103612,7 +103367,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 848
+        "matchIndex": 846
       }
     },
     {
@@ -103722,7 +103477,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 849
+        "matchIndex": 847
       }
     },
     {
@@ -103836,7 +103591,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 850
+        "matchIndex": 848
       }
     },
     {
@@ -103945,7 +103700,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 851
+        "matchIndex": 849
       }
     },
     {
@@ -104054,7 +103809,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 852
+        "matchIndex": 850
       }
     },
     {
@@ -104160,7 +103915,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 853
+        "matchIndex": 851
       }
     },
     {
@@ -104277,7 +104032,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 854
+        "matchIndex": 852
       }
     },
     {
@@ -104394,7 +104149,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 855
+        "matchIndex": 853
       }
     },
     {
@@ -104494,7 +104249,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 856
+        "matchIndex": 854
       }
     },
     {
@@ -104594,7 +104349,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 857
+        "matchIndex": 855
       }
     },
     {
@@ -104711,7 +104466,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 858
+        "matchIndex": 856
       }
     },
     {
@@ -104825,7 +104580,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 859
+        "matchIndex": 857
       }
     },
     {
@@ -104935,7 +104690,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 860
+        "matchIndex": 858
       }
     },
     {
@@ -105049,7 +104804,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 861
+        "matchIndex": 859
       }
     },
     {
@@ -105174,7 +104929,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 862
+        "matchIndex": 860
       }
     },
     {
@@ -105291,7 +105046,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 863
+        "matchIndex": 861
       }
     },
     {
@@ -105405,7 +105160,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 864
+        "matchIndex": 862
       }
     },
     {
@@ -105530,7 +105285,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 865
+        "matchIndex": 863
       }
     },
     {
@@ -105636,7 +105391,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 866
+        "matchIndex": 864
       }
     },
     {
@@ -105761,7 +105516,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 867
+        "matchIndex": 865
       }
     },
     {
@@ -105889,7 +105644,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 868
+        "matchIndex": 866
       }
     },
     {
@@ -106017,7 +105772,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 869
+        "matchIndex": 867
       }
     },
     {
@@ -106145,7 +105900,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 870
+        "matchIndex": 868
       }
     },
     {
@@ -106273,7 +106028,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 871
+        "matchIndex": 869
       }
     },
     {
@@ -106398,7 +106153,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 872
+        "matchIndex": 870
       }
     },
     {
@@ -106498,7 +106253,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 873
+        "matchIndex": 871
       }
     },
     {
@@ -106609,7 +106364,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 874
+        "matchIndex": 872
       }
     },
     {
@@ -106737,7 +106492,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 875
+        "matchIndex": 873
       }
     },
     {
@@ -106851,7 +106606,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 876
+        "matchIndex": 874
       }
     },
     {
@@ -106965,7 +106720,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 877
+        "matchIndex": 875
       }
     },
     {
@@ -107082,7 +106837,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 878
+        "matchIndex": 876
       }
     },
     {
@@ -107199,7 +106954,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 879
+        "matchIndex": 877
       }
     },
     {
@@ -107313,7 +107068,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 880
+        "matchIndex": 878
       }
     },
     {
@@ -107427,7 +107182,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 881
+        "matchIndex": 879
       }
     },
     {
@@ -107541,7 +107296,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 882
+        "matchIndex": 880
       }
     },
     {
@@ -107655,7 +107410,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 883
+        "matchIndex": 881
       }
     },
     {
@@ -107769,7 +107524,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 884
+        "matchIndex": 882
       }
     },
     {
@@ -107894,7 +107649,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 885
+        "matchIndex": 883
       }
     },
     {
@@ -108011,7 +107766,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 886
+        "matchIndex": 884
       }
     },
     {
@@ -108136,7 +107891,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 887
+        "matchIndex": 885
       }
     },
     {
@@ -108261,7 +108016,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 888
+        "matchIndex": 886
       }
     },
     {
@@ -108389,7 +108144,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 889
+        "matchIndex": 887
       }
     },
     {
@@ -108517,7 +108272,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 890
+        "matchIndex": 888
       }
     },
     {
@@ -108645,7 +108400,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 891
+        "matchIndex": 889
       }
     },
     {
@@ -108773,7 +108528,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 892
+        "matchIndex": 890
       }
     },
     {
@@ -108901,7 +108656,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 893
+        "matchIndex": 891
       }
     },
     {
@@ -109029,7 +108784,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 894
+        "matchIndex": 892
       }
     },
     {
@@ -109157,7 +108912,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 895
+        "matchIndex": 893
       }
     },
     {
@@ -109285,7 +109040,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 896
+        "matchIndex": 894
       }
     },
     {
@@ -109410,7 +109165,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 897
+        "matchIndex": 895
       }
     },
     {
@@ -109535,7 +109290,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 898
+        "matchIndex": 896
       }
     },
     {
@@ -109652,7 +109407,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 899
+        "matchIndex": 897
       }
     },
     {
@@ -109777,7 +109532,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 900
+        "matchIndex": 898
       }
     },
     {
@@ -109894,7 +109649,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 901
+        "matchIndex": 899
       }
     },
     {
@@ -110008,7 +109763,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 902
+        "matchIndex": 900
       }
     },
     {
@@ -110125,7 +109880,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 903
+        "matchIndex": 901
       }
     },
     {
@@ -110250,7 +110005,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 904
+        "matchIndex": 902
       }
     },
     {
@@ -110378,7 +110133,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 905
+        "matchIndex": 903
       }
     },
     {
@@ -110506,7 +110261,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 906
+        "matchIndex": 904
       }
     },
     {
@@ -110631,7 +110386,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 907
+        "matchIndex": 905
       }
     },
     {
@@ -110756,7 +110511,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 908
+        "matchIndex": 906
       }
     },
     {
@@ -110881,7 +110636,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 909
+        "matchIndex": 907
       }
     },
     {
@@ -110998,7 +110753,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 910
+        "matchIndex": 908
       }
     },
     {
@@ -111126,7 +110881,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 911
+        "matchIndex": 909
       }
     },
     {
@@ -111251,7 +111006,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 912
+        "matchIndex": 910
       }
     },
     {
@@ -111379,7 +111134,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 913
+        "matchIndex": 911
       }
     },
     {
@@ -111507,7 +111262,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 914
+        "matchIndex": 912
       }
     },
     {
@@ -111635,7 +111390,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 915
+        "matchIndex": 913
       }
     },
     {
@@ -111752,7 +111507,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 916
+        "matchIndex": 914
       }
     },
     {
@@ -111861,7 +111616,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 917
+        "matchIndex": 915
       }
     },
     {
@@ -111879,12 +111634,12 @@
         "time": "14:30",
         "date": "29.11.2026",
         "mbs": 3,
-        "ms1": 1.98,
-        "msX": 3.07,
-        "ms2": 2.68,
-        "doubleChance1X": 1.21,
+        "ms1": 1.95,
+        "msX": 3.08,
+        "ms2": 2.75,
+        "doubleChance1X": 1.19,
         "doubleChance12": 1.16,
-        "doubleChanceX2": 1.41,
+        "doubleChanceX2": 1.42,
         "goals25Under": 1.73,
         "goals25Over": 1.61,
         "leagueCode": "Hindistan Süper Ligi",
@@ -111894,13 +111649,13 @@
         "totalGoals23": 1.79,
         "totalGoals46": 3.34,
         "totalGoals7Plus": 12.35,
-        "halfTimeResult1": 2.55,
+        "halfTimeResult1": 2.5,
         "halfTimeResultX": 1.99,
-        "halfTimeResult2": 3.25,
-        "handicapMs1": 3.65,
-        "handicapMsX": 3.58,
-        "handicapMs2": 1.42,
-        "bttsYes": 1.49,
+        "halfTimeResult2": 3.32,
+        "handicapMs1": 3.54,
+        "handicapMsX": 3.55,
+        "handicapMs2": 1.44,
+        "bttsYes": 1.5,
         "bttsNo": 1.88,
         "halfTimeGoals15Under": 1.29,
         "halfTimeGoals15Over": 2.33,
@@ -111941,12 +111696,12 @@
         3,
         null,
         null,
-        1.98,
-        3.07,
-        2.68,
-        1.21,
+        1.95,
+        3.08,
+        2.75,
+        1.19,
         1.16,
-        1.41,
+        1.42,
         1.73,
         1.61,
         null,
@@ -111958,13 +111713,13 @@
         1.79,
         3.34,
         12.35,
-        2.55,
+        2.5,
         1.99,
-        3.25,
-        3.65,
-        3.58,
-        1.42,
-        1.49,
+        3.32,
+        3.54,
+        3.55,
+        1.44,
+        1.5,
         1.88,
         null,
         1.29,
@@ -111989,7 +111744,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 918
+        "matchIndex": 916
       }
     },
     {
@@ -112106,7 +111861,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 919
+        "matchIndex": 917
       }
     },
     {
@@ -112223,7 +111978,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 920
+        "matchIndex": 918
       }
     },
     {
@@ -112333,7 +112088,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 921
+        "matchIndex": 919
       }
     },
     {
@@ -112443,7 +112198,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 922
+        "matchIndex": 920
       }
     },
     {
@@ -112553,7 +112308,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 923
+        "matchIndex": 921
       }
     },
     {
@@ -112678,7 +112433,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 924
+        "matchIndex": 922
       }
     },
     {
@@ -112788,7 +112543,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 925
+        "matchIndex": 923
       }
     },
     {
@@ -112898,7 +112653,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 926
+        "matchIndex": 924
       }
     },
     {
@@ -113015,7 +112770,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 927
+        "matchIndex": 925
       }
     },
     {
@@ -113132,7 +112887,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 928
+        "matchIndex": 926
       }
     },
     {
@@ -113246,7 +113001,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 929
+        "matchIndex": 927
       }
     },
     {
@@ -113363,7 +113118,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 930
+        "matchIndex": 928
       }
     },
     {
@@ -113480,7 +113235,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 931
+        "matchIndex": 929
       }
     },
     {
@@ -113590,7 +113345,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 932
+        "matchIndex": 930
       }
     },
     {
@@ -113707,7 +113462,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 933
+        "matchIndex": 931
       }
     },
     {
@@ -113817,7 +113572,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 934
+        "matchIndex": 932
       }
     },
     {
@@ -113934,7 +113689,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 935
+        "matchIndex": 933
       }
     },
     {
@@ -114059,7 +113814,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 936
+        "matchIndex": 934
       }
     },
     {
@@ -114161,7 +113916,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 937
+        "matchIndex": 935
       }
     },
     {
@@ -114275,7 +114030,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 938
+        "matchIndex": 936
       }
     },
     {
@@ -114377,7 +114132,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 939
+        "matchIndex": 937
       }
     },
     {
@@ -114494,7 +114249,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 940
+        "matchIndex": 938
       }
     },
     {
@@ -114611,7 +114366,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 941
+        "matchIndex": 939
       }
     },
     {
@@ -114728,7 +114483,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 942
+        "matchIndex": 940
       }
     },
     {
@@ -114845,7 +114600,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 943
+        "matchIndex": 941
       }
     },
     {
@@ -114962,7 +114717,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 944
+        "matchIndex": 942
       }
     },
     {
@@ -115079,7 +114834,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 945
+        "matchIndex": 943
       }
     },
     {
@@ -115193,7 +114948,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 946
+        "matchIndex": 944
       }
     },
     {
@@ -115307,7 +115062,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 947
+        "matchIndex": 945
       }
     },
     {
@@ -115417,7 +115172,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 948
+        "matchIndex": 946
       }
     },
     {
@@ -115534,7 +115289,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 949
+        "matchIndex": 947
       }
     },
     {
@@ -115636,7 +115391,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 950
+        "matchIndex": 948
       }
     },
     {
@@ -115753,7 +115508,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 951
+        "matchIndex": 949
       }
     },
     {
@@ -115867,7 +115622,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 952
+        "matchIndex": 950
       }
     },
     {
@@ -115995,7 +115750,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 953
+        "matchIndex": 951
       }
     },
     {
@@ -116112,7 +115867,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 954
+        "matchIndex": 952
       }
     },
     {
@@ -116226,7 +115981,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 955
+        "matchIndex": 953
       }
     },
     {
@@ -116340,7 +116095,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 956
+        "matchIndex": 954
       }
     },
     {
@@ -116457,7 +116212,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 957
+        "matchIndex": 955
       }
     },
     {
@@ -116574,7 +116329,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 958
+        "matchIndex": 956
       }
     },
     {
@@ -116688,7 +116443,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 959
+        "matchIndex": 957
       }
     },
     {
@@ -116802,7 +116557,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 960
+        "matchIndex": 958
       }
     },
     {
@@ -116919,7 +116674,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 961
+        "matchIndex": 959
       }
     },
     {
@@ -117033,7 +116788,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 962
+        "matchIndex": 960
       }
     },
     {
@@ -117142,7 +116897,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 963
+        "matchIndex": 961
       }
     },
     {
@@ -117251,7 +117006,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 964
+        "matchIndex": 962
       }
     },
     {
@@ -117360,7 +117115,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 965
+        "matchIndex": 963
       }
     },
     {
@@ -117474,7 +117229,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 966
+        "matchIndex": 964
       }
     },
     {
@@ -117591,7 +117346,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 967
+        "matchIndex": 965
       }
     },
     {
@@ -117719,7 +117474,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 968
+        "matchIndex": 966
       }
     },
     {
@@ -117836,7 +117591,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 969
+        "matchIndex": 967
       }
     },
     {
@@ -117953,7 +117708,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 970
+        "matchIndex": 968
       }
     },
     {
@@ -118063,7 +117818,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 971
+        "matchIndex": 969
       }
     },
     {
@@ -118191,7 +117946,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 972
+        "matchIndex": 970
       }
     },
     {
@@ -118308,7 +118063,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 973
+        "matchIndex": 971
       }
     },
     {
@@ -118422,7 +118177,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 974
+        "matchIndex": 972
       }
     },
     {
@@ -118539,7 +118294,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 975
+        "matchIndex": 973
       }
     },
     {
@@ -118667,7 +118422,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 976
+        "matchIndex": 974
       }
     },
     {
@@ -118784,7 +118539,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 977
+        "matchIndex": 975
       }
     },
     {
@@ -118901,7 +118656,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 978
+        "matchIndex": 976
       }
     },
     {
@@ -119018,7 +118773,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 979
+        "matchIndex": 977
       }
     },
     {
@@ -119146,7 +118901,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 980
+        "matchIndex": 978
       }
     },
     {
@@ -119263,7 +119018,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 981
+        "matchIndex": 979
       }
     },
     {
@@ -119380,7 +119135,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 982
+        "matchIndex": 980
       }
     },
     {
@@ -119497,7 +119252,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 983
+        "matchIndex": 981
       }
     },
     {
@@ -119614,7 +119369,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 984
+        "matchIndex": 982
       }
     },
     {
@@ -119728,7 +119483,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 985
+        "matchIndex": 983
       }
     },
     {
@@ -119856,7 +119611,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 986
+        "matchIndex": 984
       }
     },
     {
@@ -119970,7 +119725,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 987
+        "matchIndex": 985
       }
     },
     {
@@ -120084,7 +119839,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 988
+        "matchIndex": 986
       }
     },
     {
@@ -120212,7 +119967,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 989
+        "matchIndex": 987
       }
     },
     {
@@ -120340,7 +120095,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 990
+        "matchIndex": 988
       }
     },
     {
@@ -120468,7 +120223,7 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 991
+        "matchIndex": 989
       }
     },
     {
@@ -120596,12 +120351,12 @@
       ],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 992
+        "matchIndex": 990
       }
     }
   ],
   "diagnostics": {
-    "handicapMarketIdMatchCount": 989,
+    "handicapMarketIdMatchCount": 987,
     "warningCounts": {},
     "warnings": []
   }
