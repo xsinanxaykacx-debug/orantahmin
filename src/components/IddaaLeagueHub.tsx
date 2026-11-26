@@ -57,14 +57,6 @@ function rowsFor(data: any, mode: Mode): any[] {
   if (mode === "total") return arr(data?.season?.tables?.[0]?.tablerows || data?.tablerows || data?.dynamicTable?.rows || data?.rows);
   return [];
 }
-function splitValue(row: any, mode: Mode, keys: string[]): any {
-  const group = mode === "home"
-    ? val(row?.home, row?.homestats, row?.homeStats)
-    : mode === "away"
-      ? val(row?.away, row?.awaystats, row?.awayStats)
-      : val(row?.total, row?.overall, row?.stats, row);
-  return group && typeof group === "object" ? val(...keys.map(k => group[k])) : null;
-}
 function dateText(v: any): string {
   if (v == null || v === "") return "—";
   const n = Number(v);
