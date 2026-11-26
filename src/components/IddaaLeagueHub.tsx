@@ -105,7 +105,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
 
   const data = payload?.data || {};
   const tableRows = useMemo(() => rowsFor(data.standings, mode), [data.standings, mode]);
-  const formMap = useMemo(() => new Map([...arr(data.form?.teams), ...arr(data.form?.formTable?.rows)].map(r => [txt(val(r?.["Takım"], r?.team?.name, r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(val(r?.Form, r?.form, r?.last5, r?.recentform, r?.form5))])), [data.form]);
+  const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => { const recent = arr(r?.form?.total).slice(0, 5).reverse().map(item => item?.value); return [txt(val(r?.team?.name, r?.["Takım"], r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(recent)]; })), [data.form]);
   const upcoming = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.schedules || data.fixtures);
   const results = arr(data.results?.matches || data.results?.events || data.results);
   const currentFixtures = fixtureMode === "upcoming" ? upcoming : results;
