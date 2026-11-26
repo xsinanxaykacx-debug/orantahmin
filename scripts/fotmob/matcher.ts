@@ -376,11 +376,6 @@ export function matchBulletinToFotMob(
         row.matchId === null || row.matchId === undefined
           ? null
           : String(row.matchId),
-      // Legacy alias retained for older FotMob map consumers.
-      mackolikMatchId:
-        row.matchId === null || row.matchId === undefined
-          ? null
-          : String(row.matchId),
       homeName: row.homeName || null,
       awayName: row.awayName || null,
       date: row.date || null,
