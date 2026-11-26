@@ -25,14 +25,28 @@ function form(value: any): string[] {
 }
 function tables(data: any): any[] { return arr(data?.season?.tables || data?.tables); }
 function field(row: any, mode: Mode, keys: string[], localized?: string): any {
-  if (mode !== "total") return splitValue(row, mode, keys);
-  return val(...keys.map(k => row?.[k]), localized ? row?.[localized] : undefined);
+  const group = mode === "total"
+    ? val(row?.total, row?.overall, row?.stats, row)
+    : mode === "home"
+      ? val(row?.home, row?.homestats, row?.homeStats)
+      : val(row?.away, row?.awaystats, row?.awayStats);
+  const nested = group && typeof group === "object"
+    ? val(...keys.map(k => group[k]), localized ? group[localized] : undefined)
+    : undefined;
+  return val(nested, ...keys.map(k => row?.[k]), localized ? row?.[localized] : undefined);
 }
 function goalsPair(row: any, mode: Mode): [any, any] {
-  if (mode !== "total") return [splitValue(row, mode, ["goalsfor","goals_for","goals"]), splitValue(row, mode, ["goalsagainst","goals_against","goalsconceded"])];
-  const raw = txt(val(row?.["AG:YG"], row?.goals, row?.goalsForAgainst));
+  const group = mode === "total"
+    ? val(row?.total, row?.overall, row?.stats, row)
+    : mode === "home"
+      ? val(row?.home, row?.homestats, row?.homeStats)
+      : val(row?.away, row?.awaystats, row?.awayStats);
+  const raw = txt(val(group?.["AG:YG"], group?.goals, group?.goalsForAgainst, row?.["AG:YG"], row?.goals, row?.goalsForAgainst));
   const m = raw.match(/(-?\d+)\s*:\s*(-?\d+)/);
-  return m ? [m[1], m[2]] : [val(row?.goalsfor,row?.goals_for), val(row?.goalsagainst,row?.goals_against)];
+  return m ? [m[1], m[2]] : [
+    val(group?.goalsfor, group?.goals_for, row?.goalsfor, row?.goals_for),
+    val(group?.goalsagainst, group?.goals_against, group?.goalsconceded, row?.goalsagainst, row?.goals_against)
+  ];
 }
 function rowsFor(data: any, mode: Mode): any[] {
   const list = tables(data);
@@ -44,7 +58,11 @@ function rowsFor(data: any, mode: Mode): any[] {
   return [];
 }
 function splitValue(row: any, mode: Mode, keys: string[]): any {
-  const group = mode === "home" ? val(row?.home, row?.homestats, row?.homeStats) : mode === "away" ? val(row?.away, row?.awaystats, row?.awayStats) : val(row?.total, row?.overall, row);
+  const group = mode === "home"
+    ? val(row?.home, row?.homestats, row?.homeStats)
+    : mode === "away"
+      ? val(row?.away, row?.awaystats, row?.awayStats)
+      : val(row?.total, row?.overall, row?.stats, row);
   return group && typeof group === "object" ? val(...keys.map(k => group[k])) : null;
 }
 function dateText(v: any): string {
