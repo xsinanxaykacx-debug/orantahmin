@@ -49,7 +49,7 @@ export default async function handler(req: Req, res: Res) {
   try {
     const [allLeaguesPayload, bulletinResponse] = await Promise.all([
       jsonFetch("https://www.fotmob.com/api/data/allLeagues?locale=en"),
-      fetch("https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/main/public/data/mackolik-bulletin.json", {
+      fetch("https://raw.githubusercontent.com/xsinanxaykacx-debug/orantahmin/main/public/data/football-bulletin.json", {
         headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000)
       })
     ]);
@@ -80,7 +80,7 @@ export default async function handler(req: Req, res: Res) {
       const sourceAway = row.awayName || "";
       const sourceNames = `${sourceHome} ${sourceAway}`;
       const sourceAges = [...ageMarkers(sourceHome), ...ageMarkers(sourceAway)];
-      const youth = row.fields?.leagueCode === "UEGL" || /\\bU(?:19|21|23)\\b/i.test(sourceNames);
+      const youth = /youth|u19|u21|u23|genclik|genc/i.test(String(row.fields?.leagueCode || "")) || /\\bU(?:19|21|23)\\b/i.test(sourceNames);
       const ranked = uniqueFixtures.filter(fixture => {
         if (usedFixtureIds.has(fixture.id)) return false;
         if (youth && !/youth|U19|U21|U23/i.test(fixture.leagueName)) return false;
@@ -98,7 +98,7 @@ export default async function handler(req: Req, res: Res) {
       usedFixtureIds.add(fixture.id);
       matchedCount++;
       const match = {
-        mackolikMatchId: String(row.matchId), fotmobMatchId: fixture.id, date: row.date,
+        iddaaEventId: String(row.matchId), fotmobMatchId: fixture.id, date: row.date,
         time: row.time || fixture.time || "", home: fixture.home?.name || sourceHome,
         away: fixture.away?.name || sourceAway, homeTeamId: Number(fixture.home?.id) || null, awayTeamId: Number(fixture.away?.id) || null, homeScore: fixture.home?.score ?? null,
         awayScore: fixture.away?.score ?? null, status: fixture.status?.reason?.short || fixture.status?.utcTime || null,
@@ -152,7 +152,7 @@ export default async function handler(req: Req, res: Res) {
       return countryCompare || a.name.localeCompare(b.name, "tr");
     });
     return res.status(200).json({
-      source: "FotMob allLeagues + Mackolik daily bulletin",
+      source: "FotMob allLeagues + iddaa daily bulletin",
       generatedAt: new Date().toISOString(),
       bulletinMatchCount: rows.length,
       matchedMatchCount: matchedCount,
