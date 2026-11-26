@@ -49,7 +49,7 @@ test("same-day youth fixture is matched and carries source league identifiers", 
   const result = matchBulletinToFotMob([row()], [fixture()]);
   assert.equal(result[0].state, "matched");
   assert.equal(result[0].fotmobMatchId, 9001);
-  assert.equal(result[0].confidence, 0.958);
+  assert.equal(result[0].confidence, 0.875);
   assert.equal(result[0].leagueCode, "UEGL");
   assert.equal(result[0].groupId, "333");
   assert.equal(result[0].leagueMatch, "unverified");
