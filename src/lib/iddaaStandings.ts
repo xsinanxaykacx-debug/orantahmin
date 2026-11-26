@@ -1,5 +1,23 @@
 export type StandingsMode = "total" | "home" | "away";
 
+export function readStandingsRows(data: any, mode: StandingsMode): any[] {
+  const tables = Array.isArray(data?.season?.tables) ? data.season.tables : Array.isArray(data?.tables) ? data.tables : [];
+  const getRows = (table: any) => Array.isArray(table?.tablerows) ? table.tablerows : Array.isArray(table?.rows) ? table.rows : [];
+  const patterns: Record<StandingsMode, RegExp> = {
+    total: /total|overall|toplam/i,
+    home: /home|home.?team|ev sahibi|iç saha/i,
+    away: /away|away.?team|deplasman/i
+  };
+  const selected = tables.find((table: any) => patterns[mode].test(String(table?.name ?? table?.tabletype ?? table?.type ?? "")));
+  if (selected && getRows(selected).length) return getRows(selected);
+  // Gismo's live season_dynamictable response normally contains one table.
+  // Its rows include total, home and away fields together.
+  const fallback = tables.find((table: any) => getRows(table).length);
+  if (fallback) return getRows(fallback);
+  if (mode === "total") return Array.isArray(data?.tablerows) ? data.tablerows : Array.isArray(data?.dynamicTable?.rows) ? data.dynamicTable.rows : Array.isArray(data?.rows) ? data.rows : [];
+  return [];
+}
+
 const first = (...values: any[]) => values.find(value => value !== undefined && value !== null && value !== "");
 
 const MODE_KEYS: Record<StandingsMode, string[]> = {
@@ -63,6 +81,7 @@ export function readStandingsGoals(row: any, mode: StandingsMode): [any, any] {
   return [undefined, undefined];
 }
 
-export function readStandingsPosition(row: any, fallback: number): any {
-  return first(row?.position, row?.pos, row?.rank, row?._position, row?._pos, row?._rank, fallback);
+export function readStandingsPosition(row: any, fallback: number, mode: StandingsMode = "total"): any {
+  const modePosition = mode === "home" ? first(row?.posHome, row?.positionHome, row?._posHome) : mode === "away" ? first(row?.posAway, row?.positionAway, row?._posAway) : undefined;
+  return first(modePosition, row?.position, row?.pos, row?.rank, row?._position, row?._pos, row?._rank, fallback);
 }
