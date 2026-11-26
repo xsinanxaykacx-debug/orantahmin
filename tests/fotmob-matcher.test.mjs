@@ -155,7 +155,7 @@ test("two high-confidence matches establish a league guard for their Mackolik gr
   const fixtures = [
     fixture({ id: 11, home: "Alpha FC", away: "Beta FC", league: "Trusted League - Group A" }),
     fixture({ id: 12, home: "Gamma FC", away: "Delta FC", league: "Trusted League - Group B" }),
-    fixture({ id: 13, home: "Echo FC", away: "Foxtrot FC", league: "Wrong League" }),
+    fixture({ id: 13, home: "Echo", away: "Foxtrot", league: "Wrong League" }),
   ];
 
   const result = matchBulletinToFotMob(rows, fixtures);

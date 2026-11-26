@@ -271,11 +271,13 @@ function inferGroupLeagueConsensus(
   const consensus = new Map<string, string>();
   for (const [groupKey, groupVotes] of votes) {
     const rankedVotes = [...groupVotes.entries()].sort((a, b) => b[1] - a[1]);
-    const [topLeague, topCount] = rankedVotes[0] || [];
+    const topVote = rankedVotes[0];
+    if (!topVote) continue;
+    const [topLeague, topCount] = topVote;
     const totalVotes = rankedVotes.reduce((sum, [, count]) => sum + count, 0);
     const secondCount = rankedVotes[1]?.[1] || 0;
 
-    if (topLeague && topCount >= 2 && topCount / totalVotes >= 0.8 && topCount > secondCount) {
+    if (topCount >= 2 && topCount / totalVotes >= 0.8 && topCount > secondCount) {
       consensus.set(groupKey, topLeague);
     }
   }
