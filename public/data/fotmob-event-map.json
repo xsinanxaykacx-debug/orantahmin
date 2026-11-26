@@ -1,10 +1,10 @@
 {
   "source": "Mackolik 61-field bulletin + FotMob",
-  "generatedAt": "2026-11-25T16:35:04.509Z",
+  "generatedAt": "2026-11-26T10:30:00.000Z",
   "summary": {
-    "bulletinRows": 107,
-    "matched": 51,
-    "unmatched": 55,
+    "bulletinRows": 108,
+    "matched": 52,
+    "unmatched": 54,
     "invalidBulletinTeam": 1,
     "lineupAvailable": 41,
     "bothTeamsStartingXI": 41,
@@ -1936,6 +1936,24 @@
       "awayStarters": 11,
       "homeBench": 10,
       "awayBench": 10
+    },
+    {
+      "mackolikMatchId": "4549627",
+      "homeName": "Olympiakos",
+      "awayName": "Ac Milan",
+      "date": "26.11.2026",
+      "time": "20:45",
+      "state": "matched",
+      "confidence": 1,
+      "fotmobMatchId": 6112266,
+      "fotmobHome": "Olympiacos",
+      "fotmobAway": "Milan",
+      "league": "Europa League",
+      "lineupAvailable": false,
+      "homeStarters": null,
+      "awayStarters": null,
+      "homeBench": null,
+      "awayBench": null
     }
   ]
 }
