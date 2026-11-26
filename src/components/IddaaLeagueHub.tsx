@@ -108,7 +108,9 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => { const recent = arr(r?.form?.total).slice(0, 5).reverse().map(item => item?.value); return [txt(val(r?.team?.name, r?.["Takım"], r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(recent)] as const; })), [data.form]);
   const allFixtures = values(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.matches || data.fixtures?.data?.schedules || data.fixtures);
   const upcoming = allFixtures.filter((match: any) => txt(match?.matchstatus).toLowerCase() !== "result" && txt(match?.status?.shortName).toUpperCase() !== "MS");
-  const results = values(data.results?.matches || data.results?.events || data.results?.data?.matches || data.results);
+  const feedResults = values(data.results?.matches || data.results?.events || data.results?.data?.matches || data.results);
+  const completedFixtures = allFixtures.filter((match: any) => txt(match?.matchstatus).toLowerCase() === "result" || txt(match?.status?.shortName).toUpperCase() === "MS");
+  const results = completedFixtures.length ? completedFixtures : feedResults;
   const currentFixtures = fixtureMode === "upcoming" ? upcoming : results;
   const rounds = useMemo(() => [...new Set([...upcoming, ...results].map(roundOf).filter(Boolean))].sort((a,b) => Number(a)-Number(b) || a.localeCompare(b,"tr")), [upcoming, results]);
   const filteredFixtures = currentFixtures.filter(m => round === "all" || roundOf(m) === round);
@@ -135,9 +137,9 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
     : [["fixtures","Fikstür"]];
   return <div className="league-hub iddaa-league-hub">
     <header className="league-hub-header">
-      <div className="league-hub-logo"><span>TR</span></div>
+      <div className="league-hub-logo"><span>{league.country.slice(0, 2).toLocaleUpperCase("tr-TR")}</span></div>
       <div><span className="eyebrow">İDDAA LİG MERKEZİ</span><h2>{league.name}</h2><p>{payload?.season?.name || league.seasonName} · {payload?.fetchedAt ? "Güncelleme: " + dateText(payload.fetchedAt) : "Güncel sezon"}</p></div>
-      <div className="league-hub-count"><b>{tableRows.length || (league.hasStandings ? 18 : 0)}</b><span>Takım</span></div>
+      <div className="league-hub-count"><b>{league.hasStandings ? (tableRows.length || 18) : upcoming.length}</b><span>{league.hasStandings ? "Takım" : "Maç"}</span></div>
     </header>
     {loading ? <div className="league-loading">İddaa puan durumu, fikstür ve oyuncu verileri yükleniyor…</div>
     : error ? <div className="league-warning">{error}</div>
