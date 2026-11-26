@@ -11,6 +11,7 @@ type Mode = "total" | "home" | "away";
 type Leader = "goals" | "assists" | "cards";
 
 const arr = (v: any): any[] => Array.isArray(v) ? v : [];
+const values = (v: any): any[] => Array.isArray(v) ? v : v && typeof v === "object" ? Object.values(v) : [];
 const val = (...v: any[]) => v.find(x => x !== undefined && x !== null && x !== "");
 const txt = (v: any) => typeof v === "string" || typeof v === "number" ? String(v) : "";
 const name = (v: any) => typeof v === "string" || typeof v === "number" ? String(v) : txt(val(v?.name, v?._name, v?.fullname, v?.shortname, v?.teamname));
@@ -98,9 +99,9 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const data = payload?.data || {};
   const tableRows = useMemo(() => readStandingsRows(data.standings, mode), [data.standings, mode]);
   const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => { const recent = arr(r?.form?.total).slice(0, 5).reverse().map(item => item?.value); return [txt(val(r?.team?.name, r?.["Takım"], r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(recent)] as const; })), [data.form]);
-  const allFixtures = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.schedules || data.fixtures);
+  const allFixtures = values(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.matches || data.fixtures?.data?.schedules || data.fixtures);
   const upcoming = allFixtures.filter((match: any) => txt(match?.matchstatus).toLowerCase() !== "result" && txt(match?.status?.shortName).toUpperCase() !== "MS");
-  const results = arr(data.results?.matches || data.results?.events || data.results);
+  const results = values(data.results?.matches || data.results?.events || data.results?.data?.matches || data.results);
   const currentFixtures = fixtureMode === "upcoming" ? upcoming : results;
   const rounds = useMemo(() => [...new Set([...upcoming, ...results].map(roundOf).filter(Boolean))].sort((a,b) => Number(a)-Number(b) || a.localeCompare(b,"tr")), [upcoming, results]);
   const filteredFixtures = currentFixtures.filter(m => round === "all" || roundOf(m) === round);
