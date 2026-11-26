@@ -76,8 +76,8 @@ export interface BulletinMatch {
   time: string;
   status: number;
   fields: MatchFields;
-  /** Stable 61-slot compatibility projection mapped from the active odds provider. */
-  raw: unknown[];
+  /** Optional legacy projection; complete provider markets live in fields.iddaaMarkets. */
+  raw?: unknown[];
   source: {
     groupIndex: number;
     matchIndex: number;
@@ -94,7 +94,7 @@ export interface BulletinDocument {
   };
 }
 
-/** UI-only sections. These do not add fields to the 61-column source schema. */
+/** UI-only sections. Provider market data is dynamically sized. */
 export type MatchDetailTab =
   | "overview"
   | "odds"

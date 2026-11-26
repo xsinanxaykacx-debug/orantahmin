@@ -85,8 +85,6 @@ async function main():Promise<void> {
       markets.set(market.code,(markets.get(market.code)||0)+1);
       outcomes+=market.outcomes.filter(item=>item.odd!==null).length;
     }
-    // Full market details are loaded on demand from /api/iddaa-markets.
-    delete match.fields.iddaaMarkets;
   }
 
   const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Istanbul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
