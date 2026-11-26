@@ -192,7 +192,7 @@ function MackolikMarketCard({ market, result }: { market: MackolikMarket; result
   const available = market.outcomes.some(outcome => outcome.odd !== null);
   return (
     <section className={`market-card ${available ? "" : "is-empty"}`}>
-      <div className="market-card-title">{market.name}<span>{available ? `Mackolik · ${market.code}` : "Oran yok"}</span></div>
+      <div className="market-card-title">{market.name}<span>{available ? "Mackolik" : "Oran yok"}</span></div>
       <div className="market-values">
         {market.outcomes.map((outcome, index) => {
           const settlement = outcome.odd !== null ? settleMarketOutcome(market.name, outcome.name, result) : "unknown";
