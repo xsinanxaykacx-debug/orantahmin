@@ -23,7 +23,7 @@ export type LeagueSummary = {
     finished: boolean;
   }>;
 };
-type TableRow = { idx?: number; name?: string; shortName?: string; id?: number; played?: number; wins?: number; draws?: number; losses?: number; scoresStr?: string; goalConDiff?: number; pts?: number };
+type TableRow = { idx?: number; name?: string; shortName?: string; id?: number; played?: number; wins?: number; draws?: number; losses?: number; scoresStr?: string; goalConDiff?: number; pts?: number; recentForm?: string[] };
 type LeagueDetail = { details?: { name?: string; selectedSeason?: string; country?: string; leagueColor?: string }; tableGroups?: Array<{ name: string; rows: TableRow[] }>; fixtures?: any; stats?: any; error?: string };
 
 function extractFixtures(value: any): any[] {
@@ -53,12 +53,17 @@ function TeamLogo({ id, name, className = "" }: { id?: number | null; name: stri
 }
 function Table({ rows }: { rows: TableRow[] }) {
   return <div className="league-table-scroll"><table className="league-table">
-    <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AV</th><th> P</th></tr></thead>
-    <tbody>{rows.map((row, index) => <tr key={row.id || row.name || index}>
-      <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><TeamLogo id={row.id} name={row.name || "Takım"} /><span>{row.name || "Takım"}</span></td>
-      <td>{row.played ?? "—"}</td><td>{row.wins ?? "—"}</td><td>{row.draws ?? "—"}</td><td>{row.losses ?? "—"}</td>
-      <td>{row.goalConDiff ?? "—"}</td><td><b>{row.pts ?? "—"}</b></td>
-    </tr>)}</tbody>
+    <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th><th>AV</th><th>P</th><th>Son 5</th></tr></thead>
+    <tbody>{rows.map((row, index) => {
+      const score = String(row.scoresStr || "").match(/(\d+)\s*[:–-]\s*(\d+)/);
+      const form = Array.isArray(row.recentForm) ? row.recentForm.slice(-5) : [];
+      return <tr key={row.id || row.name || index}>
+        <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><TeamLogo id={row.id} name={row.name || "Takım"} /><span>{row.name || "Takım"}</span></td>
+        <td>{row.played ?? "—"}</td><td>{row.wins ?? "—"}</td><td>{row.draws ?? "—"}</td><td>{row.losses ?? "—"}</td>
+        <td>{score ? score[1] : "—"}</td><td>{score ? score[2] : "—"}</td><td>{row.goalConDiff ?? "—"}</td><td><b>{row.pts ?? "—"}</b></td>
+        <td><span className="league-form">{form.length ? form.map((result, formIndex) => <i key={formIndex} className={`league-form-${result.toLowerCase()}`} title={result === "G" ? "Galibiyet" : result === "B" ? "Beraberlik" : "Mağlubiyet"}>{result}</i>) : "—"}</span></td>
+      </tr>;
+    })}</tbody>
   </table></div>;
 }
 function FixtureList({ matches }: { matches: any[] }) {
@@ -109,10 +114,17 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
     return seasonFixtures.filter((match: any) => match.status?.finished)
       .sort((a: any, b: any) => String(b.status?.utcTime || "").localeCompare(String(a.status?.utcTime || ""))).slice(0, 10);
   }, [detail, league.matches]);
-  const topScorers = useMemo(() => {
+  const playerLeaders = useMemo(() => {
     const players = detail?.stats?.players || [];
-    const scorer = players.find((item: any) => /goal|gol|scorer/i.test(String(item.header || item.name || ""))) || players[0];
-    return (scorer?.topThree || scorer?.top || []).slice(0, 3);
+    const findPlayers = (pattern: RegExp) => {
+      const category = players.find((item: any) => pattern.test(String(item.header || item.name || "")));
+      return (category?.topThree || category?.top || []).slice(0, 3);
+    };
+    return {
+      scorers: findPlayers(/top scorer|goals|gol/i),
+      assists: findPlayers(/assist/i),
+      ratings: findPlayers(/rating|puan/i)
+    };
   }, [detail]);
 
   return <div className="league-hub">
@@ -133,11 +145,21 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
           <div className="card-heading"><span>LİG MAÇLARI</span><small>{fixtures.length ? `${fixtures.length} karşılaşma` : "Veri yok"}</small></div>
           <FixtureList matches={fixtures} />
         </section>
-        <section className="info-card league-panel league-scorers-panel">
-          <div className="card-heading"><span>GOL KRALLIĞI</span><small>FotMob</small></div>
-          {topScorers.length ? <div className="league-scorers">{topScorers.map((player: any, index: number) => <div key={player.id || player.name || index}><span>{index + 1}</span><b>{player.name || player.participant?.name || "Oyuncu"}{player.teamId ? <TeamLogo id={player.teamId} name={player.teamName || ""} /> : null}</b><strong>{player.value ?? player.statValue ?? "—"}</strong></div>)}</div>
-            : <div className="league-empty">Gol krallığı verisi bu lig yanıtında bulunmuyor.</div>}
-        </section>
+        {[
+          { title: "EN GOLCÜLER", players: playerLeaders.scorers, empty: "Gol krallığı verisi bulunmuyor." },
+          { title: "EN ÇOK ASİST", players: playerLeaders.assists, empty: "Asist verisi bulunmuyor." },
+          { title: "EN YÜKSEK PUAN", players: playerLeaders.ratings, empty: "Oyuncu puan verisi bulunmuyor." }
+        ].map(card => <section className="info-card league-panel league-scorers-panel" key={card.title}>
+          <div className="card-heading"><span>{card.title}</span><small>FotMob · İlk 3</small></div>
+          {card.players.length ? <div className="league-scorers">{card.players.map((player: any, index: number) => {
+            const teamId = Number(player.teamId || player.team?.id) || null;
+            return <div key={player.id || player.name || index}>
+              <span>{index + 1}</span>
+              <b>{player.name || player.participant?.name || "Oyuncu"}{teamId ? <TeamLogo id={teamId} name={player.teamName || player.team?.name || ""} /> : null}</b>
+              <strong>{player.value ?? player.statValue ?? "—"}</strong>
+            </div>;
+          })}</div> : <div className="league-empty">{card.empty}</div>}
+        </section>)}
       </div>}
     <p className="league-source-note">Kaynak: FotMob. Yalnızca kaynakta bulunan lig tablosu ve fikstür bilgileri gösterilir.</p>
   </div>;
