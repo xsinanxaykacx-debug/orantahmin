@@ -137,7 +137,7 @@ function categoryTags(
   const tags = new Set<string>();
 
   for (const age of ageMarkers(combined)) tags.add(age);
-  if ([...tags].some((tag) => /^U\\d+$/.test(tag))) tags.add("youth");
+  if ([...tags].some((tag) => /^U\d+$/.test(tag))) tags.add("youth");
   if (/\b(women|woman|ladies|femenino|feminin|femmes)\b/i.test(combined)) {
     tags.add("women");
   }
