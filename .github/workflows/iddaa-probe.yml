@@ -6,6 +6,8 @@ on:
       - feature/iddaa-source-migration
     paths:
       - "scripts/iddaa/**"
+      - "src/**"
+      - "api/**"
       - "scripts/update-iddaa.ts"
       - "tests/**"
       - "package.json"
