@@ -115,7 +115,7 @@ export async function fetchIddaaUpcomingFixtures(): Promise<any> {
   });
   if (!pageResponse.ok) throw new Error(`İddaa fikstür sayfası HTTP ${pageResponse.status}.`);
   const html = await pageResponse.text();
-  const nextDataMatch = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\\s\\S]*?)<\\/script>/i);
+  const nextDataMatch = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
   if (!nextDataMatch?.[1]) throw new Error("İddaa sayfasının başlangıç verisi bulunamadı.");
   const nextData = JSON.parse(nextDataMatch[1]);
   const token = nextData?.props?.pageProps?.initialState?.common?.apiConfig?.sportradar?.token;
