@@ -171,7 +171,7 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
   fields.isLive = Boolean(event.k0dd);
   return {
-    matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:row,
+    matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:[],
     source:{groupIndex:0,matchIndex:index}
   };
 }
@@ -188,8 +188,8 @@ export function transformIddaaPayload(payload: any, marketConfig: Record<string,
   return {
     meta:{
       sourceFile:"iddaa-events.json",generatedAt:new Date().toISOString(),
-      schemaVersion:"orantahmin-61-v1",sourceProvider:"iddaa",
-      sourceFieldCount:61,sourceMatchCount:events.length,includedMatchCount:matches.length,
+      schemaVersion:"orantahmin-iddaa-dynamic-v2",sourceProvider:"iddaa",
+      sourceFieldCount:0,sourceMatchCount:events.length,includedMatchCount:matches.length,
       rejectedMatchCount:events.length-matches.length,warningCount:0
     },
     matches,
