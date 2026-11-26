@@ -206,7 +206,7 @@ function sourceGroupKey(row: BulletinMatch): string | null {
   if (groupId === null || groupId === undefined || subgroupId === null || subgroupId === undefined) {
     return null;
   }
-  return \`${String(groupId)}/${String(subgroupId)}\`;
+  return String(groupId) + "/" + String(subgroupId);
 }
 
 function rankCandidates(
