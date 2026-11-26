@@ -291,3 +291,9 @@ button { cursor: pointer; }
   font-size: 22px;
   line-height: 1;
 }
+
+
+/* Global typography size requested: 14px across the application. */
+body, body * {
+  font-size: 14px !important;
+}
