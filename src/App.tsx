@@ -188,8 +188,7 @@ function OddsAnalysis({ match }: { match: DisplayMatch }) {
   const awayScore = match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
-  const firstHalfScore: null = null;
-  const eventFacts = {};
+  const firstHalfScore: { home: number; away: number } | null = null;
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
     ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
     : null;
