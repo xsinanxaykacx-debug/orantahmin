@@ -116,31 +116,53 @@ function pageTeamSlug(value: string): string {
 }
 
 function parseMarkets(html: string): MackolikMarket[] {
-  const headings = [...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)];
+  // Yeni Mackolik maç detayındaki gerçek market kartları: her market bir
+  // widget-iddaa-markets__market-item LI elemanıdır.
+  const starts = [...html.matchAll(/<li\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__market-item\\b[^"']*["'])[^>]*>/gi)];
   const markets: MackolikMarket[] = [];
 
-  headings.forEach((heading, index) => {
-    const headingEnd = (heading.index ?? 0) + heading[0].length;
-    const nextHeadingStart = headings[index + 1]?.index ?? html.length;
-    const section = html.slice(headingEnd, nextHeadingStart);
-    const name = textContent(heading[1]).replace(/\s*MBS\s*\d+\s*$/i, "").trim();
-    if (!name) return;
+  for (let index = 0; index < starts.length; index++) {
+    const start = starts[index].index ?? 0;
+    const end = starts[index + 1]?.index ?? html.length;
+    const block = html.slice(start, end);
 
-    // Mackolik renders the current market selections in the first list after its heading.
-    const firstList = section.match(/<ul\b[^>]*>([\s\S]*?)<\/ul>/i);
-    if (!firstList) return;
+    const titleMatch = block.match(/<span\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__header-text\\b[^"']*["'])[^>]*>([\\s\\S]*?)<\\/span>/i);
+    if (!titleMatch) continue;
+    const name = textContent(titleMatch[1]);
+    if (!name) continue;
 
-    const outcomes = [...firstList[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)]
-      .map(item => parseOutcome(item[1]))
-      .filter((item): item is MarketOutcome => item !== null);
+    // Ana iddaa oran listesi ilk option-list'tir. type2 hidden listeler
+    // sağlayıcı reklam/partner oranlarıdır; ana markete karıştırılmaz.
+    const listMatch = block.match(/<ul\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__option-list\\b[^"']*["'])(?![^>]*\\btype2\\b)[^>]*>([\\s\\S]*?)<\\/ul>/i);
+    if (!listMatch) continue;
 
-    if (!outcomes.length) return;
+    const outcomes: MarketOutcome[] = [];
+    const optionStarts = [...listMatch[1].matchAll(/<li\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__option\\b[^"']*["'])[^>]*>([\\s\\S]*?)<\\/li>/gi)];
+    for (const option of optionStarts) {
+      const labelMatch = option[1].match(/<span\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__label\\b[^"']*["'])[^>]*>([\\s\\S]*?)<\\/span>/i);
+      const valueMatch = option[1].match(/<span\\b(?=[^>]*\\bclass=["'][^"']*\\bwidget-iddaa-markets__value\\b[^"']*["'])[^>]*>([\\s\\S]*?)<\\/span>/i);
+      if (!labelMatch || !valueMatch) continue;
+      const outcomeName = textContent(labelMatch[1]);
+      const rawOdd = textContent(valueMatch[1]);
+      if (!outcomeName) continue;
+      const normalized = rawOdd.replace(",", ".").trim();
+      const parsed = normalized && normalized !== "-" ? Number(normalized) : NaN;
+      outcomes.push({
+        name: outcomeName,
+        odd: Number.isFinite(parsed) && parsed > 0 ? parsed : null,
+        rawOdd
+      });
+    }
+
+    if (!outcomes.length) continue;
+    const marketType = block.match(/\\bdata-market=["']([^"']+)["']/i)?.[1] || "";
+    const marketId = block.match(/\\bdata-market-id=["']([^"']+)["']/i)?.[1] || "";
     markets.push({
       name,
-      code: `${slugify(name)}-${index + 1}`,
+      code: marketType ? (marketId ? marketType + "-" + marketId : marketType) : slugify(name) + "-" + (index + 1),
       outcomes
     });
-  });
+  }
 
   return markets;
 }
