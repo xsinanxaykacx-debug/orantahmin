@@ -71,13 +71,34 @@ export default async function handler(req: Req, res: Res) {
     const recent = allFixtures.filter((match: any) => match?.status?.finished)
       .sort((a: any, b: any) => String(b?.status?.utcTime || "").localeCompare(String(a?.status?.utcTime || "")));
     const fixtureList = (upcoming.length ? upcoming : recent).slice(0, 12);
-    const players = Array.isArray(data?.stats?.players) ? data.stats.players : [];
-    const playerLeaders = players.filter((item: any) =>
-      /top scorer|goals|assists|assist|rating|average rating|puan/i.test(String(item?.header || item?.name || ""))
-    ).map((item: any) => ({
-      header: item.header || item.name,
-      topThree: (item.topThree || item.top || []).slice(0, 3)
-    }));
+    // FotMob leaderboard payloads can expose ranked entries as topThree,
+    // top, players, values, or a single participant object. Normalize all
+    // observed shapes instead of silently dropping valid leaderboards.
+    const rawPlayers = data?.stats?.players;
+    const playerCategories: any[] = Array.isArray(rawPlayers)
+      ? rawPlayers
+      : rawPlayers && typeof rawPlayers === "object"
+        ? Object.entries(rawPlayers).map(([header, value]) => ({ header, ...(value && typeof value === "object" ? value as object : { topThree: value }) }))
+        : [];
+    const playerLeaders = playerCategories.map((item: any) => {
+      const header = String(item?.header || item?.name || item?.title || item?.stat?.name || "");
+      const ranked = item?.topThree ?? item?.top ?? item?.players ?? item?.values
+        ?? (item?.participant || item?.player ? [item] : []);
+      const entries = Array.isArray(ranked) ? ranked : [];
+      const topThree = entries.slice(0, 3).map((entry: any) => {
+        const participant = entry?.participant || entry?.player || entry;
+        const statValue = entry?.value ?? entry?.statValue ?? entry?.stat?.value
+          ?? participant?.value ?? participant?.stat?.value ?? null;
+        return {
+          id: participant?.id ?? entry?.id ?? null,
+          name: participant?.name ?? entry?.name ?? "",
+          teamId: participant?.teamId ?? entry?.teamId ?? participant?.team?.id ?? null,
+          teamName: participant?.teamName ?? entry?.teamName ?? participant?.team?.name ?? "",
+          value: statValue
+        };
+      }).filter((player: any) => player.name);
+      return { header, topThree };
+    }).filter((item: any) => item.topThree.length);
     const seasons = Array.isArray(data?.allAvailableSeasons) ? data.allAvailableSeasons :
       Array.isArray(data?.seasons) ? data.seasons.map((item: any) => typeof item === "string" ? item : item?.seasonName || item?.name).filter(Boolean) : [];
     return res.status(200).json({
