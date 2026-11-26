@@ -177,15 +177,7 @@ function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?:
 type IddaaMarket = {
   name: string;
   code: string;
-  outcomes: Array<{ name: string; odd: number | null; rawOdd: string }>;
-};
-type IddaaMarketsResponse = {
-  available?: boolean;
-  markets?: IddaaMarket[];
-  marketCount?: number;
-  reason?: string;
-  error?: string;
-  fetchedAt?: string;
+  outcomes: Array<{ name: string; odd: number | null }>;
 };
 
 function IddaaMarketCard({ market, result }: { market: IddaaMarket; result: MatchResult | null }) {
