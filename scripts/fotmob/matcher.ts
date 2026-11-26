@@ -372,6 +372,11 @@ export function matchBulletinToFotMob(
   return internal.map(({ row, state, confidence, leagueMatch, selected, candidates }) => {
     const leagueCode = String(row.fields?.leagueCode || "");
     const base = {
+      iddaaEventId:
+        row.matchId === null || row.matchId === undefined
+          ? null
+          : String(row.matchId),
+      // Legacy alias retained for older FotMob map consumers.
       mackolikMatchId:
         row.matchId === null || row.matchId === undefined
           ? null
