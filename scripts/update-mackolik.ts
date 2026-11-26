@@ -27,6 +27,49 @@ function getIstanbulDate(): string {
   return `${get("day")}.${get("month")}.${get("year")}`;
 }
 
+async function fetchMackolikWithRetry(url: URL): Promise<Response> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Referer: "https://arsiv.mackolik.com/Genis-Iddaa-Programi",
+          "X-Requested-With": "XMLHttpRequest",
+          "User-Agent":
+            "Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Mobile Safari/537.36",
+          Accept: "*/*",
+          "sec-ch-ua-platform": '"Android"',
+          "sec-ch-ua":
+            '"Chromium";v="158", "Not.A/Brand";v="24", "Google Chrome";v="158"',
+          "sec-ch-ua-mobile": "?1",
+        },
+        signal: AbortSignal.timeout(30000),
+      });
+
+      if (response.ok) return response;
+      lastError = new Error("Maçkolik HTTP hatası: " + response.status);
+
+      const retryable = [403, 408, 429, 500, 502, 503, 504].includes(response.status);
+      if (!retryable || attempt === 3) break;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 3) break;
+    }
+
+    const delayMs = attempt * 2000;
+    console.warn(
+      "Maçkolik isteği başarısız (deneme " + attempt + "/3); " +
+        delayMs + " ms sonra yeniden denenecek.",
+    );
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, delayMs));
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("Maçkolik isteği üç denemede de başarısız oldu.");
+}
+
 async function main(): Promise<void> {
   const day = getIstanbulDate();
   const url = new URL(
@@ -46,24 +89,7 @@ async function main(): Promise<void> {
 
   console.log(`Maçkolik verisi çekiliyor: ${day}`);
 
-  const response = await fetch(url, {
-    headers: {
-      Referer: "https://arsiv.mackolik.com/Genis-Iddaa-Programi",
-      "X-Requested-With": "XMLHttpRequest",
-      "User-Agent":
-        "Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Mobile Safari/537.36",
-      Accept: "*/*",
-      "sec-ch-ua-platform": '"Android"',
-      "sec-ch-ua":
-        '"Chromium";v="158", "Not.A/Brand";v="24", "Google Chrome";v="158"',
-      "sec-ch-ua-mobile": "?1",
-    },
-    signal: AbortSignal.timeout(30000),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Maçkolik HTTP hatası: ${response.status}`);
-  }
+  const response = await fetchMackolikWithRetry(url);
 
   const rawText = await response.text();
   if (!rawText.trim()) throw new Error("Maçkolik boş yanıt döndürdü.");
