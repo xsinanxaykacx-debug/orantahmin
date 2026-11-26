@@ -48,8 +48,8 @@ export default async function handler(req: Req, res: Res) {
           })
           .map((match: any) => {
             const scoreParts = String(match?.status?.scoreStr || "").match(/(\d+)\s*[-–:]\s*(\d+)/);
-            const homeScore = Number.isFinite(Number(match?.home?.score)) ? Number(match.home.score) : scoreParts ? Number(scoreParts[1]) : null;
-            const awayScore = Number.isFinite(Number(match?.away?.score)) ? Number(match.away.score) : scoreParts ? Number(scoreParts[2]) : null;
+            const homeScore = match?.home?.score != null && Number.isFinite(Number(match.home.score)) ? Number(match.home.score) : scoreParts ? Number(scoreParts[1]) : null;
+            const awayScore = match?.away?.score != null && Number.isFinite(Number(match.away.score)) ? Number(match.away.score) : scoreParts ? Number(scoreParts[2]) : null;
             if (homeScore === null || awayScore === null) return null;
             const homeId = Number(match?.home?.id || match?.homeTeam?.id) || null;
             const isHome = teamId ? homeId === teamId
