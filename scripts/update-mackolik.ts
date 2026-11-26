@@ -97,8 +97,8 @@ async function main(): Promise<void> {
     throw new Error("Dönüştürülebilir maç bulunamadı; mevcut bülten korunuyor.");
   }
 
-  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\\.\\d{3}Z$/, "Z");
-  const dateStamp = day.replace(/\\./g, "");
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+  const dateStamp = day.replace(/\./g, "");
   const baseName = `mackolik_program_${dateStamp}_${stamp}`;
 
   await mkdir(RAW_DIR, { recursive: true });
