@@ -47,3 +47,12 @@ test("non-football events are not included",()=>{
   payload.data[0].events.push({...payload.data[0].events[0],i:12346,sid:2});
   assert.equal(transformIddaaPayload(payload).matches.length,1);
 });
+
+test("official market config names and competition names are applied",()=>{
+  const result=transformIddaaPayload(sample,{"2_101":{n:"Alt/Üst {0}"}},{"77":"Test Ligi"});
+  const match=result.matches[0];
+  assert.equal(match.fields.leagueCode,"Test Ligi");
+  const markets=match.fields.iddaaMarkets;
+  assert.ok(Array.isArray(markets));
+  assert.equal(markets.find(m=>m.code==="2:101:2.5")?.name,"Alt/Üst 2.5");
+});
