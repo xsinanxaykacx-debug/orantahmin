@@ -111,7 +111,7 @@ export default async function handler(req: Req, res: Res) {
     const rawFixtures = Array.isArray(data?.fixtures?.allMatches) ? data.fixtures.allMatches : [];
     const fixtures = rawFixtures.filter((match: any) => match?.status?.finished === true && !match?.status?.cancelled && scoreOf(match));
     const roundOf = (match: any) => String(match?.roundName ?? match?.matchRound ?? match?.round ?? match?.tournamentStage ?? match?.status?.roundName ?? "").trim();
-    const rounds = [...new Set(rawFixtures.map(roundOf).filter(Boolean))].sort((a, b) => Number(a) - Number(b) || a.localeCompare(b, "tr"));
+    const rounds: string[] = Array.from(new Set<string>(rawFixtures.map((match: any) => roundOf(match)).filter((round: string) => Boolean(round)))).sort((a, b) => Number(a) - Number(b) || a.localeCompare(b, "tr"));
     const selectedFixtures = selectedRound === "all" ? fixtures : fixtures.filter((match: any) => roundOf(match) === selectedRound);
     const detailRows = await mapLimit(selectedFixtures, 10, async (match: any) => {
       const id = String(match?.id || match?.matchId || "");
