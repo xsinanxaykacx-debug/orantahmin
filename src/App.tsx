@@ -284,8 +284,6 @@ function App() {
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
   const [statisticsView, setStatisticsView] = useState<"league" | "team">("league");
   const leagueDirectory = IDDAA_LEAGUES;
-  const leagueDirectoryLoading = false;
-  const leagueDirectoryError: string | null = null;
   const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(52);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
