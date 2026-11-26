@@ -1,4 +1,4 @@
-import { fetchIddaaFeed, IDDAA_SEASON_ID, IDDAA_UNIQUE_TOURNAMENT_ID } from "../lib/iddaaGismo";
+import { fetchIddaaFeed, fetchIddaaUpcomingFixtures, IDDAA_SEASON_ID, IDDAA_UNIQUE_TOURNAMENT_ID } from "../lib/iddaaGismo";
 
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
@@ -17,7 +17,7 @@ export default async function handler(req: Req, res: Res) {
     const feeds = [
       ["standings", "season_dynamictable", IDDAA_SEASON_ID],
       ["form", "stats_formtable", IDDAA_SEASON_ID],
-      ["fixtures", "livescore_season_nextx", IDDAA_SEASON_ID],
+      
       ["results", "livescore_season_lastx", IDDAA_SEASON_ID],
       ["goals", "stats_season_topgoals", IDDAA_SEASON_ID],
       ["assists", "stats_season_topassists", IDDAA_SEASON_ID],
@@ -26,8 +26,11 @@ export default async function handler(req: Req, res: Res) {
       ["meta", "stats_season_meta", IDDAA_SEASON_ID]
     ] as const;
     const values = await Promise.all(feeds.map(async ([key, feed, params]) => [key, await optionalFeed(feed, params)] as const));
+    const fixtureResult = await (async () => { try { return { data: await fetchIddaaUpcomingFixtures(), error: null }; } catch (error) { return { data: null, error: error instanceof Error ? error.message : String(error) }; } })();
     const data = Object.fromEntries(values.map(([key, value]) => [key, value.data]));
+    data.fixtures = fixtureResult.data;
     const errors = Object.fromEntries(values.filter(([, value]) => value.error).map(([key, value]) => [key, value.error]));
+    if (fixtureResult.error) errors.fixtures = fixtureResult.error;
     if (!data.standings) return res.status(502).json({
       source: "iddaa.com / Sportradar",
       error: errors.standings || "Süper Lig puan tablosu alınamadı.",
