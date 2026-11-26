@@ -1,6 +1,6 @@
 export interface BulletinMeta {
   sourceFile: string;
-  sourceProvider?: "iddaa" | "mackolik";
+  sourceProvider?: "iddaa";
   generatedAt: string;
   schemaVersion: string;
   sourceFieldCount: number;
