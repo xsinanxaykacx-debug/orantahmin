@@ -80,7 +80,7 @@ export default async function handler(req: Req, res: Res) {
       const sourceAway = row.awayName || "";
       const sourceNames = `${sourceHome} ${sourceAway}`;
       const sourceAges = [...ageMarkers(sourceHome), ...ageMarkers(sourceAway)];
-      const youth = /youth|u19|u21|u23|genclik|genc/i.test(String(row.fields?.leagueCode || "")) || /\\bU(?:19|21|23)\\b/i.test(sourceNames);
+      const youth = /youth|u19|u21|u23|genclik|genc/i.test(String(row.fields?.leagueCode || "")) || /\bU(?:19|21|23)\b/i.test(sourceNames);
       const ranked = uniqueFixtures.filter(fixture => {
         if (usedFixtureIds.has(fixture.id)) return false;
         if (youth && !/youth|U19|U21|U23/i.test(fixture.leagueName)) return false;
