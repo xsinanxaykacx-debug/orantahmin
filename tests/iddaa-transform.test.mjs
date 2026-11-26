@@ -33,7 +33,7 @@ test("iddaa response exposes complete dynamic markets without a fixed source row
   assert.equal(retainedMarkets.length,4);
 });
 test("unknown markets are retained rather than discarded",()=>{
-  const event=sample.data[0].events[0];
+  const event=structuredClone(sample.data[0].events[0]);
   event.m.push({t:2,st:999,sov:"line",o:[{no:1,n:"A",odd:2.1}]});
   const markets=parseIddaaMarkets(event);
   assert.equal(markets.length,5);
@@ -70,5 +70,5 @@ test("event detail replaces listview markets with the complete event market payl
   assert.equal(enriched.m.length,6);
   assert.equal(enriched.m[4].st,48);
   assert.equal(enriched.m[5].st,718);
-  assert.throws(()=>mergeIddaaEventDetail(event,{isSuccess:true,data:{m:[]}}),/tam market listesi/);
+  assert.throws(()=>mergeIddaaEventDetail(event,{isSuccess:true,data:{m:null}}),/tam market listesi/);
 });
