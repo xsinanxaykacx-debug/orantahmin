@@ -33,7 +33,7 @@ test("iddaa response exposes complete dynamic markets without a fixed source row
   assert.equal(retainedMarkets.length,4);
 });
 test("unknown markets are retained rather than discarded",()=>{
-  const event=sample.data[0].events[0];
+  const event=structuredClone(sample.data[0].events[0]);
   event.m.push({t:2,st:999,sov:"line",o:[{no:1,n:"A",odd:2.1}]});
   const markets=parseIddaaMarkets(event);
   assert.equal(markets.length,5);
