@@ -1,0 +1,65 @@
+name: Mackolik cloudscraper diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/mackolik-cloudscraper-probe.yml"
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install scraper
+        run: pip install cloudscraper beautifulsoup4
+      - name: Test Mackolik session and market HTML
+        run: |
+          python - <<'PY'
+          import cloudscraper, re, time
+          from bs4 import BeautifulSoup
+          from datetime import datetime
+          base = "https://www.mackolik.com"
+          s = cloudscraper.create_scraper(browser={"browser":"chrome","platform":"windows","desktop":True})
+          s.headers.update({
+              "Accept":"application/json, text/html, */*",
+              "Accept-Language":"tr-TR,tr;q=0.9,en;q=0.7",
+              "Referer":base+"/iddaa",
+          })
+          date = datetime.utcnow().strftime("%Y-%m-%d")
+          feed_url = base + "/perform/p0/ajax/components/competition/livescores/json"
+          r = s.get(feed_url, params={"sports[]":"Soccer","matchDate":date}, timeout=30)
+          print(f"FEED date={date} status={r.status_code} bytes={len(r.content)}")
+          r.raise_for_status()
+          matches = (r.json().get("data") or {}).get("matches") or {}
+          chosen = []
+          targets = ("brighton", "beşiktaş", "besiktas", "ajax", "lyon", "pafos")
+          for mid, m in matches.items():
+              slug = m.get("matchSlug") or ""
+              home = ((m.get("homeTeam") or {}).get("name") or "")
+              away = ((m.get("awayTeam") or {}).get("name") or "")
+              if slug and any(t in (home+" "+away).casefold() for t in targets):
+                  chosen.append((mid, slug, home, away))
+          if len(chosen) < 3:
+              for mid, m in matches.items():
+                  slug = m.get("matchSlug") or ""
+                  if slug and all(x[0] != mid for x in chosen):
+                      chosen.append((mid,slug,(m.get("homeTeam") or {}).get("name",""),(m.get("awayTeam") or {}).get("name","")))
+                  if len(chosen) >= 5: break
+          for mid, slug, home, away in chosen[:5]:
+              url = f"{base}/mac/{slug}/iddaa/{mid}"
+              try:
+                  p = s.get(url, timeout=30)
+                  soup = BeautifulSoup(p.text, "html.parser")
+                  cards = soup.select("li.widget-iddaa-markets__market-item")
+                  outcomes = soup.select("li.widget-iddaa-markets__option")
+                  print(f"MATCH {home} vs {away} id={mid} status={p.status_code} bytes={len(p.content)} markets={len(cards)} outcomes={len(outcomes)} cf={p.headers.get('cf-mitigated','-')}")
+              except Exception as e:
+                  print(f"MATCH {home} vs {away} id={mid} ERROR={type(e).__name__}: {e}")
+              time.sleep(2)
+          if not chosen:
+              print("NO_FIXTURES_FOUND")
+          PY
