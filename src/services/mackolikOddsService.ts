@@ -1,6 +1,6 @@
 import type { BulletinDocument, BulletinMatch, BulletinWarning } from "../types/match";
 
-const DATA_URL = "/data/mackolik-bulletin.json";
+const DATA_URL = "/data/football-bulletin.json";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -57,7 +57,7 @@ export const OddsService = {
     if (!response.ok) {
       throw new Error(
         response.status === 404
-          ? "Bülten dosyası bulunamadı: public/data/mackolik-bulletin.json"
+          ? "Bülten dosyası bulunamadı: public/data/football-bulletin.json"
           : `Bülten yüklenemedi: HTTP ${response.status}`
       );
     }
@@ -70,7 +70,7 @@ export const OddsService = {
     }
 
     if (!isBulletin(payload)) {
-      throw new Error("Bülten şeması beklenen mackolik-61-v1 formatında değil.");
+      throw new Error("Bülten şeması beklenen orantahmin-61-v1 formatında değil.");
     }
 
     if (payload.meta.sourceFieldCount !== 61 || payload.matches.some((match) => match.raw.length !== 61)) {
