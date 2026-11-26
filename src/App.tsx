@@ -4,12 +4,9 @@ import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } fro
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
 import { IddaaLineupPanel } from "./components/IddaaLineupPanel";
-import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
-import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
 import { IddaaLeagueHub } from "./components/IddaaLeagueHub";
-import { FotMobStatistics } from "./components/FotMobStatistics";
-import { LeagueLogo } from "./components/LeagueLogo";
-import { settleMarketOutcome, type MatchEventFacts, type MatchResult } from "./utils/marketSettlement";
+import { settleMarketOutcome, type MatchResult } from "./utils/marketSettlement";
+import { IDDAA_LEAGUES } from "./lib/iddaaLeagues";
 
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
 type StatusFilter = "all" | "live" | "finished";
@@ -41,12 +38,9 @@ const markets: MarketDefinition[] = [
   { key: "half-time-goals-15", title: "İY 1,5 Gol", selections: [{ label: "Alt", field: "halfTimeGoals15Under" }, { label: "Üst", field: "halfTimeGoals15Over" }] }
 ];
 
-function TeamCrest({ id, name, large = false }: { id?: number | null; name: string; large?: boolean }) {
-  const [failed, setFailed] = useState(false);
+function TeamCrest({ name, large = false }: { name: string; large?: boolean }) {
   const className = large ? "detail-crest" : "team-crest";
-  return <span className={className}>
-    {id && !failed ? <img src={`https://images.fotmob.com/image_resources/logo/teamlogo/${id}.png`} alt="" loading="lazy" onError={() => setFailed(true)} /> : name.trim().slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}
-  </span>;
+  return <span className={className}>{name.trim().slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}</span>;
 }
 function safeTeamName(value: string | null | undefined): string {
   return value?.trim() || "Takım bilgisi yok";
@@ -66,23 +60,11 @@ function formatDate(value: string): string {
 function getOdds(match: DisplayMatch, field: keyof MatchFields): number[] {
   return uniqueOdds(match.sourceRecords.map((record) => record.fields?.[field]));
 }
- type FotMobMatchState = { started: boolean; finished: boolean; fotmobMatchId?: number; homeScore?: number | null; awayScore?: number | null; minute?: string | null; status?: string | null };
-function isLiveMatch(status: number, fotmob?: FotMobMatchState): boolean {
-  // FotMob can return a fixture without reliable started/finished flags.
-  // Only let a positive FotMob state override the iddaa event status.
-  if (fotmob?.finished) return false;
-  if (fotmob?.started) return true;
-  return status > 0 && status < 4;
-}
-function isFinishedMatch(status: number, fotmob?: FotMobMatchState): boolean {
-  // A confirmed live state must not be classified as finished.
-  if (fotmob?.finished) return true;
-  if (fotmob?.started) return false;
-  return status >= 4;
-}
-function statusLabel(status: number, fotmob?: FotMobMatchState): string {
-  if (isFinishedMatch(status, fotmob)) return "Tamamlandı";
-  if (isLiveMatch(status, fotmob)) return "Canlı";
+function isLiveMatch(status: number): boolean { return status > 0 && status < 4; }
+function isFinishedMatch(status: number): boolean { return status >= 4; }
+function statusLabel(status: number): string {
+  if (isFinishedMatch(status)) return "Tamamlandı";
+  if (isLiveMatch(status)) return "Canlı";
   return "Başlamadı";
 }
 function matchKey(match: DisplayMatch): string {
@@ -90,25 +72,25 @@ function matchKey(match: DisplayMatch): string {
 }
 
 const MatchRow = memo(function MatchRow({
-  match, active, onSelect, homeLogo, awayLogo, fotmobStatus
-}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void; homeLogo?: number | null; awayLogo?: number | null; fotmobStatus?: FotMobMatchState }) {
+  match, active, onSelect
+}: { match: DisplayMatch; active: boolean; onSelect: (id: string) => void }) {
   const homeOdds = getOdds(match, "ms1");
   const drawOdds = getOdds(match, "msX");
   const awayOdds = getOdds(match, "ms2");
-  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
-  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const homeScore = match.fields.scoreHome;
+  const awayScore = match.fields.scoreAway;
   const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined && String(homeScore) !== "" && String(awayScore) !== "";
   const hasMissingName = !match.homeName?.trim() || !match.awayName?.trim();
   return (
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
       <div className="match-row-top">
         <span>{match.time || "Saat yok"}</span>
-        <span className={`match-state ${isLiveMatch(match.status, fotmobStatus) ? "live" : ""}`}>{isLiveMatch(match.status, fotmobStatus) && fotmobStatus?.minute ? fotmobStatus.minute : statusLabel(match.status, fotmobStatus)}</span>
+        <span className={`match-state ${isLiveMatch(match.status) ? "live" : ""}`}>{isLiveMatch(match.status, fotmobStatus) && statusLabel(match.status)}</span>
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
-          <div className="team-line"><TeamCrest id={homeLogo} name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
-          <div className="team-line"><TeamCrest id={awayLogo} name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
+          <div className="team-line"><TeamCrest name={match.homeName || ""} /><strong>{safeTeamName(match.homeName)}</strong></div>
+          <div className="team-line"><TeamCrest name={match.awayName || ""} /><strong>{safeTeamName(match.awayName)}</strong></div>
         </div>
         <span className="match-row-score">{hasScore ? `${homeScore} – ${awayScore}` : "—"}</span>
         <div className="row-odds">
@@ -146,9 +128,9 @@ function EmptyData({ title, description }: { title: string; description: string 
   return <div className="data-empty"><span className="empty-symbol">⌁</span><strong>{title}</strong><p>{description}</p></div>;
 }
 
-function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?: FotMobMatchState }) {
-  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
-  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+function Overview({ match }: { match: DisplayMatch }) {
+  const homeScore = match.fields.scoreHome;
+  const awayScore = match.fields.scoreAway;
   const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined &&
     String(homeScore) !== "" && String(awayScore) !== "";
   return (
@@ -159,13 +141,13 @@ function Overview({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?:
           <div className="info-grid">
             <div><span>Lig kodu</span><strong>{match.fields.leagueCode || "—"}</strong></div>
             <div><span>Başlangıç</span><strong>{match.time || "—"}</strong></div>
-            <div><span>Durum</span><strong>{statusLabel(match.status, fotmobStatus)}</strong></div>
+            <div><span>Durum</span><strong>{statusLabel(match.status)}</strong></div>
             <div><span>Skor</span><strong>{hasScore ? `${homeScore} – ${awayScore}` : "—"}</strong></div>
             <div><span>Hakem</span><strong>Veri yok</strong></div>
             <div><span>Hava durumu</span><strong>Veri yok</strong></div>
           </div>
         </article>
-        <FotMobTeamFormPanel matchId={match.matchId} />
+        <div className="info-card"><div className="card-heading"><span>TAKIM FORMU</span><small>İddaa lig verisi</small></div><p>Takım formu, seçilen ligin İddaa istatistik merkezinden görüntülenir.</p></div>
       </div>
       <section className="info-card">
         <div className="card-heading"><span>MEVCUT ORANLAR</span><small>Orijinal market alanlarından</small></div>
@@ -200,73 +182,17 @@ function IddaaMarketCard({ market, result }: { market: IddaaMarket; result: Matc
   );
 }
 
-function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStatus?: FotMobMatchState }) {
-  const finished = isFinishedMatch(match.status, fotmobStatus);
-  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
-  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+function OddsAnalysis({ match }: { match: DisplayMatch }) {
+  const finished = isFinishedMatch(match.status);
+  const homeScore = match.fields.scoreHome;
+  const awayScore = match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
-  const [firstHalfScore, setFirstHalfScore] = useState<{ home: number; away: number } | null>(null);
-  const [eventFacts, setEventFacts] = useState<MatchEventFacts>({});
+  const firstHalfScore: null = null;
+  const eventFacts = {};
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
-    ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore, ...eventFacts }
+    ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
     : null;
-
-  useEffect(() => {
-    if (!finished || !Number.isFinite(parsedHome) || !Number.isFinite(parsedAway)) {
-      setFirstHalfScore(null);
-      return;
-    }
-    const controller = new AbortController();
-    setFirstHalfScore(null);
-    const params = new URLSearchParams({
-      date: (match.date || "").split(".").reverse().join("-"),
-      home: match.homeName || "",
-      away: match.awayName || "",
-      finalHome: String(parsedHome),
-      finalAway: String(parsedAway)
-    });
-    if (fotmobStatus?.fotmobMatchId) params.set("matchId", String(fotmobStatus.fotmobMatchId));
-    fetch(`/api/fotmob-match-periods?${params.toString()}`, { cache: "force-cache", signal: controller.signal })
-      .then(async response => {
-        const payload = await response.json() as { available?: boolean; firstHalfHomeScore?: number; firstHalfAwayScore?: number; error?: string };
-        if (!response.ok) throw new Error(payload.error || "İlk yarı skoru alınamadı.");
-        if (payload.available && Number.isFinite(payload.firstHalfHomeScore) && Number.isFinite(payload.firstHalfAwayScore)) {
-          setFirstHalfScore({ home: Number(payload.firstHalfHomeScore), away: Number(payload.firstHalfAwayScore) });
-        }
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, [finished, fotmobStatus?.fotmobMatchId, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
-  useEffect(() => {
-    if (!finished || !Number.isFinite(parsedHome) || !Number.isFinite(parsedAway)) {
-      setEventFacts({});
-      return;
-    }
-    const controller = new AbortController();
-    setEventFacts({});
-    const params = new URLSearchParams({
-      date: (match.date || "").split(".").reverse().join("-"),
-      home: match.homeName || "",
-      away: match.awayName || "",
-      finalHome: String(parsedHome),
-      finalAway: String(parsedAway)
-    });
-    fetch(`/api/sofascore-match-events?${params.toString()}`, { cache: "force-cache", signal: controller.signal })
-      .then(async response => {
-        const payload = await response.json() as { available?: boolean; corners?: MatchEventFacts["corners"]; cards?: MatchEventFacts["cards"]; firstGoal?: MatchEventFacts["firstGoal"] };
-        if (!response.ok) throw new Error("Maç olay verileri alınamadı.");
-        if (payload.available) {
-          setEventFacts({
-            ...(payload.corners ? { corners: payload.corners } : {}),
-            ...(payload.cards ? { cards: payload.cards } : {}),
-            ...(payload.firstGoal != null ? { firstGoal: payload.firstGoal } : {})
-          });
-        }
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, [finished, match.date, match.homeName, match.awayName, parsedHome, parsedAway]);
 
   const [sourceMarkets, setSourceMarkets] = useState<IddaaMarket[]>([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
@@ -326,11 +252,11 @@ function DetailPlaceholder() {
   return <div className="placeholder-wrap"><EmptyData title="AI tahmini oluşturulmadı" description="Bu sürüm tahmin üretmez. Kaynak dışı olasılık veya sonuç uydurulmaz." /></div>;
 }
 
-function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus }: {
-  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void; homeLogo?: number | null; awayLogo?: number | null; fotmobStatus?: FotMobMatchState;
+function MatchDetail({ match, tab, onTabChange }: {
+  match: DisplayMatch; tab: MatchDetailTab; onTabChange: (tab: MatchDetailTab) => void;
 }) {
-  const homeScore = fotmobStatus?.homeScore ?? match.fields.scoreHome;
-  const awayScore = fotmobStatus?.awayScore ?? match.fields.scoreAway;
+  const homeScore = match.fields.scoreHome;
+  const awayScore = match.fields.scoreAway;
   const hasScore = homeScore !== null && homeScore !== undefined && awayScore !== null && awayScore !== undefined &&
     String(homeScore) !== "" && String(awayScore) !== "";
   return (
@@ -338,15 +264,15 @@ function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus
       <header className="detail-header">
         <div className="detail-meta"><span>{formatDate(match.date)} · {match.time || "Saat yok"}</span><b>{match.fields.leagueCode || "Lig kodu bulunmuyor"}</b></div>
         <div className="versus-header">
-          <div className="detail-team"><TeamCrest id={homeLogo} name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
-          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${homeScore} : ${awayScore}` : "— : —"}</strong><small>{fotmobStatus?.minute && isLiveMatch(match.status, fotmobStatus) ? fotmobStatus.minute : statusLabel(match.status, fotmobStatus)}</small></div>
-          <div className="detail-team"><TeamCrest id={awayLogo} name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
+          <div className="detail-team"><TeamCrest name={match.homeName || ""} large /><strong>{safeTeamName(match.homeName)}</strong><small>Ev sahibi</small></div>
+          <div className="match-center"><span>{hasScore ? "MAÇ SKORU" : "BAŞLANGICA KALAN"}</span><strong>{hasScore ? `${homeScore} : ${awayScore}` : "— : —"}</strong><small>{statusLabel(match.status)}</small></div>
+          <div className="detail-team"><TeamCrest name={match.awayName || ""} large /><strong>{safeTeamName(match.awayName)}</strong><small>Deplasman</small></div>
         </div>
       </header>
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} fotmobStatus={fotmobStatus} /> : tab === "squad" ? <IddaaLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
+      {tab === "overview" ? <Overview match={match} /> : tab === "odds" ? <OddsAnalysis match={match} /> : tab === "squad" ? <IddaaLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
     </div>
   );
 }
@@ -357,15 +283,14 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
   const [statisticsView, setStatisticsView] = useState<"league" | "team">("league");
-  const [leagueDirectory, setLeagueDirectory] = useState<LeagueSummary[]>([]);
-  const [leagueDirectoryLoading, setLeagueDirectoryLoading] = useState(false);
-  const [leagueDirectoryError, setLeagueDirectoryError] = useState<string | null>(null);
-  const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(null);
+  const leagueDirectory = IDDAA_LEAGUES;
+  const leagueDirectoryLoading = false;
+  const leagueDirectoryError: string | null = null;
+  const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(52);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");
-  const [liveScores, setLiveScores] = useState<Map<string, FotMobMatchState>>(new Map());
 
   useEffect(() => {
     let active = true;
@@ -379,124 +304,15 @@ function App() {
     return () => { active = false; };
   }, []);
 
-  useEffect(() => {
-    if (leagueDirectory.length > 0) return;
-    let active = true;
-    setLeagueDirectoryLoading(true);
-    setLeagueDirectoryError(null);
-    fetch("/api/fotmob-leagues")
-      .then(async response => {
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.error || "Lig listesi alınamadı.");
-        return payload as { leagues?: LeagueSummary[] };
-      })
-      .then(payload => {
-        if (!active) return;
-        const leagues = payload.leagues || [];
-        setLeagueDirectory(leagues);
-        setSelectedLeagueId(current => current && leagues.some(league => league.id === current) ? current : leagues.find(league => league.matchCount > 0)?.id ?? leagues[0]?.id ?? null);
-      })
-      .catch(reason => { if (active) setLeagueDirectoryError(reason instanceof Error ? reason.message : "Lig listesi alınamadı."); })
-      .finally(() => { if (active) setLeagueDirectoryLoading(false); });
-    return () => { active = false; };
-  }, [activeNav, leagueDirectory.length]);
-
-  useEffect(() => {
-    const today = new Intl.DateTimeFormat("tr-TR", {
-      timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric"
-    }).format(new Date());
-    const ids = [...new Set(leagueDirectory.flatMap(league => (league.matches || [])
-      .filter(match => !match.finished && (match.started || match.date === today))
-      .map(match => Number(match.fotmobMatchId))
-      .filter(id => Number.isSafeInteger(id) && id > 0)))];
-    if (!ids.length) return;
-    let stopped = false;
-    let controller: AbortController | null = null;
-    let interval: number | null = null;
-    const pendingIds = new Set(ids);
-    const refresh = async () => {
-      if (stopped || document.visibilityState === "hidden" || pendingIds.size === 0) return;
-      controller?.abort();
-      controller = new AbortController();
-      try {
-        const response = await fetch(`/api/fotmob-live?ids=${[...pendingIds].join(",")}`, {
-          cache: "no-store", signal: controller.signal
-        });
-        if (!response.ok) throw new Error("Canlı skorlar güncellenemedi.");
-        const payload = await response.json() as { matches?: Array<{ fotmobMatchId: number; homeScore: number | null; awayScore: number | null; started: boolean; finished: boolean; status: string | null; minute: string | null }> };
-        if (stopped) return;
-        for (const item of payload.matches || []) if (item.finished) pendingIds.delete(item.fotmobMatchId);
-        setLiveScores(previous => {
-          const next = new Map(previous);
-          const idMap = new Map<number, string>();
-          for (const league of leagueDirectory) for (const match of league.matches || []) {
-            idMap.set(match.fotmobMatchId, String(match.iddaaEventId));
-          }
-          for (const item of payload.matches || []) {
-            const matchId = idMap.get(item.fotmobMatchId);
-            if (matchId) next.set(matchId, item);
-          }
-          return next;
-        });
-        if (pendingIds.size === 0 && interval !== null) window.clearInterval(interval);
-      } catch (reason) {
-        if (!(reason instanceof DOMException && reason.name === "AbortError")) console.warn("FotMob canlı skor yenileme:", reason);
-      }
-    };
-    const onVisibilityChange = () => { if (document.visibilityState === "visible") void refresh(); };
-    const onPageHide = () => {
-      stopped = true;
-      controller?.abort();
-      if (interval !== null) window.clearInterval(interval);
-    };
-    void refresh();
-    interval = window.setInterval(() => { void refresh(); }, 60_000);
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("pagehide", onPageHide);
-    return () => {
-      stopped = true;
-      controller?.abort();
-      if (interval !== null) window.clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("pagehide", onPageHide);
-    };
-  }, [leagueDirectory]);
-
   const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
-  const teamLogosByMatch = useMemo(() => {
-    const map = new Map<string, { home: number | null; away: number | null; homeName: string | null; awayName: string | null } & FotMobMatchState>();
-    for (const league of leagueDirectory) for (const match of league.matches || []) {
-      map.set(String(match.iddaaEventId), {
-        home: match.homeTeamId || null,
-        away: match.awayTeamId || null,
-        homeName: match.home?.trim() || null,
-        awayName: match.away?.trim() || null,
-        started: Boolean(match.started),
-        finished: Boolean(match.finished),
-        fotmobMatchId: Number(match.fotmobMatchId),
-        homeScore: match.homeScore ?? null,
-        awayScore: match.awayScore ?? null,
-        status: match.status ?? null
-      });
-    }
-    for (const [matchId, score] of liveScores) {
-      const existing = map.get(matchId);
-      if (existing) map.set(matchId, { ...existing, ...score });
-    }
-    return map;
-  }, [leagueDirectory, liveScores]);
-  const displayMatches = useMemo(() => matches.map(match => {
-    const fotmob = teamLogosByMatch.get(String(match.matchId));
-    return { ...match, homeName: fotmob?.homeName || match.homeName, awayName: fotmob?.awayName || match.awayName };
-  }), [matches, teamLogosByMatch]);
+  const displayMatches = matches;
 
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
     return displayMatches.filter((match) => {
-      const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-      const live = isLiveMatch(match.status, fotmobStatus);
+      const live = isLiveMatch(match.status);
       if (statusFilter === "live" && !live) return false;
-      const finished = isFinishedMatch(match.status, fotmobStatus);
+      const finished = isFinishedMatch(match.status);
       if (statusFilter === "finished" && !finished) return false;
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
@@ -504,7 +320,7 @@ function App() {
     }).sort((a, b) => statusFilter === "finished"
       ? dateTimeKey(b).localeCompare(dateTimeKey(a))
       : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [displayMatches, statusFilter, search, teamLogosByMatch]);
+  }, [displayMatches, statusFilter, search]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -517,8 +333,6 @@ function App() {
     return [...groups.entries()];
   }, [filteredMatches]);
 
-  const selectedMatchLogos = selectedId ? teamLogosByMatch.get(selectedId) : undefined;
-  const selectedMatchFotMobStatus = selectedMatchLogos;
   const selectedMatch = useMemo(
     () => displayMatches.find((match) => String(match.matchId) === selectedId) ?? null,
     [displayMatches, selectedId]
@@ -533,13 +347,11 @@ function App() {
   );
 
   const liveCount = useMemo(() => matches.filter((match) => {
-    const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-    return isLiveMatch(match.status, fotmobStatus);
-  }).length, [matches, teamLogosByMatch]);
+    return isLiveMatch(match.status);
+  }).length, [matches]);
   const finishedCount = useMemo(() => matches.filter((match) => {
-    const fotmobStatus = teamLogosByMatch.get(String(match.matchId));
-    return isFinishedMatch(match.status, fotmobStatus);
-  }).length, [matches, teamLogosByMatch]);
+    return isFinishedMatch(match.status);
+  }).length, [matches]);
   const visibleCount = filteredMatches.length;
 
   useEffect(() => {
@@ -624,13 +436,11 @@ function App() {
             <span className="statistics-nav-arrow">›</span>
           </button>
         </div> : activeNav === "leagues" ? <div className="league-directory-scroll">
-          {leagueDirectoryLoading ? <div className="league-directory-empty">Lig kataloğu yükleniyor…</div>
-            : leagueDirectoryError ? <div className="league-directory-empty">{leagueDirectoryError}</div>
-            : filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
+          {filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
             : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
-              <LeagueLogo id={league.id} name={league.name} src={league.logo} className="league-directory-logo" />
+              <span className="league-directory-logo">{league.name.slice(0, 1)}</span>
               <span className="league-directory-name"><b>{league.name}</b><small>{league.country || "Uluslararası"}</small></span>
-              <span className="league-directory-count">{league.matchCount}</span>
+              <span className="league-directory-count">ID</span>
             </button>)}
         </div> : activeNav === "matches" ? <div className="match-list-scroll">
           {loading ? <div className="list-message">Bülten yükleniyor…</div>
@@ -639,7 +449,7 @@ function App() {
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
-                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch} homeLogo={teamLogosByMatch.get(String(match.matchId))?.home} awayLogo={teamLogosByMatch.get(String(match.matchId))?.away} fotmobStatus={teamLogosByMatch.get(String(match.matchId))} />)}
+                {group.map((match) => <MatchRow key={String(match.matchId)} match={match} active={String(match.matchId) === selectedId} onSelect={selectMatch}  />)}
               </section>
             ))}
         </div> : <div className="league-directory-empty">Ayarlar</div>}
@@ -648,9 +458,9 @@ function App() {
       <main className="detail-pane">
         {loading ? <EmptyData title="Bülten yükleniyor" description="Yerel maç verileri okunuyor." />
           : error ? <EmptyData title="Veri yüklenemedi" description={error} />
-          : activeNav === "leagues" ? leagueDirectoryLoading ? <EmptyData title="Ligler yükleniyor" description="Lig kataloğu ve günlük maç eşleşmeleri yükleniyor." /> : leagueDirectoryError ? <EmptyData title="Lig verisi alınamadı" description={leagueDirectoryError} /> : selectedLeague ? (selectedLeague.id === 71 || (/süper|super/i.test(selectedLeague.name) && /turkey|türkiye|turkiye/i.test(String(selectedLeague.country || ""))) ? <IddaaLeagueHub league={selectedLeague} /> : <FotMobLeagueHub league={selectedLeague} />) : <EmptyData title="Lig bulunamadı" description="Lig kataloğunda seçilebilir lig bulunamadı." />
-          : activeNav === "statistics" ? <FotMobStatistics view={statisticsView} /> : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
-          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} homeLogo={selectedMatchLogos?.home} awayLogo={selectedMatchLogos?.away} fotmobStatus={selectedMatchFotMobStatus} />
+          : activeNav === "leagues" ? selectedLeague ? <IddaaLeagueHub league={selectedLeague} /> : <EmptyData title="Lig bulunamadı" description="İddaa kataloğunda seçilebilir lig bulunamadı." />
+          : activeNav === "statistics" ? <IddaaLeagueHub league={selectedLeague || IDDAA_LEAGUES[0]} /> : activeNav === "settings" ? <EmptyData title="Görünüm ayarları" description="Tema ve görünüm ayarları bu sürümde sabit." />
+          : selectedMatch ? <MatchDetail match={selectedMatch} tab={activeTab} onTabChange={setActiveTab} />
           : <div className="detail-empty"><div className="empty-graphic"><span>↖</span></div><h2>Bir maç seçin</h2><p>Detayını görmek için listeden bir maç seç.</p></div>}
       </main>
     </div>
