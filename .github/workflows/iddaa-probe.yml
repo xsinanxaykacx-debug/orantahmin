@@ -52,7 +52,8 @@ jobs:
           if (b.meta.sourceProvider !== "iddaa") throw new Error("Wrong source provider");
           if (b.meta.sourceFieldCount !== 61) throw new Error("61-field compatibility schema changed");
           if (!b.matches.length) throw new Error("No matches");
-          if (b.matches.some(m => !Array.isArray(m.raw) || m.raw.length !== 61)) throw new Error("Invalid raw row");\n          if (b.matches.some(m => m.fields.iddaaMarkets !== undefined)) throw new Error("Full markets should be served on demand");
+          if (b.matches.some(m => !Array.isArray(m.raw) || m.raw.length !== 61)) throw new Error("Invalid raw row");
+          if (b.matches.some(m => m.fields.iddaaMarkets !== undefined)) throw new Error("Full markets should be served on demand");
           console.log("BULLETIN_OK", JSON.stringify({
             matches:b.matches.length,
             sourceRows:b.meta.sourceMatchCount,
