@@ -109,27 +109,12 @@ export function resetIddaaTokenCacheForTests() {
 }
 
 export async function fetchIddaaUpcomingFixtures(): Promise<any> {
-  const pageResponse = await fetch(PAGE_URL, {
-    headers: { Accept: "text/html,application/xhtml+xml", "User-Agent": UA },
-    signal: AbortSignal.timeout(12000)
-  });
-  if (!pageResponse.ok) throw new Error(`İddaa fikstür sayfası HTTP ${pageResponse.status}.`);
-  const html = await pageResponse.text();
-  const nextDataMatch = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
-  if (!nextDataMatch?.[1]) throw new Error("İddaa sayfasının başlangıç verisi bulunamadı.");
-  const nextData = JSON.parse(nextDataMatch[1]);
-  const token = nextData?.props?.pageProps?.initialState?.common?.apiConfig?.sportradar?.token;
-  if (typeof token !== "string" || !/^[a-f0-9]{32}$/i.test(token)) {
-    throw new Error("İddaa canlı fikstür erişim anahtarı bulunamadı.");
-  }
-  const url = new URL("https://ls.sportradar.com/ls/soccer/v7/turkiye/super-lig/schedules.json");
-  url.searchParams.set("period", "S");
-  url.searchParams.set("seasonId", String(IDDAA_SEASON_ID));
-  url.searchParams.set("key", token);
-  const response = await fetch(url, {
-    headers: { Accept: "application/json", Referer: PAGE_URL, "User-Agent": UA },
-    signal: AbortSignal.timeout(15000)
-  });
-  if (!response.ok) throw new Error(`İddaa fikstür servisi HTTP ${response.status}.`);
-  return response.json();
+  const data = await fetchIddaaFeed("livescore_season_fixtures", IDDAA_SEASON_ID);
+  const rawMatches = data?.matches;
+  const matches = Array.isArray(rawMatches)
+    ? rawMatches
+    : rawMatches && typeof rawMatches === "object"
+      ? Object.values(rawMatches)
+      : [];
+  return { ...data, matches };
 }
