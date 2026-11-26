@@ -7,7 +7,7 @@ on:
     paths:
       - "scripts/iddaa/**"
       - "scripts/update-iddaa.ts"
-      - "tests/iddaa-transform.test.mjs"
+      - "tests/**"
       - "package.json"
       - ".github/workflows/iddaa-probe.yml"
 
@@ -27,7 +27,7 @@ jobs:
       - run: npm ci
       - name: Run tests
         run: npm test
-      - name: Fetch live iddaa feed and validate data
+      - name: Typecheck and build\n        run: npm run build\n      - name: Fetch live iddaa feed and validate data
         run: node --experimental-strip-types scripts/update-iddaa.ts
       - name: Verify generated bulletin
         run: |
