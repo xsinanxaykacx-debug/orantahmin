@@ -57,10 +57,13 @@ function Table({ rows }: { rows: TableRow[] }) {
     <tbody>{rows.map((row, index) => {
       const score = String(row.scoresStr || "").match(/(\d+)\s*[:–-]\s*(\d+)/);
       const form = Array.isArray(row.recentForm) ? row.recentForm.slice(-5) : [];
+      const goalDiff = row.goalConDiff;
+      const goalDiffText = goalDiff == null ? "—" : Number.isFinite(Number(goalDiff))
+        ? `${Number(goalDiff) > 0 ? "+" : ""}${goalDiff}` : String(goalDiff);
       return <tr key={row.id || row.name || index}>
         <td>{row.idx ?? index + 1}</td><td className="league-team-cell"><TeamLogo id={row.id} name={row.name || "Takım"} /><span>{row.name || "Takım"}</span></td>
         <td>{row.played ?? "—"}</td><td>{row.wins ?? "—"}</td><td>{row.draws ?? "—"}</td><td>{row.losses ?? "—"}</td>
-        <td>{score ? score[1] : "—"}</td><td>{score ? score[2] : "—"}</td><td>{row.goalConDiff ?? "—"}</td><td><b>{row.pts ?? "—"}</b></td>
+        <td>{score ? score[1] : "—"}</td><td>{score ? score[2] : "—"}</td><td>{goalDiffText}</td><td><b>{row.pts ?? "—"}</b></td>
         <td><span className="league-form">{form.length ? form.map((result, formIndex) => <i key={formIndex} className={`league-form-${result.toLowerCase()}`} title={result === "G" ? "Galibiyet" : result === "B" ? "Beraberlik" : "Mağlubiyet"}>{result}</i>) : "—"}</span></td>
       </tr>;
     })}</tbody>
