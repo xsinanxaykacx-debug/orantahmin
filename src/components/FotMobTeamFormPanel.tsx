@@ -5,6 +5,44 @@ type FormMatch = { result: "W" | "D" | "L"; score: string | null; scored: number
 type TeamStats = { sampleSize: number; scoredMatches: number; goalsForAvg: number | null; goalsAgainstAvg: number | null; over25Pct: number | null; bttsPct: number | null };
 type TeamForm = { name: string; form: FormMatch[]; stats: TeamStats };
 type FormResponse = { source: string; available: boolean; home?: TeamForm; away?: TeamForm; reason?: string; error?: string };
+const TEAM_CACHE_FRESH_MS = 30 * 60 * 1000;
+const TEAM_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+type TeamCacheEntry = { savedAt: number; data: FormResponse };
+
+function readTeamCache(key: string): TeamCacheEntry | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+
+    const entry = JSON.parse(raw) as TeamCacheEntry;
+    if (
+      !entry?.data?.available ||
+      !entry.data.home ||
+      !entry.data.away ||
+      typeof entry.savedAt !== "number"
+    ) return null;
+
+    if (Date.now() - entry.savedAt > TEAM_CACHE_MAX_AGE_MS) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return entry;
+  } catch {
+    return null;
+  }
+}
+
+function writeTeamCache(key: string, data: FormResponse) {
+  if (!data.available || !data.home || !data.away) return;
+
+  try {
+    localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), data }));
+  } catch {
+    // Önbellek kullanılamazsa normal API yüklemesi devam eder.
+  }
+}
 
 function stat(value: number | null, suffix = ""): string {
   return value === null ? "—" : `${value.toLocaleString("tr-TR")}${suffix}`;
@@ -44,26 +82,66 @@ export function FotMobTeamFormPanel({ matchId }: { matchId: string | number }) {
     let active = true;
     setLoading(true);
     setData(null);
+
     (async () => {
       try {
         const mapResponse = await fetch("/data/fotmob-event-map.json", { cache: "no-store" });
         if (!mapResponse.ok) throw new Error("FotMob eşleştirme dosyası okunamadı.");
-        const eventMap = await mapResponse.json() as { matches: Array<{ mackolikMatchId: string; state: string; fotmobMatchId: number | null }> };
+
+        const eventMap = await mapResponse.json() as {
+          matches: Array<{ mackolikMatchId: string; state: string; fotmobMatchId: number | null }>
+        };
+
         const mapping = eventMap.matches.find(item => item.mackolikMatchId === String(matchId));
+
         if (!mapping || mapping.state !== "matched" || !mapping.fotmobMatchId) {
-          if (active) setData({ source: "FotMob", available: false, reason: "Bu maç FotMob'da güvenilir biçimde eşleştirilmedi." });
+          if (active) {
+            setData({ source: "FotMob", available: false, reason: "Bu maç FotMob'da güvenilir biçimde eşleştirilmedi." });
+          }
           return;
         }
-        const response = await fetch(`/api/fotmob-team-form?matchId=${encodeURIComponent(String(mapping.fotmobMatchId))}`, { cache: "no-store" });
+
+        const cacheKey = `orantahmin:fotmob-team-form:${mapping.fotmobMatchId}`;
+        const cached = readTeamCache(cacheKey);
+
+        if (cached && active) {
+          setData(cached.data);
+          setLoading(false);
+        }
+
+        if (cached && Date.now() - cached.savedAt < TEAM_CACHE_FRESH_MS) return;
+
+        const response = await fetch(
+          `/api/fotmob-team-form?matchId=${encodeURIComponent(String(mapping.fotmobMatchId))}`,
+          { cache: "no-store" }
+        );
+
         const payload = await response.json() as FormResponse;
-        if (!response.ok) throw new Error(payload.error || `Geçmiş maç verisi alınamadı (HTTP ${response.status}).`);
-        if (active) setData(payload);
+
+        if (!response.ok) {
+          throw new Error(payload.error || `Geçmiş maç verisi alınamadı (HTTP ${response.status}).`);
+        }
+
+        if (!active) return;
+
+        if (payload.available && payload.home && payload.away) {
+          writeTeamCache(cacheKey, payload);
+        }
+
+        setData(payload);
       } catch (error) {
-        if (active) setData({ source: "FotMob", available: false, error: error instanceof Error ? error.message : "Veri alınamadı." });
+        if (active && !data) {
+          setData({
+            source: "FotMob",
+            available: false,
+            error: error instanceof Error ? error.message : "Veri alınamadı."
+          });
+        }
       } finally {
         if (active) setLoading(false);
       }
     })();
+
     return () => { active = false; };
   }, [matchId]);
 
