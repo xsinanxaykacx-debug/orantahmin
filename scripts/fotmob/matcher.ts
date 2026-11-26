@@ -193,9 +193,26 @@ function compatibleCategories(
   return true;
 }
 
+function normalizeLeagueKey(league: string): string {
+  return normalize(league)
+    .replace(/\b(?:group|grp)\s+[a-z0-9]+\b/g, "")
+    .replace(/\s+[a-h]$/, "")
+    .trim();
+}
+
+function sourceGroupKey(row: BulletinMatch): string | null {
+  const groupId = row.fields?.groupId;
+  const subgroupId = row.fields?.subgroupId;
+  if (groupId === null || groupId === undefined || subgroupId === null || subgroupId === undefined) {
+    return null;
+  }
+  return \`${String(groupId)}/${String(subgroupId)}\`;
+}
+
 function rankCandidates(
   row: BulletinMatch,
   fixtures: FotMobFixture[],
+  expectedLeagueKey?: string,
 ): RankedCandidate[] {
   const matchDate = toFotMobDate(row.date);
   if (!matchDate || !row.homeName || !row.awayName) return [];
@@ -203,7 +220,9 @@ function rankCandidates(
   return fixtures
     .filter(
       (fixture) =>
-        fixture.date === matchDate && compatibleCategories(row, fixture),
+        fixture.date === matchDate &&
+        compatibleCategories(row, fixture) &&
+        (!expectedLeagueKey || normalizeLeagueKey(fixture.league) === expectedLeagueKey),
     )
     .map((fixture) => {
       const homeScore = similarity(row.homeName!, fixture.home);
@@ -223,10 +242,52 @@ function rankCandidates(
     .sort((a, b) => b.score - a.score);
 }
 
+function inferGroupLeagueConsensus(
+  rows: BulletinMatch[],
+  fixtures: FotMobFixture[],
+): Map<string, string> {
+  const votes = new Map<string, Map<string, number>>();
+
+  for (const row of rows) {
+    const groupKey = sourceGroupKey(row);
+    if (!groupKey || !row.homeName || !row.awayName || !toFotMobDate(row.date)) {
+      continue;
+    }
+
+    const ranked = rankCandidates(row, fixtures);
+    const best = ranked[0];
+    const second = ranked[1];
+    if (!best || best.score < 0.93) continue;
+    if (second && best.score - second.score < 0.08) continue;
+
+    const leagueKey = normalizeLeagueKey(best.fixture.league);
+    if (!leagueKey) continue;
+
+    const groupVotes = votes.get(groupKey) || new Map<string, number>();
+    groupVotes.set(leagueKey, (groupVotes.get(leagueKey) || 0) + 1);
+    votes.set(groupKey, groupVotes);
+  }
+
+  const consensus = new Map<string, string>();
+  for (const [groupKey, groupVotes] of votes) {
+    const rankedVotes = [...groupVotes.entries()].sort((a, b) => b[1] - a[1]);
+    const [topLeague, topCount] = rankedVotes[0] || [];
+    const totalVotes = rankedVotes.reduce((sum, [, count]) => sum + count, 0);
+    const secondCount = rankedVotes[1]?.[1] || 0;
+
+    if (topLeague && topCount >= 2 && topCount / totalVotes >= 0.8 && topCount > secondCount) {
+      consensus.set(groupKey, topLeague);
+    }
+  }
+
+  return consensus;
+}
+
 type InternalResult = {
   row: BulletinMatch;
   state: MatchState;
   confidence: number;
+  leagueMatch: "group_consensus" | "unverified";
   selected?: FotMobFixture;
   candidates?: RankedCandidate[];
 };
@@ -235,15 +296,19 @@ export function matchBulletinToFotMob(
   rows: BulletinMatch[],
   fixtures: FotMobFixture[],
 ) {
+  const groupLeagueConsensus = inferGroupLeagueConsensus(rows, fixtures);
   const internal: InternalResult[] = rows.map((row) => {
+    const expectedLeague = groupLeagueConsensus.get(sourceGroupKey(row) || "");
+    const leagueMatch = expectedLeague ? "group_consensus" : "unverified";
+
     if (!row.homeName || !row.awayName) {
-      return { row, state: "invalid_bulletin_team", confidence: 0 };
+      return { row, state: "invalid_bulletin_team", confidence: 0, leagueMatch };
     }
     if (!toFotMobDate(row.date)) {
-      return { row, state: "invalid_bulletin_date", confidence: 0 };
+      return { row, state: "invalid_bulletin_date", confidence: 0, leagueMatch };
     }
 
-    const ranked = rankCandidates(row, fixtures);
+    const ranked = rankCandidates(row, fixtures, expectedLeague);
     const best = ranked[0];
     const second = ranked[1];
 
@@ -252,6 +317,7 @@ export function matchBulletinToFotMob(
         row,
         state: "unmatched",
         confidence: best ? Number(best.score.toFixed(3)) : 0,
+        leagueMatch,
         candidates: best ? [best] : [],
       };
     }
@@ -261,6 +327,7 @@ export function matchBulletinToFotMob(
         row,
         state: "ambiguous",
         confidence: Number(best.score.toFixed(3)),
+        leagueMatch,
         candidates: ranked.slice(0, 2),
       };
     }
@@ -269,6 +336,7 @@ export function matchBulletinToFotMob(
       row,
       state: "matched",
       confidence: Number(best.score.toFixed(3)),
+      leagueMatch,
       selected: best.fixture,
     };
   });
@@ -281,13 +349,12 @@ export function matchBulletinToFotMob(
     selectedByFixture.set(result.selected.id, indices);
   });
 
-  for (const [fixtureId, indices] of selectedByFixture) {
+  for (const indices of selectedByFixture.values()) {
     if (indices.length < 2) continue;
     for (const index of indices) {
       const result = internal[index];
       const collisionFixture = result.selected!;
       result.state = "ambiguous";
-      result.confidence = Number(result.confidence.toFixed(3));
       result.candidates = [
         {
           fixture: collisionFixture,
@@ -298,11 +365,9 @@ export function matchBulletinToFotMob(
       ];
       result.selected = undefined;
     }
-    // A FotMob event can only be assigned to one Mackolik event.
-    void fixtureId;
   }
 
-  return internal.map(({ row, state, confidence, selected, candidates }) => {
+  return internal.map(({ row, state, confidence, leagueMatch, selected, candidates }) => {
     const leagueCode = String(row.fields?.leagueCode || "");
     const base = {
       mackolikMatchId:
@@ -322,7 +387,7 @@ export function matchBulletinToFotMob(
       leagueCode,
       groupId: row.fields?.groupId ?? null,
       subgroupId: row.fields?.subgroupId ?? null,
-      leagueMatch: "unverified",
+      leagueMatch,
       lineupAvailable: false,
       homeStarters: null,
       awayStarters: null,
@@ -375,6 +440,9 @@ export function createFotMobEventMap(
     ).length,
     invalidBulletinDate: matches.filter(
       (match) => match.state === "invalid_bulletin_date",
+    ).length,
+    leagueGroupVerified: matches.filter(
+      (match) => match.leagueMatch === "group_consensus",
     ).length,
     lineupAvailable: 0,
     bothTeamsStartingXI: 0,

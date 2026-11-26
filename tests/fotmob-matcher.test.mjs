@@ -138,3 +138,30 @@ test("FotMob fetch rejects malformed responses instead of writing false unmatche
     /no leagues array/,
   );
 });
+
+test("two high-confidence matches establish a league guard for their Mackolik group", () => {
+  const groupRow = (matchId, homeName, awayName) =>
+    row({
+      matchId,
+      homeName,
+      awayName,
+      fields: { leagueCode: "ABC", groupId: "10", subgroupId: "20" },
+    });
+  const rows = [
+    groupRow("201", "Alpha FC", "Beta FC"),
+    groupRow("202", "Gamma FC", "Delta FC"),
+    groupRow("203", "Echo FC", "Foxtrot FC"),
+  ];
+  const fixtures = [
+    fixture({ id: 11, home: "Alpha FC", away: "Beta FC", league: "Trusted League - Group A" }),
+    fixture({ id: 12, home: "Gamma FC", away: "Delta FC", league: "Trusted League - Group B" }),
+    fixture({ id: 13, home: "Echo FC", away: "Foxtrot FC", league: "Wrong League" }),
+  ];
+
+  const result = matchBulletinToFotMob(rows, fixtures);
+  assert.equal(result[0].state, "matched");
+  assert.equal(result[1].state, "matched");
+  assert.equal(result[2].state, "unmatched");
+  assert.equal(result[2].leagueMatch, "group_consensus");
+  assert.equal(result[2].fotmobMatchId, null);
+});
