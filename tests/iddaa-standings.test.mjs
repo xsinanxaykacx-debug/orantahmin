@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readStandingsGoals, readStandingsPosition, readStandingsStat } from "../src/lib/iddaaStandings.ts";
+import { readStandingsGoals, readStandingsPosition, readStandingsRows, readStandingsStat } from "../src/lib/iddaaStandings.ts";
 
 test("actual Iddaa Gismo standings row maps every total column", () => {
   const row = {
