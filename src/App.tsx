@@ -3,7 +3,7 @@ import { OddsService } from "./services/iddaaOddsService";
 import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
 import "./index.css";
-import { FotMobLineupPanel } from "./components/FotMobLineupPanel";
+import { IddaaLineupPanel } from "./components/IddaaLineupPanel";
 import { FotMobTeamFormPanel } from "./components/FotMobTeamFormPanel";
 import { FotMobLeagueHub, type LeagueSummary } from "./components/FotMobLeagueHub";
 import { FotMobStatistics } from "./components/FotMobStatistics";
@@ -345,7 +345,7 @@ function MatchDetail({ match, tab, onTabChange, homeLogo, awayLogo, fotmobStatus
       <nav className="detail-tabs" aria-label="Maç detay sekmeleri">
         {detailTabs.map((item) => <button type="button" key={item.id} className={tab === item.id ? "active" : ""} onClick={() => onTabChange(item.id)}>{item.label}</button>)}
       </nav>
-      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} fotmobStatus={fotmobStatus} /> : tab === "squad" ? <FotMobLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
+      {tab === "overview" ? <Overview match={match} fotmobStatus={fotmobStatus} /> : tab === "odds" ? <OddsAnalysis match={match} fotmobStatus={fotmobStatus} /> : tab === "squad" ? <IddaaLineupPanel matchId={match.matchId} /> : <DetailPlaceholder />}
     </div>
   );
 }
