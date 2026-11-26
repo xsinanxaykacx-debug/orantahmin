@@ -452,7 +452,7 @@ export function createFotMobEventMap(
   };
 
   return {
-    source: "Mackolik 61-field bulletin + FotMob",
+    source: "iddaa 61-field bulletin + FotMob",
     generatedAt: new Date().toISOString(),
     summary,
     matches,
