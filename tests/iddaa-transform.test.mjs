@@ -27,7 +27,9 @@ test("iddaa response maps to the stable 61-slot compatibility row",()=>{
   assert.equal(result.matches[0].fields.doubleChance1X,1.2);
   assert.equal(result.matches[0].fields.goals25Under,1.9);
   assert.equal(result.matches[0].fields.bttsYes,1.7);
-  const retainedMarkets = result.matches[0].fields.iddaaMarkets;\n  assert.ok(Array.isArray(retainedMarkets));\n  assert.equal(retainedMarkets.length,4);
+  const retainedMarkets = result.matches[0].fields.iddaaMarkets;
+  assert.ok(Array.isArray(retainedMarkets));
+  assert.equal(retainedMarkets.length,4);
 });
 test("unknown markets are retained rather than discarded",()=>{
   const event=sample.data[0].events[0];
