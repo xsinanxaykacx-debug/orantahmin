@@ -67,3 +67,53 @@
 .league-fixture { grid-template-columns: 54px minmax(0, 1fr) 42px; gap: 6px; padding: 9px 7px; }
 .league-fixture-teams { font-size: 8px; }
 .league-fixture-score { font-size: 9px; }
+
+
+/* Oyuncu lider kartları sağ panelde tek satırda yan yana */
+.league-leader-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  min-width: 0;
+}
+.league-leader-grid .league-scorers-panel {
+  min-width: 0;
+  padding: 11px 9px;
+}
+.league-leader-grid .card-heading {
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 11px;
+}
+.league-leader-grid .card-heading > span {
+  font-size: 8px;
+  line-height: 1.35;
+}
+.league-leader-grid .card-heading small {
+  font-size: 7px;
+}
+.league-leader-grid .league-scorers {
+  gap: 8px;
+}
+.league-leader-grid .league-scorers > div {
+  grid-template-columns: 13px minmax(0, 1fr) auto;
+  gap: 4px;
+  font-size: 8px;
+}
+.league-leader-grid .league-scorers b {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.35;
+}
+.league-leader-grid .league-scorers strong {
+  font-size: 8px;
+  white-space: nowrap;
+}
+@media (max-width: 1000px) {
+  .league-leader-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .league-leader-grid { grid-template-columns: 1fr; }
+  .league-leader-grid .league-scorers b { white-space: nowrap; }
+}
