@@ -109,7 +109,7 @@ export default async function handler(req: Req, res: Res) {
 
   const rawId = req.query.matchId;
   const matchId = Array.isArray(rawId) ? rawId[0] : rawId;
-  if (!matchId || !/^\\d{5,12}$/.test(matchId)) {
+  if (!matchId || !/^\d{5,12}$/.test(matchId)) {
     return res.status(400).json({ error: "Geçersiz Mackolik maç kimliği." });
   }
 
@@ -119,7 +119,7 @@ export default async function handler(req: Req, res: Res) {
     const forwardedHost = headerValue(req.headers?.["x-forwarded-host"]);
     const requestHost = headerValue(req.headers?.host);
     const host = (forwardedHost || requestHost).split(",")[0].trim();
-    if (!host || !/^[a-z0-9.-]+(?::\\d+)?$/i.test(host)) {
+    if (!host || !/^[a-z0-9.-]+(?::\d+)?$/i.test(host)) {
       return res.status(500).json({ source: "Mackolik", matchId, error: "Bülten kaynağı için geçerli dağıtım adresi belirlenemedi." });
     }
 
