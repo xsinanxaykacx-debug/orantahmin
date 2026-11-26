@@ -105,7 +105,8 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   const epoch = Number(event.d);
   if (!id || !home || !away || !Number.isFinite(epoch) || epoch <= 0) return null;
   const {date,time} = dateParts(epoch);
-  if (!Array.isArray(event.m) || event.m.length === 0) return null;\n  const markets = parseIddaaMarkets(event, marketConfig);
+  if (!Array.isArray(event.m) || event.m.length === 0) return null;
+  const markets = parseIddaaMarkets(event, marketConfig);
   const ms = marketFor(event,1,1);
   const dc = marketFor(event,2,92);
   const ht = marketFor(event,2,88);
@@ -115,7 +116,9 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   const put = (field:number,value:unknown) => { row[field] = value; };
   put(FIELD.MATCH_ID,id); put(FIELD.HOME_NAME,home); put(FIELD.AWAY_NAME,away);
   put(FIELD.STATUS,0); put(FIELD.TIME,time); put(FIELD.DATE,date); put(FIELD.MBS,event.mbc ?? null);
-  put(FIELD.LEAGUE_CODE,event.ci == null ? null : (competitionMap[String(event.ci)] || String(event.ci)));\n  put(FIELD.GROUP_ID,event.ci == null ? null : String(event.ci)); put(FIELD.SUBGROUP_ID,event.ci == null ? null : "0");\n  put(FIELD.EVENT_ID,id);
+  put(FIELD.LEAGUE_CODE,event.ci == null ? null : (competitionMap[String(event.ci)] || String(event.ci)));
+  put(FIELD.GROUP_ID,event.ci == null ? null : String(event.ci)); put(FIELD.SUBGROUP_ID,event.ci == null ? null : "0");
+  put(FIELD.EVENT_ID,id);
   put(FIELD.MS_1,findOutcome(ms,["1","ev sahibi"],1));
   put(FIELD.MS_X,findOutcome(ms,["x","0","beraberlik"],2));
   put(FIELD.MS_2,findOutcome(ms,["2","deplasman"],3));
@@ -164,7 +167,8 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   ];
   fieldNames.forEach((name,i)=>fields[name]=row[i]);
   fields.iddaaMarkets = markets;
-  fields.competitionId = event.ci ?? null;\n  fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
+  fields.competitionId = event.ci ?? null;
+  fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
   fields.isLive = Boolean(event.k0dd);
   return {
     matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:row,
