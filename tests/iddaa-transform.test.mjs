@@ -16,11 +16,12 @@ const sample = {
   }]}]
 };
 
-test("iddaa response maps to the stable 61-slot compatibility row",()=>{
+test("iddaa response exposes complete dynamic markets without a fixed source row",()=>{
   const result=transformIddaaPayload(sample);
   assert.equal(result.matches.length,1);
-  assert.equal(result.meta.sourceFieldCount,61);
-  assert.equal(result.matches[0].raw.length,FIELD_COUNT);
+  assert.equal(result.meta.schemaVersion,"orantahmin-iddaa-dynamic-v2");
+  assert.equal(result.meta.sourceFieldCount,0);
+  assert.deepEqual(result.matches[0].raw,[]);
   assert.equal(result.matches[0].fields.ms1,1.8);
   assert.equal(result.matches[0].fields.msX,3.4);
   assert.equal(result.matches[0].fields.ms2,4.2);
