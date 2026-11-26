@@ -66,3 +66,25 @@ test("standings normalizer preserves explicit zero values", () => {
   assert.deepEqual(readStandingsGoals(row, "total"), [0, 0]);
   assert.equal(readStandingsStat(row, "total", ["points"], "P"), 0);
 });
+
+test("home and away views reuse the single live Gismo table rows", () => {
+  const data = { season: { tables: [{ tablerows: [
+    { pos: 1, posHome: 2, posAway: 1, team: { name: "Galatasaray" }, total: 12, home: 6, away: 6,
+      winHome: 5, drawHome: 1, lossHome: 0, goalsForHome: 18, goalsAgainstHome: 7, goalDiffHome: 11, pointsHome: 16,
+      winAway: 5, drawAway: 0, lossAway: 1, goalsForAway: 11, goalsAgainstAway: 9, goalDiffAway: 2, pointsAway: 15 }
+  ] }] } };
+  const totalRows = readStandingsRows(data, "total");
+  const homeRows = readStandingsRows(data, "home");
+  const awayRows = readStandingsRows(data, "away");
+  assert.equal(totalRows.length, 1);
+  assert.equal(homeRows.length, 1);
+  assert.equal(awayRows.length, 1);
+  assert.equal(readStandingsPosition(homeRows[0], 1, "home"), 2);
+  assert.equal(readStandingsPosition(awayRows[0], 1, "away"), 1);
+  assert.equal(readStandingsStat(homeRows[0], "home", ["played"], "O"), 6);
+  assert.equal(readStandingsStat(homeRows[0], "home", ["points"], "P"), 16);
+  assert.deepEqual(readStandingsGoals(homeRows[0], "home"), [18, 7]);
+  assert.equal(readStandingsStat(awayRows[0], "away", ["played"], "O"), 6);
+  assert.equal(readStandingsStat(awayRows[0], "away", ["points"], "P"), 15);
+  assert.deepEqual(readStandingsGoals(awayRows[0], "away"), [11, 9]);
+});
