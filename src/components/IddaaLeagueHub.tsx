@@ -113,7 +113,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const rounds = useMemo(() => [...new Set([...upcoming, ...results].map(roundOf).filter(Boolean))].sort((a,b) => Number(a)-Number(b) || a.localeCompare(b,"tr")), [upcoming, results]);
   const filteredFixtures = currentFixtures.filter(m => round === "all" || roundOf(m) === round);
   const leaders = arr(data[leader]?.players);
-  const teams = arr(data.teams?.teams).filter(t => Number(val(t?.teamtypeid, t?.teamTypeId, 0)) === 0);
+  const teams = values(data.teams?.teams).filter(t => Number(val(t?.teamtypeid, t?.teamTypeId, 0)) === 0);
   const selectedTeam = teams.find(t => uid(t) === teamUid);
 
   useEffect(() => {
