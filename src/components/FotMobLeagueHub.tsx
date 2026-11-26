@@ -150,9 +150,9 @@ export function FotMobLeagueHub({ league }: { league: LeagueSummary }) {
         </section>
         <div className="league-leader-grid">
           {[
-            { title: "EN GOLCÜLER", players: playerLeaders.scorers, empty: "Gol krallığı verisi bulunmuyor." },
+            { title: "EN YÜKSEK PUAN", players: playerLeaders.ratings, empty: "Oyuncu puan verisi bulunmuyor." },
             { title: "EN ÇOK ASİST", players: playerLeaders.assists, empty: "Asist verisi bulunmuyor." },
-            { title: "EN YÜKSEK PUAN", players: playerLeaders.ratings, empty: "Oyuncu puan verisi bulunmuyor." }
+            { title: "EN GOLCÜLER", players: playerLeaders.scorers, empty: "Gol krallığı verisi bulunmuyor." }
           ].map(card => <section className="info-card league-panel league-scorers-panel" key={card.title}>
             <div className="card-heading"><span>{card.title}</span><small>FotMob · İlk 3</small></div>
             {card.players.length ? <div className="league-scorers">{card.players.map((player: any, index: number) => {
