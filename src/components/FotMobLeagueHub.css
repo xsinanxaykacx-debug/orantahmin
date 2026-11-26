@@ -21,7 +21,7 @@
 .league-hub-count span { color: #8491a6; font-size: 8px; white-space: nowrap; }
 .league-hub-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(270px, .75fr); align-items: start; gap: 14px; }
 .league-panel { min-width: 0; }
-.league-table-panel { grid-row: span 4; }
+.league-table-panel { grid-row: auto; }
 .league-table-scroll { width: 100%; overflow-x: auto; }
 .league-table { width: 100%; border-collapse: collapse; font-size: 8px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .league-table th { padding: 8px 5px; border-bottom: 1px solid #384153; color: #78869c; font-size: 8px; font-weight: 600; text-align: right; }
