@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import handler from "../api/iddaa-lineups.ts";
+import handler from "../api/iddaa.ts";
 
 function responseRecorder() {
   return {
@@ -34,7 +34,7 @@ test("iddaa lineup endpoint normalizes probable starters, substitutes and format
   };
   try {
     const res = responseRecorder();
-    await handler({ method: "GET", query: { eventId: "3326581" } }, res);
+    await handler({ method: "GET", query: { resource: "lineups", eventId: "3326581" } }, res);
     assert.equal(res.code, 200);
     assert.equal(res.body.source, "iddaa.com");
     assert.equal(res.body.lineupType, "Muhtemel 11");
@@ -54,7 +54,7 @@ test("iddaa lineup endpoint rejects malformed event ids without upstream request
   globalThis.fetch = async () => { throw new Error("fetch must not be called"); };
   try {
     const res = responseRecorder();
-    await handler({ method: "GET", query: { eventId: "3326581abc" } }, res);
+    await handler({ method: "GET", query: { resource: "lineups", eventId: "3326581abc" } }, res);
     assert.equal(res.code, 400);
     assert.match(res.body.error, /maç numarası/);
   } finally {

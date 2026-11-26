@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import handler from "../api/iddaa-markets.ts";
+import handler from "../api/iddaa.ts";
 
 test("iddaa market API returns every market for a requested public event",async()=>{
   const originalFetch=globalThis.fetch;
@@ -24,7 +24,7 @@ test("iddaa market API returns every market for a requested public event",async(
     json(body){this.body=body;return this;}
   };
   try {
-    await handler({method:"GET",query:{eventId:"123"}},response);
+    await handler({method:"GET",query:{resource:"markets",eventId:"123"}},response);
     assert.equal(response.statusCode,200);
     assert.equal(response.body.available,true);
     assert.equal(response.body.source,"iddaa.com");
