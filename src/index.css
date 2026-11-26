@@ -225,3 +225,69 @@ button { cursor: pointer; }
   font-style: normal;
   font-weight: 800;
 }
+
+
+/* İstatistik menüsü: seçim kartlarını tam genişlikte alt alta yerleştir */
+.statistics-nav-options {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 16px 12px;
+}
+.statistics-nav-options > button {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid #2b3445;
+  border-radius: 10px;
+  background: #1b202c;
+  color: #dce5f3;
+  text-align: left;
+  transition: background .15s ease, border-color .15s ease;
+}
+.statistics-nav-options > button:hover {
+  border-color: #40577e;
+  background: #202839;
+}
+.statistics-nav-options > button.active {
+  border-color: #3b82f6;
+  background: #202d45;
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+.statistics-nav-options .statistics-nav-symbol {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #34425a;
+  border-radius: 9px;
+  background: #222d40;
+  color: #9fc3fa;
+}
+.statistics-nav-options > button > span:nth-child(2) {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  gap: 5px;
+}
+.statistics-nav-options > button b {
+  color: #e3ebf7;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+.statistics-nav-options > button small {
+  color: #8996aa;
+  font-size: 9px;
+}
+.statistics-nav-options .statistics-nav-arrow {
+  flex: 0 0 auto;
+  color: #8297b8;
+  font-size: 22px;
+  line-height: 1;
+}
