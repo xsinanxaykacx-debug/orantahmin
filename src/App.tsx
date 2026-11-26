@@ -67,6 +67,9 @@ function statusLabel(status: number): string {
   if (isLiveMatch(status)) return "Canlı";
   return "Başlamadı";
 }
+function readIddaaFirstHalfScore(_match: DisplayMatch): { home: number; away: number } | null {
+  return null;
+}
 function matchKey(match: DisplayMatch): string {
   return String(match.matchId);
 }
@@ -188,7 +191,7 @@ function OddsAnalysis({ match }: { match: DisplayMatch }) {
   const awayScore = match.fields.scoreAway;
   const parsedHome = homeScore === null || homeScore === undefined || String(homeScore).trim() === "" ? NaN : Number(homeScore);
   const parsedAway = awayScore === null || awayScore === undefined || String(awayScore).trim() === "" ? NaN : Number(awayScore);
-  const firstHalfScore: { home: number; away: number } | null = null;
+  const firstHalfScore = readIddaaFirstHalfScore(match);
   const result: MatchResult | null = finished && Number.isFinite(parsedHome) && Number.isFinite(parsedAway)
     ? { home: parsedHome, away: parsedAway, finished: true, firstHalf: firstHalfScore }
     : null;
