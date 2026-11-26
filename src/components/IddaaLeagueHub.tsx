@@ -12,7 +12,7 @@ type Leader = "goals" | "assists" | "cards";
 const arr = (v: any): any[] => Array.isArray(v) ? v : [];
 const val = (...v: any[]) => v.find(x => x !== undefined && x !== null && x !== "");
 const txt = (v: any) => typeof v === "string" || typeof v === "number" ? String(v) : "";
-const name = (v: any) => txt(val(v?.name, v?._name, v?.fullname, v?.shortname, v?.teamname));
+const name = (v: any) => typeof v === "string" || typeof v === "number" ? String(v) : txt(val(v?.name, v?._name, v?.fullname, v?.shortname, v?.teamname));
 const uid = (v: any) => txt(val(v?._id, v?.id, v?.uid, v?.teamUid));
 const team = (r: any) => val(r?.team, r?.participant, r?.competitor, {});
 const teamName = (r: any) => name(team(r)) || txt(r?.teamname) || "Takım";
@@ -24,13 +24,24 @@ function form(value: any): string[] {
   return raw.toUpperCase().split("").filter(x => "WDLGBMY".includes(x)).slice(-5).map(x => x === "W" || x === "G" ? "G" : x === "D" || x === "B" ? "B" : "M");
 }
 function tables(data: any): any[] { return arr(data?.season?.tables || data?.tables); }
+function tableRows(data: any): any[] { return arr(data?.dynamicTable?.rows || data?.rows || data?.season?.dynamicTable?.rows); }
+function field(row: any, mode: Mode, keys: string[], localized?: string): any {
+  if (mode !== "total") return splitValue(row, mode, keys);
+  return val(...keys.map(k => row?.[k]), localized ? row?.[localized] : undefined);
+}
+function goalsPair(row: any, mode: Mode): [any, any] {
+  if (mode !== "total") return [splitValue(row, mode, ["goalsfor","goals_for","goals"]), splitValue(row, mode, ["goalsagainst","goals_against","goalsconceded"])];
+  const raw = txt(val(row?.["AG:YG"], row?.goals, row?.goalsForAgainst));
+  const m = raw.match(/(-?\\d+)\\s*:\\s*(-?\\d+)/);
+  return m ? [m[1], m[2]] : [val(row?.goalsfor,row?.goals_for), val(row?.goalsagainst,row?.goals_against)];
+}
 function rowsFor(data: any, mode: Mode): any[] {
   const list = tables(data);
   const table = mode === "total"
     ? list.find(x => /total|overall|toplam/i.test(txt(val(x?.name, x?.tabletype, x?.type)))) || list[0]
     : list.find(x => mode === "home" ? /home|ev sahibi|iç saha/i.test(txt(val(x?.name, x?.tabletype, x?.type))) : /away|deplasman/i.test(txt(val(x?.name, x?.tabletype, x?.type))));
   if (table) return arr(table.tablerows || table.rows);
-  if (mode === "total") return arr(data?.season?.tables?.[0]?.tablerows || data?.tablerows || data?.rows);
+  if (mode === "total") return arr(data?.season?.tables?.[0]?.tablerows || data?.tablerows || data?.dynamicTable?.rows || data?.rows);
   return [];
 }
 function splitValue(row: any, mode: Mode, keys: string[]): any {
@@ -108,7 +119,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
 
   const data = payload?.data || {};
   const tableRows = useMemo(() => rowsFor(data.standings, mode), [data.standings, mode]);
-  const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => [teamKey(r), form(val(r?.form, r?.last5, r?.recentform, r?.form5))])), [data.form]);
+  const formMap = useMemo(() => new Map([...arr(data.form?.teams), ...arr(data.form?.formTable?.rows)].map(r => [txt(val(r?.["Takım"], r?.team?.name, r?.teamname, teamKey(r))).toLocaleLowerCase("tr-TR"), form(val(r?.Form, r?.form, r?.last5, r?.recentform, r?.form5))])), [data.form]);
   const upcoming = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.schedules || data.fixtures);
   const results = arr(data.results?.matches || data.results?.events || data.results);
   const currentFixtures = fixtureMode === "upcoming" ? upcoming : results;
@@ -149,10 +160,10 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
         {tableRows.length ? <div className="league-table-scroll"><table className="league-table iddaa-standings-table">
           <thead><tr><th>Poz</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG:YG</th><th>+/-</th><th>P</th><th>Form</th></tr></thead>
           <tbody>{tableRows.map((r:any,i:number)=>{
-            const t=team(r), n=name(t)||txt(r?.teamname)||"Takım", f=form(val(r?.form,r?.recentform,r?.last5,formMap.get(teamKey(r))));
-            const p=val(r?.position,r?.pos,r?.rank,i+1);
-            const o=splitValue(r,mode,["played","matches","matchplayed"]), g=splitValue(r,mode,["won","wins","win"]), b=splitValue(r,mode,["drawn","draws","draw"]), l=splitValue(r,mode,["lost","losses","loss"]);
-            const gf=splitValue(r,mode,["goalsfor","goals_for","goals"]), ga=splitValue(r,mode,["goalsagainst","goals_against","goalsconceded"]), gd=splitValue(r,mode,["goalsdiff","goaldifference","goal_diff"]), pts=splitValue(r,mode,["points","pts"]);
+            const t=team(r), n=name(val(t,r?.["Takım"],r?.teamname))||"Takım", f=form(val(r?.Form,r?.form,r?.recentform,r?.last5,formMap.get(n.toLocaleLowerCase("tr-TR"))));
+            const p=val(r?.position,r?.pos,r?.rank,r?.Poz,i+1);
+            const o=field(r,mode,["played","matches","matchplayed"],"O"), g=field(r,mode,["won","wins","win"],"G"), b=field(r,mode,["drawn","draws","draw"],"B"), l=field(r,mode,["lost","losses","loss"],"M");
+            const [gf,ga]=goalsPair(r,mode), gd=field(r,mode,["goalsdiff","goaldifference","goal_diff"],"+/-"), pts=field(r,mode,["points","pts"],"P");
             return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td>{txt(g)||"—"}</td><td>{txt(b)||"—"}</td><td>{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
           })}</tbody>
         </table></div> : <div className="league-empty">{mode==="total"?"Puan tablosu verisi bulunamadı.":"Kaynak bu görünüm için ayrı bir tablo sağlamadı."}</div>}
