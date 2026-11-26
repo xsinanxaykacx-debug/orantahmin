@@ -44,14 +44,18 @@ function dateText(v: any): string {
   return Number.isNaN(d.getTime()) ? txt(v) : d.toLocaleString("tr-TR", { timeZone: "Europe/Istanbul", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 function fixtureTeam(m: any, side: "home" | "away"): any {
-  return val(m?.[side]?.team, m?.[side], m?.[side === "home" ? "_home" : "_away"], m?.[side === "home" ? "team1" : "team2"], m?.competitors?.[side === "home" ? 0 : 1], {});
+  const event = val(m?.sport_event, m?.event, m);
+  const competitors = arr(event?.competitors || event?.teams);
+  const qualified = competitors.find((entry: any) => txt(entry?.qualifier).toLowerCase() === side);
+  return val(m?.[side]?.team, m?.[side], m?.[side === "home" ? "_home" : "_away"], m?.[side === "home" ? "team1" : "team2"], qualified, competitors[side === "home" ? 0 : 1], {});
 }
 function fixtureScore(m: any, side: "home" | "away"): any {
   const i = side === "home" ? 0 : 1;
-  return val(m?.[side]?.score, m?.[side]?.goals, m?.[side === "home" ? "_homescore" : "_awayscore"], m?.[side === "home" ? "homeScore" : "awayScore"], m?.result?.[side], m?.result?.[i]);
+  const status = val(m?.sport_event_status, m?.status, {});
+  return val(m?.[side]?.score, m?.[side]?.goals, m?.[side === "home" ? "_homescore" : "_awayscore"], m?.[side === "home" ? "homeScore" : "awayScore"], m?.result?.[side], m?.result?.[i], status?.[side === "home" ? "home_score" : "away_score"], m?.scores?.[i]?.score);
 }
 function roundOf(m: any): string {
-  const r = val(m?.round?.name, m?.roundname, m?.roundName, m?.matchday, m?.round, m?._round, m?.stage?.name);
+  const r = val(m?.round?.name, m?.roundname, m?.roundName, m?.matchday, m?.round, m?._round, m?.stage?.name, m?.sport_event?.sport_event_context?.round?.name, m?.sport_event?.sport_event_context?.round?.number);
   return typeof r === "object" ? name(r) : txt(r);
 }
 function playerOf(e: any): any { return val(e?.player, e?.participant, e); }
@@ -105,7 +109,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
   const data = payload?.data || {};
   const tableRows = useMemo(() => rowsFor(data.standings, mode), [data.standings, mode]);
   const formMap = useMemo(() => new Map(arr(data.form?.teams).map(r => [teamKey(r), form(val(r?.form, r?.last5, r?.recentform, r?.form5))])), [data.form]);
-  const upcoming = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures);
+  const upcoming = arr(data.fixtures?.matches || data.fixtures?.events || data.fixtures?.schedules || data.fixtures?.NextXEvents || data.fixtures?.schedule || data.fixtures?.data?.schedules || data.fixtures);
   const results = arr(data.results?.matches || data.results?.events || data.results);
   const currentFixtures = fixtureMode === "upcoming" ? upcoming : results;
   const rounds = useMemo(() => [...new Set([...upcoming, ...results].map(roundOf).filter(Boolean))].sort((a,b) => Number(a)-Number(b) || a.localeCompare(b,"tr")), [upcoming, results]);
@@ -158,8 +162,8 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
         <div className="iddaa-subtabs"><button type="button" className={fixtureMode==="upcoming"?"active":""} onClick={()=>{setFixtureMode("upcoming");setRound("all");}}>Fikstür</button><button type="button" className={fixtureMode==="results"?"active":""} onClick={()=>{setFixtureMode("results");setRound("all");}}>Sonuçlar</button></div>
         {rounds.length?<label className="iddaa-round-filter">Tur <select value={round} onChange={e=>setRound(e.target.value)}><option value="all">Tüm turlar</option>{rounds.map(r=><option key={r} value={r}>{r}</option>)}</select></label>:null}
         {filteredFixtures.length?<div className="league-fixtures">{filteredFixtures.map((m:any,i:number)=>{
-          const h=fixtureTeam(m,"home"),a=fixtureTeam(m,"away"),hn=name(h)||"Ev sahibi",an=name(a)||"Deplasman",hs=fixtureScore(m,"home"),as=fixtureScore(m,"away");
-          return <div className="league-fixture" key={txt(val(m?._id,m?.id,m?.matchid,m?.matchId,i))}><div className="league-fixture-time">{dateText(val(m?.date,m?._dt,m?.datetime,m?.starttime,m?.time))}<small>{roundOf(m)||txt(val(m?.status?.name,m?.status,m?._status))||"—"}</small></div><div className="league-fixture-teams"><span><TeamMark label={hn}/>{hn}</span><span><TeamMark label={an}/>{an}</span></div><b className="league-fixture-score">{hs!=null&&as!=null?String(hs)+" : "+String(as):"— : —"}</b></div>;
+          const event=val(m?.sport_event,m?.event,m),h=fixtureTeam(m,"home"),a=fixtureTeam(m,"away"),hn=name(h)||"Ev sahibi",an=name(a)||"Deplasman",hs=fixtureScore(m,"home"),as=fixtureScore(m,"away");
+          return <div className="league-fixture" key={txt(val(m?._id,m?.id,m?.matchid,m?.matchId,event?.id,i))}><div className="league-fixture-time">{dateText(val(m?.date,m?._dt,m?.datetime,m?.starttime,m?.time,event?.start_time))}<small>{roundOf(m)||txt(val(m?.status?.name,m?.status,m?._status))||"—"}</small></div><div className="league-fixture-teams"><span><TeamMark label={hn}/>{hn}</span><span><TeamMark label={an}/>{an}</span></div><b className="league-fixture-score">{hs!=null&&as!=null?String(hs)+" : "+String(as):"— : —"}</b></div>;
         })}</div>:<div className="league-empty">Bu görünümde listelenebilir maç bulunamadı.</div>}
         {fixtureMode==="upcoming"&&payload?.feedErrors?.fixtures?<p className="iddaa-feed-warning">{payload.feedErrors.fixtures}</p>:null}
       </section>:null}
