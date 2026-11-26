@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   update:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Depoyu indir
         uses: actions/checkout@v4
@@ -58,59 +58,3 @@ jobs:
             git commit -m "chore: update daily Mackolik and FotMob data"
             git push origin HEAD:main
           fi
-
-  market-probe:
-    name: Market probe - ${{ matrix.home }}
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - home: Lyon
-            away: Lilleström
-            url: https://www.mackolik.com/mac/lyon-vs-lillestr%C3%B6m/iddaa/ef0e4bf4pij9h60axri8f4owk
-          - home: Pafos
-            away: Midtjylland
-            url: https://www.mackolik.com/mac/pafos-vs-midtjylland/iddaa/d07py8ou9j0tpsmp1vt4xur6c
-          - home: Ajax
-            away: Thun
-            url: https://www.mackolik.com/mac/ajax-vs-thun/iddaa/cxxvgrsonfifrybqfibgni2vo
-          - home: Brighton
-            away: Craiova
-            url: https://www.mackolik.com/mac/brighton-vs-univ-craiova/iddaa/cy9hxamyflol3qv0yogrdha1g
-          - home: Beşiktaş
-            away: HB Sheva
-            url: https://www.mackolik.com/mac/be%C5%9Fikta%C5%9F-vs-hb-sheva/iddaa/edfewvdr86ufd82m2299ivs44
-    steps:
-      - name: Node.js kur
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Playwright ve Chromium kur
-        run: |
-          npm install --no-save --package-lock=false playwright@1.56.1
-          npx playwright install chromium
-      - name: Tek maç isteğini test et
-        env:
-          MATCH_URL: ${{ matrix.url }}
-          HOME_TEAM: ${{ matrix.home }}
-          AWAY_TEAM: ${{ matrix.away }}
-        run: |
-          node --input-type=module <<'NODE'
-          import { chromium } from "playwright";
-          const browser = await chromium.launch({ headless: true });
-          const page = await browser.newPage({ locale: "tr-TR" });
-          try {
-            const response = await page.goto(process.env.MATCH_URL, { waitUntil: "domcontentloaded", timeout: 60000 });
-            await page.waitForTimeout(1000);
-            const data = await page.evaluate(() => ({
-              title: document.title,
-              bytes: document.documentElement.outerHTML.length,
-              marketCards: document.querySelectorAll("ul.widget-iddaa-markets__markets-list > li.widget-iddaa-markets__market-item").length
-            }));
-            console.log(JSON.stringify({ home: process.env.HOME_TEAM, away: process.env.AWAY_TEAM, status: response?.status() ?? null, ...data }));
-            if (!response?.ok() || data.marketCards === 0) process.exitCode = 1;
-          } finally {
-            await browser.close();
-          }
-          NODE
