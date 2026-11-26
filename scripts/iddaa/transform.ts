@@ -84,26 +84,28 @@ function dateParts(epochSeconds: number) {
   return { date:`${get("day")}.${get("month")}.${get("year")}`, time:`${get("hour")}:${get("minute")}` };
 }
 
-export function parseIddaaMarkets(event: RawEvent): IddaaMarket[] {
+export function parseIddaaMarkets(event: RawEvent, marketConfig: Record<string, { n?: string }> = {}): IddaaMarket[] {
   return (event.m || []).map((m:any) => {
     const code = `${Number(m.t)}:${Number(m.st)}`;
     const line = m.sov == null ? null : String(m.sov);
     return {
       t:Number(m.t), st:Number(m.st), line, code:`${code}:${line ?? ""}`,
-      name:MARKET_NAMES[code] || `Market ${code}`,
+      name:(marketConfig[`${Number(m.t)}_${Number(m.st)}`]?.n || MARKET_NAMES[code] || `Market ${code}`)
+        .replaceAll("{0}", line || "")
+        .replaceAll("{h}", line || ""),
       outcomes:(m.o || []).map((o:any)=>({no:Number(o.no),name:label(o.n),odd:asNumber(o.odd)}))
     };
   }).filter((m:IddaaMarket)=>m.outcomes.length>0);
 }
 
-export function transformIddaaEvent(event: RawEvent, index: number) {
+export function transformIddaaEvent(event: RawEvent, index: number, marketConfig: Record<string, { n?: string }> = {}, competitionMap: Record<string, string> = {}) {
   const id = String(event.i);
   const home = label(event.hn);
   const away = label(event.an);
   const epoch = Number(event.d);
   if (!id || !home || !away || !Number.isFinite(epoch) || epoch <= 0) return null;
   const {date,time} = dateParts(epoch);
-  const markets = parseIddaaMarkets(event);
+  if (!Array.isArray(event.m) || event.m.length === 0) return null;\n  const markets = parseIddaaMarkets(event, marketConfig);
   const ms = marketFor(event,1,1);
   const dc = marketFor(event,2,92);
   const ht = marketFor(event,2,88);
@@ -113,7 +115,7 @@ export function transformIddaaEvent(event: RawEvent, index: number) {
   const put = (field:number,value:unknown) => { row[field] = value; };
   put(FIELD.MATCH_ID,id); put(FIELD.HOME_NAME,home); put(FIELD.AWAY_NAME,away);
   put(FIELD.STATUS,0); put(FIELD.TIME,time); put(FIELD.DATE,date); put(FIELD.MBS,event.mbc ?? null);
-  put(FIELD.LEAGUE_CODE,event.ci == null ? null : String(event.ci)); put(FIELD.EVENT_ID,id);
+  put(FIELD.LEAGUE_CODE,event.ci == null ? null : (competitionMap[String(event.ci)] || String(event.ci)));\n  put(FIELD.GROUP_ID,event.ci == null ? null : String(event.ci)); put(FIELD.SUBGROUP_ID,event.ci == null ? null : "0");\n  put(FIELD.EVENT_ID,id);
   put(FIELD.MS_1,findOutcome(ms,["1","ev sahibi"],1));
   put(FIELD.MS_X,findOutcome(ms,["x","0","beraberlik"],2));
   put(FIELD.MS_2,findOutcome(ms,["2","deplasman"],3));
@@ -162,7 +164,7 @@ export function transformIddaaEvent(event: RawEvent, index: number) {
   ];
   fieldNames.forEach((name,i)=>fields[name]=row[i]);
   fields.iddaaMarkets = markets;
-  fields.competitionId = event.ci ?? null;
+  fields.competitionId = event.ci ?? null;\n  fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
   fields.isLive = Boolean(event.k0dd);
   return {
     matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:row,
@@ -170,13 +172,13 @@ export function transformIddaaEvent(event: RawEvent, index: number) {
   };
 }
 
-export function transformIddaaPayload(payload: any) {
+export function transformIddaaPayload(payload: any, marketConfig: Record<string, { n?: string }> = {}, competitionMap: Record<string, string> = {}) {
   if (payload?.isSuccess !== true) throw new Error("iddaa futbol bülteni isSuccess=true döndürmedi.");
   const root = Array.isArray(payload.data) ? payload.data[0] : payload.data;
   const events = Array.isArray(root?.events) ? root.events : [];
   if (!events.length) throw new Error("iddaa futbol bülteni boş veya events dizisi bulunamadı.");
   const matches = events.filter((event:any)=>Number(event.sid)===1)
-    .map((event:any,index:number)=>transformIddaaEvent(event,index))
+    .map((event:any,index:number)=>transformIddaaEvent(event,index,marketConfig,competitionMap))
     .filter((match:any)=>match !== null);
   if (!matches.length) throw new Error("iddaa futbol bülteninde dönüştürülebilir maç bulunamadı.");
   return {
