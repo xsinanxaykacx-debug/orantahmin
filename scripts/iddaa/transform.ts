@@ -165,7 +165,7 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
     "marketHalfTimeResult","marketTotalGoals","marketBtts","marketHandicapMs","marketGoals15","marketGoals35",
     "marketHalfTimeGoals15"
   ];
-  fieldNames.forEach((name,i)=>fields[name]=row[i]);
+  fieldNames.forEach((name,i)=>{ if(row[i] !== null && row[i] !== undefined) fields[name]=row[i]; });
   fields.iddaaMarkets = markets;
   fields.competitionId = event.ci ?? null;
   fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
