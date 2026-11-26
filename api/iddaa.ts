@@ -113,7 +113,7 @@ async function handleTeam(req: Req, res: Res) {
     const [squad, facts, injuries] = await Promise.all([
       fetchIddaaFeed("stats_team_squad", teamUid),
       fetchIddaaFeed("stats_teamplayer_facts", `${teamUid}/${seasonId}`),
-      fetchIddaaFeed("stats_season_injuries", IDDAA_SEASON_ID)
+      fetchIddaaFeed("stats_season_injuries", seasonId)
     ]);
     const injuryRows = Array.isArray(injuries) ? injuries : [];
     const selectedInjuries = injuryRows.filter((item: any) =>
