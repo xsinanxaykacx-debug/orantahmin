@@ -22,5 +22,23 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/iddaa-superlig",
+      "destination": "/api/iddaa?resource=superlig"
+    },
+    {
+      "source": "/api/iddaa-superlig-team",
+      "destination": "/api/iddaa?resource=team"
+    },
+    {
+      "source": "/api/iddaa-lineups",
+      "destination": "/api/iddaa?resource=lineups"
+    },
+    {
+      "source": "/api/iddaa-markets",
+      "destination": "/api/iddaa?resource=markets"
+    }
   ]
 }
