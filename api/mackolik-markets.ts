@@ -33,6 +33,7 @@ function normalizeName(value: string): string {
     .replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US")
     .replace(/\bolympiacos\b/g, "olympiakos")
+    .replace(/\buniversitatea\b|\buniversidad\b|\buniv\.?\b/g, "univ")
     .replace(/\b(fc|ac|cf|sc|fk|sk|afc|club|the)\b/g, " ")
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
@@ -162,9 +163,17 @@ export default async function handler(req: Req, res: Res) {
     feedUrl.searchParams.set("matchDate", date);
 
     const commonHeaders = {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-      "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-      "Referer": "https://www.mackolik.com/"
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36",
+      "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+      "Referer": "https://www.mackolik.com/",
+      "Origin": "https://www.mackolik.com",
+      "sec-ch-ua": '"Chromium";v="158", "Google Chrome";v="158", "Not_A Brand";v="99"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"Windows"',
+      "Sec-Fetch-Dest": "document",
+      "Sec-Fetch-Mode": "navigate",
+      "Sec-Fetch-Site": "same-origin",
+      "Upgrade-Insecure-Requests": "1"
     };
 
     const feedResponse = await fetch(feedUrl, {
@@ -197,15 +206,29 @@ export default async function handler(req: Req, res: Res) {
     }
 
     const matchUrl = new URL(`/mac/${match.matchSlug}/iddaa/${match.id}`, "https://www.mackolik.com");
-    const pageResponse = await fetch(matchUrl, {
-      headers: { ...commonHeaders, Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" },
-      signal: AbortSignal.timeout(20000)
-    });
-    if (!pageResponse.ok) {
+    let pageResponse: Response | null = null;
+    let lastPageStatus = 0;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      pageResponse = await fetch(matchUrl, {
+        headers: {
+          ...commonHeaders,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache"
+        },
+        redirect: "follow",
+        signal: AbortSignal.timeout(20000)
+      });
+      if (pageResponse.ok) break;
+      lastPageStatus = pageResponse.status;
+      if (![403, 408, 429, 500, 502, 503, 504].includes(pageResponse.status)) break;
+      await new Promise(resolve => setTimeout(resolve, 350 * (attempt + 1)));
+    }
+    if (!pageResponse?.ok) {
       return res.status(502).json({
         source: "Mackolik",
         matchId,
-        error: `Mackolik oran sayfası alınamadı (HTTP ${pageResponse.status}).`
+        error: `Mackolik oran sayfası alınamadı (HTTP ${lastPageStatus || pageResponse?.status || 502}).`
       });
     }
 
