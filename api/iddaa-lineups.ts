@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const rawId = req.query.eventId;
   const eventId = Array.isArray(rawId) ? rawId[0] : rawId;
-  if (!eventId || !/^\\d{1,12}$/.test(eventId)) {
+  if (!eventId || !/^\d{1,12}$/.test(eventId)) {
     return res.status(400).json({ source: "iddaa.com", error: "Geçerli iddaa maç numarası gerekli." });
   }
 
