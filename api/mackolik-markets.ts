@@ -1,177 +1,105 @@
 type Req = {
   method?: string;
   query: Record<string, string | string[] | undefined>;
-  headers: Record<string, string | string[] | undefined>;
+  headers?: Record<string, string | string[] | undefined>;
 };
-type Res = {
-  setHeader(name: string, value: string): void;
-  status(code: number): Res;
-  json(body: unknown): Res;
-};
+type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
 
-type BulletinMarket = {
-  name: string;
-  code: string;
-  outcomes: Array<{ name: string; odd: number | null; rawOdd: string }>;
-};
+type MarketOutcome = { name: string; odd: number | null; rawOdd: string };
+type MackolikMarket = { name: string; code: string; outcomes: MarketOutcome[] };
 
 type BulletinMatch = {
   matchId: string | number;
   fields?: Record<string, unknown>;
 };
-
 type BulletinDocument = {
-  meta?: { generatedAt?: string; schemaVersion?: string };
+  meta?: { generatedAt?: string };
   matches?: BulletinMatch[];
 };
 
-type MarketDefinition = {
-  key: string;
-  name: string;
-  marketField: string;
-  outcomes: Array<{ name: string; oddField: string }>;
-};
-
-const MARKET_DEFINITIONS: MarketDefinition[] = [
-  {
-    key: "ms",
-    name: "Maç Sonucu",
-    marketField: "marketMs",
-    outcomes: [
-      { name: "1", oddField: "ms1" },
-      { name: "X", oddField: "msX" },
-      { name: "2", oddField: "ms2" }
-    ]
-  },
-  {
-    key: "double-chance",
-    name: "Çifte Şans",
-    marketField: "marketDoubleChance",
-    outcomes: [
-      { name: "1X", oddField: "doubleChance1X" },
-      { name: "12", oddField: "doubleChance12" },
-      { name: "X2", oddField: "doubleChanceX2" }
-    ]
-  },
-  {
-    key: "goals-25",
-    name: "2,5 Gol Alt/Üst",
-    marketField: "marketGoals25",
-    outcomes: [
-      { name: "Alt", oddField: "goals25Under" },
-      { name: "Üst", oddField: "goals25Over" }
-    ]
-  },
-  {
-    key: "half-time",
-    name: "İlk Yarı Sonucu",
-    marketField: "marketHalfTimeResult",
-    outcomes: [
-      { name: "1", oddField: "halfTimeResult1" },
-      { name: "X", oddField: "halfTimeResultX" },
-      { name: "2", oddField: "halfTimeResult2" }
-    ]
-  },
-  {
-    key: "total-goals",
-    name: "Toplam Gol Aralığı",
-    marketField: "marketTotalGoals",
-    outcomes: [
-      { name: "0–1", oddField: "totalGoals01" },
-      { name: "2–3", oddField: "totalGoals23" },
-      { name: "4–6", oddField: "totalGoals46" },
-      { name: "7+", oddField: "totalGoals7Plus" }
-    ]
-  },
-  {
-    key: "btts",
-    name: "Karşılıklı Gol",
-    marketField: "marketBtts",
-    outcomes: [
-      { name: "Var", oddField: "bttsYes" },
-      { name: "Yok", oddField: "bttsNo" }
-    ]
-  },
-  {
-    key: "handicap",
-    name: "Handikaplı Maç Sonucu",
-    marketField: "marketHandicapMs",
-    outcomes: [
-      { name: "1", oddField: "handicapMs1" },
-      { name: "X", oddField: "handicapMsX" },
-      { name: "2", oddField: "handicapMs2" }
-    ]
-  },
-  {
-    key: "goals-15",
-    name: "1,5 Gol Alt/Üst",
-    marketField: "marketGoals15",
-    outcomes: [
-      { name: "Alt", oddField: "goals15Under" },
-      { name: "Üst", oddField: "goals15Over" }
-    ]
-  },
-  {
-    key: "goals-35",
-    name: "3,5 Gol Alt/Üst",
-    marketField: "marketGoals35",
-    outcomes: [
-      { name: "Alt", oddField: "goals35Under" },
-      { name: "Üst", oddField: "goals35Over" }
-    ]
-  },
-  {
-    key: "half-time-goals-15",
-    name: "İlk Yarı 1,5 Gol Alt/Üst",
-    marketField: "marketHalfTimeGoals15",
-    outcomes: [
-      { name: "Alt", oddField: "halfTimeGoals15Under" },
-      { name: "Üst", oddField: "halfTimeGoals15Over" }
-    ]
-  }
-];
-
-function asOdd(value: unknown): number | null {
-  if (typeof value === "number" && Number.isFinite(value) && value > 0) return value;
-  if (typeof value === "string" && value.trim()) {
-    const parsed = Number(value.trim().replace(",", "."));
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-  }
-  return null;
+function headerValue(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? value[0] || "" : value || "";
 }
 
-function buildMarkets(fields: Record<string, unknown>): BulletinMarket[] {
-  const markets: BulletinMarket[] = [];
+function positiveOdd(value: unknown): number | null {
+  const parsed = typeof value === "number" ? value : Number(String(value ?? "").replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
 
-  for (const definition of MARKET_DEFINITIONS) {
-    const marketId = fields[definition.marketField];
-    if (marketId === null || marketId === undefined || String(marketId).trim() === "") continue;
+function market(
+  name: string,
+  marketId: unknown,
+  selections: Array<{ name: string; value: unknown }>
+): MackolikMarket | null {
+  const outcomes = selections.map(selection => {
+    const odd = positiveOdd(selection.value);
+    return {
+      name: selection.name,
+      odd,
+      rawOdd: odd === null ? "" : String(selection.value)
+    };
+  });
 
-    const outcomes = definition.outcomes.map(outcome => {
-      const odd = asOdd(fields[outcome.oddField]);
-      return {
-        name: outcome.name,
-        odd,
-        rawOdd: odd === null ? "" : String(odd)
-      };
-    });
+  if (!outcomes.some(outcome => outcome.odd !== null)) return null;
 
-    // Market kimliği ve en az bir gerçek oran yoksa marketi varmış gibi göstermeyiz.
-    if (!outcomes.some(outcome => outcome.odd !== null)) continue;
+  const code = marketId === null || marketId === undefined || String(marketId).trim() === ""
+    ? name.toLocaleLowerCase("tr-TR").replace(/[^a-z0-9]+/g, "-")
+    : String(marketId);
 
-    let name = definition.name;
-    if (definition.key === "handicap") {
-      const homeLine = fields.handicapHome;
-      const awayLine = fields.handicapAway;
-      if (homeLine !== null && homeLine !== undefined && awayLine !== null && awayLine !== undefined) {
-        name += ` (${String(homeLine)}:${String(awayLine)})`;
-      }
-    }
+  return { name, code, outcomes };
+}
 
-    markets.push({ name, code: String(marketId), outcomes });
-  }
+function buildMarkets(fields: Record<string, unknown>): MackolikMarket[] {
+  const definitions: Array<MackolikMarket | null> = [
+    market("Maç Sonucu", fields.marketMs, [
+      { name: "1", value: fields.ms1 },
+      { name: "X", value: fields.msX },
+      { name: "2", value: fields.ms2 }
+    ]),
+    market("Çifte Şans", fields.marketDoubleChance, [
+      { name: "1X", value: fields.doubleChance1X },
+      { name: "12", value: fields.doubleChance12 },
+      { name: "X2", value: fields.doubleChanceX2 }
+    ]),
+    market("2,5 Gol", fields.marketGoals25, [
+      { name: "Alt", value: fields.goals25Under },
+      { name: "Üst", value: fields.goals25Over }
+    ]),
+    market("İlk Yarı Sonucu", fields.marketHalfTimeResult, [
+      { name: "1", value: fields.halfTimeResult1 },
+      { name: "X", value: fields.halfTimeResultX },
+      { name: "2", value: fields.halfTimeResult2 }
+    ]),
+    market("Toplam Gol", fields.marketTotalGoals, [
+      { name: "0–1", value: fields.totalGoals01 },
+      { name: "2–3", value: fields.totalGoals23 },
+      { name: "4–6", value: fields.totalGoals46 },
+      { name: "7+", value: fields.totalGoals7Plus }
+    ]),
+    market("Karşılıklı Gol", fields.marketBtts, [
+      { name: "Var", value: fields.bttsYes },
+      { name: "Yok", value: fields.bttsNo }
+    ]),
+    market("Handikaplı Maç Sonucu", fields.marketHandicapMs, [
+      { name: `1 (${fields.handicapHome ?? "handikap"})`, value: fields.handicapMs1 },
+      { name: "X", value: fields.handicapMsX },
+      { name: `2 (${fields.handicapAway ?? "handikap"})`, value: fields.handicapMs2 }
+    ]),
+    market("1,5 Gol", fields.marketGoals15, [
+      { name: "Alt", value: fields.goals15Under },
+      { name: "Üst", value: fields.goals15Over }
+    ]),
+    market("3,5 Gol", fields.marketGoals35, [
+      { name: "Alt", value: fields.goals35Under },
+      { name: "Üst", value: fields.goals35Over }
+    ]),
+    market("İlk Yarı 1,5 Gol", fields.marketHalfTimeGoals15, [
+      { name: "Alt", value: fields.halfTimeGoals15Under },
+      { name: "Üst", value: fields.halfTimeGoals15Over }
+    ])
+  ];
 
-  return markets;
+  return definitions.filter((item): item is MackolikMarket => item !== null);
 }
 
 export default async function handler(req: Req, res: Res) {
@@ -186,29 +114,32 @@ export default async function handler(req: Req, res: Res) {
   }
 
   try {
-    const hostHeader = req.headers["x-forwarded-host"] || req.headers.host;
-    const host = Array.isArray(hostHeader) ? hostHeader[0] : hostHeader;
-    if (!host) return res.status(500).json({ error: "Bülten kaynağı belirlenemedi." });
+    // Bülten, aynı Vercel dağıtımında statik dosya olarak yayınlanır.
+    // Mackolik arşivine maç başına istek gönderilmez.
+    const forwardedHost = headerValue(req.headers?.["x-forwarded-host"]);
+    const requestHost = headerValue(req.headers?.host);
+    const host = (forwardedHost || requestHost).split(",")[0].trim();
+    if (!host || !/^[a-z0-9.-]+(?::\\d+)?$/i.test(host)) {
+      return res.status(500).json({ source: "Mackolik", matchId, error: "Bülten kaynağı için geçerli dağıtım adresi belirlenemedi." });
+    }
 
-    const protoHeader = req.headers["x-forwarded-proto"];
-    const protocol = (Array.isArray(protoHeader) ? protoHeader[0] : protoHeader) || "https";
-    const bulletinUrl = `${protocol}://${host}/data/mackolik-bulletin.json`;
+    const bulletinUrl = `https://${host}/data/mackolik-bulletin.json`;
     const response = await fetch(bulletinUrl, {
       headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(10000)
+      cache: "force-cache",
+      signal: AbortSignal.timeout(12000)
     });
-
     if (!response.ok) {
       return res.status(502).json({
         source: "Mackolik",
         matchId,
-        error: `Yerel Mackolik bülteni okunamadı (HTTP ${response.status}).`
+        error: `Günlük Mackolik bülteni okunamadı (HTTP ${response.status}).`
       });
     }
 
     const bulletin = await response.json() as BulletinDocument;
     if (!Array.isArray(bulletin.matches)) {
-      return res.status(502).json({ source: "Mackolik", matchId, error: "Mackolik bülten biçimi geçersiz." });
+      return res.status(502).json({ source: "Mackolik", matchId, error: "Mackolik bülteninde maç kayıtları bulunamadı." });
     }
 
     const match = bulletin.matches.find(item => String(item.matchId) === matchId);
@@ -229,7 +160,7 @@ export default async function handler(req: Req, res: Res) {
         matchId,
         available: false,
         markets: [],
-        reason: "Bu maç için 61 alanlı Mackolik bülteninde ek market oranı bulunmuyor."
+        reason: "Bu maçın 61 alanlı Mackolik bülten kaydında kullanılabilir ek market oranı bulunmuyor."
       });
     }
 
@@ -237,7 +168,7 @@ export default async function handler(req: Req, res: Res) {
       source: "Mackolik",
       matchId,
       available: true,
-      fetchedAt: bulletin.meta?.generatedAt || null,
+      fetchedAt: bulletin.meta?.generatedAt || new Date().toISOString(),
       marketCount: markets.length,
       markets
     });
