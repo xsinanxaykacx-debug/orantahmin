@@ -328,11 +328,10 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
           {sourceMarkets.map(market => <MackolikMarketCard key={market.code} market={market} result={result} />)}
         </div>
       ) : (
-        <>
-          {marketError && <div className="data-empty"><strong>Ek market verisi alınamadı</strong><p>{marketError} Mevcut bülten oranları gösteriliyor.</p></div>}
-          <div className="market-grid-detail">{markets.map(market => <MarketCard key={market.key} market={market} match={match} result={result} />)}</div>
-        </>
-      )}
+        <div className="data-empty">
+          <strong>Mackolik marketleri alınamadı</strong>
+          <p>{marketError || "Bu maç için Mackolik tarafından yayımlanan okunabilir oran verisi bulunamadı."}</p>
+        </div>}
     </div>
   );
 }
