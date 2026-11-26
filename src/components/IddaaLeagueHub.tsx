@@ -73,7 +73,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const [payload, setPayload] = useState<Payload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<View>("standings");
+  const [view, setView] = useState<View>(league.hasStandings ? "standings" : "fixtures");
   const [mode, setMode] = useState<Mode>("total");
   const [leader, setLeader] = useState<Leader>("goals");
   const [fixtureMode, setFixtureMode] = useState<"upcoming" | "results">("upcoming");
@@ -86,7 +86,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true); setError(null);
-    fetch("/api/iddaa?resource=league&seasonId=" + league.seasonId + "&tournamentId=" + league.uniqueTournamentId + "&leagueName=" + encodeURIComponent(league.name) + "&seasonName=" + encodeURIComponent(league.seasonName), { signal: controller.signal }).then(async response => {
+    fetch("/api/iddaa?resource=league&seasonId=" + league.seasonId + "&tournamentId=" + league.uniqueTournamentId + "&includeStandings=" + String(league.hasStandings) + "&leagueName=" + encodeURIComponent(league.name) + "&seasonName=" + encodeURIComponent(league.seasonName), { signal: controller.signal }).then(async response => {
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "İddaa lig verisi alınamadı.");
       return body as Payload;
@@ -94,7 +94,14 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
       .catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "İddaa verisi alınamadı."); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [league.id, league.seasonId]);
+  }, [league.id, league.seasonId, league.hasStandings]);
+
+  useEffect(() => {
+    setView(league.hasStandings ? "standings" : "fixtures");
+    setRound("all");
+    setTeamUid("");
+    setTeamData(null);
+  }, [league.id, league.hasStandings]);
 
   const data = payload?.data || {};
   const tableRows = useMemo(() => readStandingsRows(data.standings, mode), [data.standings, mode]);
@@ -123,12 +130,14 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
     return () => controller.abort();
   }, [teamUid, league.seasonId]);
 
-  const tabs: Array<[View, string]> = [["standings","Puan Durumu"],["fixtures","Fikstür"],["leaders","Liderler"],["teams","Takım Kadroları"]];
+  const tabs: Array<[View, string]> = league.hasStandings
+    ? [["standings","Puan Durumu"],["fixtures","Fikstür"],["leaders","Liderler"],["teams","Takım Kadroları"]]
+    : [["fixtures","Fikstür"]];
   return <div className="league-hub iddaa-league-hub">
     <header className="league-hub-header">
       <div className="league-hub-logo"><span>TR</span></div>
       <div><span className="eyebrow">İDDAA LİG MERKEZİ</span><h2>{league.name}</h2><p>{payload?.season?.name || league.seasonName} · {payload?.fetchedAt ? "Güncelleme: " + dateText(payload.fetchedAt) : "Güncel sezon"}</p></div>
-      <div className="league-hub-count"><b>{tableRows.length || 18}</b><span>Takım</span></div>
+      <div className="league-hub-count"><b>{tableRows.length || (league.hasStandings ? 18 : 0)}</b><span>Takım</span></div>
     </header>
     {loading ? <div className="league-loading">İddaa puan durumu, fikstür ve oyuncu verileri yükleniyor…</div>
     : error ? <div className="league-warning">{error}</div>
@@ -172,12 +181,12 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
         })}</div>:<div className="league-empty">{payload?.feedErrors?.[leader]||"Bu kategoride oyuncu verisi bulunamadı."}</div>}
       </section>:null}
       {view === "teams" ? <section className="info-card league-panel iddaa-team-panel">
-        <div className="card-heading"><span>TAKIM KADROLARI</span><small>{teams.length||18} takım</small></div>
+        <div className="card-heading"><span>TAKIM KADROLARI</span><small>{teams.length || (league.hasStandings ? 18 : 0)} takım</small></div>
         <label className="iddaa-team-select">Takım seç <select value={teamUid} onChange={e=>setTeamUid(e.target.value)}><option value="">Takım seçin</option>{teams.map(t=><option key={uid(t)} value={uid(t)}>{name(t)}</option>)}</select></label>
         {teamLoading?<div className="league-loading">Kadro yükleniyor…</div>:teamError?<div className="league-warning">{teamError}</div>:teamData?<div className="iddaa-squad-content">
           <h3>{name(teamData.team)||name(selectedTeam)||"Takım kadrosu"}</h3>
           {arr(teamData.players).length?<div className="iddaa-squad-grid">{teamData.players.map((p:any,i:number)=>{
-            const id=txt(val(p?._id,p?.id,p?.playerid)), fact=teamData.facts?.[id], stats=fact?.stats?.teams?.[teamUid]?.seasons?.[String(payload?.season?.id||143916)]||fact?.stats||{}, injury=arr(teamData.injuries).find((x:any)=>txt(val(x?.player?._id,x?.player?.id))===id);
+            const id=txt(val(p?._id,p?.id,p?.playerid)), fact=teamData.facts?.[id], stats=fact?.stats?.teams?.[teamUid]?.seasons?.[String(league.seasonId)]||fact?.stats||{}, injury=arr(teamData.injuries).find((x:any)=>txt(val(x?.player?._id,x?.player?.id))===id);
             return <div className="iddaa-squad-player" key={id||i}><span className="iddaa-shirt">{txt(val(p?.shirtnumber,p?.shirt_number,p?.number))||"—"}</span><div><b>{name(p)||txt(p?.fullname)||"Oyuncu"}</b><small>{name(p?.position)||txt(p?.position)||"—"}{injury?" · Durum bildirimi":""}</small></div><strong>{txt(val(stats?.matches,stats?.played))||"—"}<small>maç</small></strong></div>;
           })}</div>:<div className="league-empty">Bu takım için kadro verisi bulunamadı.</div>}
         </div>:<div className="league-empty">Kadro ve oyuncu istatistiklerini görmek için takım seçin.</div>}
