@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import "./FotMobLeagueHub.css";
 import "./IddaaLeagueHub.css";
 import { readStandingsGoals, readStandingsPosition, readStandingsRows, readStandingsStat } from "../lib/iddaaStandings.ts";
+import type { IddaaLeague } from "../lib/iddaaLeagues.ts";
 
-type LeagueSummary = { id: number; name: string; country: string | null; logo: string; matchCount: number };
+
 type Payload = { source: string; season?: { id: number; name: string }; fetchedAt?: string; data: Record<string, any>; feedErrors?: Record<string, string>; error?: string };
 type TeamPayload = { team?: any; players: any[]; facts: Record<string, any>; injuries: any[]; error?: string };
 type View = "standings" | "fixtures" | "leaders" | "teams";
@@ -68,7 +68,7 @@ function leaderStat(e: any, mode: Leader): string {
 }
 function TeamMark({ label }: { label: string }) { return <span className="iddaa-team-mark">{label.slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}</span>; }
 
-export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
+export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const [payload, setPayload] = useState<Payload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,15 +85,15 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true); setError(null);
-    fetch("/api/iddaa-superlig", { signal: controller.signal }).then(async response => {
+    fetch("/api/iddaa?resource=league&seasonId=" + league.seasonId + "&tournamentId=" + league.uniqueTournamentId + "&leagueName=" + encodeURIComponent(league.name) + "&seasonName=" + encodeURIComponent(league.seasonName), { signal: controller.signal }).then(async response => {
       const body = await response.json();
-      if (!response.ok) throw new Error(body.error || "İddaa Süper Lig verisi alınamadı.");
+      if (!response.ok) throw new Error(body.error || "İddaa lig verisi alınamadı.");
       return body as Payload;
     }).then(body => { if (!controller.signal.aborted) setPayload(body); })
       .catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "İddaa verisi alınamadı."); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [league.id]);
+  }, [league.id, league.seasonId]);
 
   const data = payload?.data || {};
   const tableRows = useMemo(() => readStandingsRows(data.standings, mode), [data.standings, mode]);
@@ -112,7 +112,7 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
     if (!teamUid) { setTeamData(null); return; }
     const controller = new AbortController();
     setTeamLoading(true); setTeamError(null); setTeamData(null);
-    fetch("/api/iddaa-superlig-team?teamUid=" + encodeURIComponent(teamUid), { signal: controller.signal }).then(async response => {
+    fetch("/api/iddaa?resource=team&teamUid=" + encodeURIComponent(teamUid) + "&seasonId=" + league.seasonId, { signal: controller.signal }).then(async response => {
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "Takım kadrosu alınamadı.");
       return body as TeamPayload;
@@ -120,13 +120,13 @@ export function IddaaLeagueHub({ league }: { league: LeagueSummary }) {
       .catch(reason => { if (!controller.signal.aborted) setTeamError(reason instanceof Error ? reason.message : "Takım kadrosu alınamadı."); })
       .finally(() => { if (!controller.signal.aborted) setTeamLoading(false); });
     return () => controller.abort();
-  }, [teamUid]);
+  }, [teamUid, league.seasonId]);
 
   const tabs: Array<[View, string]> = [["standings","Puan Durumu"],["fixtures","Fikstür"],["leaders","Liderler"],["teams","Takım Kadroları"]];
   return <div className="league-hub iddaa-league-hub">
     <header className="league-hub-header">
       <div className="league-hub-logo"><span>TR</span></div>
-      <div><span className="eyebrow">İDDAA LİG MERKEZİ</span><h2>Türkiye Süper Lig</h2><p>{payload?.season?.name || "Süper Lig 26/27"} · {payload?.fetchedAt ? "Güncelleme: " + dateText(payload.fetchedAt) : "Güncel sezon"}</p></div>
+      <div><span className="eyebrow">İDDAA LİG MERKEZİ</span><h2>{league.name}</h2><p>{payload?.season?.name || league.seasonName} · {payload?.fetchedAt ? "Güncelleme: " + dateText(payload.fetchedAt) : "Güncel sezon"}</p></div>
       <div className="league-hub-count"><b>{tableRows.length || 18}</b><span>Takım</span></div>
     </header>
     {loading ? <div className="league-loading">İddaa puan durumu, fikstür ve oyuncu verileri yükleniyor…</div>
