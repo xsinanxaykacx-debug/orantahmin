@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { FIELD_COUNT } from "../scripts/iddaa/schema.ts";
-import { parseIddaaMarkets, transformIddaaEvent, transformIddaaPayload } from "../scripts/iddaa/transform.ts";
+import { mergeIddaaEventDetail, parseIddaaMarkets, transformIddaaEvent, transformIddaaPayload } from "../scripts/iddaa/transform.ts";
 
 const sample = {
   isSuccess:true,
@@ -56,4 +56,19 @@ test("official market config names and competition names are applied",()=>{
   const markets=match.fields.iddaaMarkets;
   assert.ok(Array.isArray(markets));
   assert.equal(markets.find(m=>m.code==="2:101:2.5")?.name,"Alt/Üst 2.5");
+});
+
+test("event detail replaces listview markets with the complete event market payload",()=>{
+  const event=structuredClone(sample.data[0].events[0]);
+  const detailMarkets=[
+    ...event.m,
+    {t:2,st:48,sov:"9.5",o:[{no:1,n:"Alt",odd:1.9},{no:2,n:"Üst",odd:1.8}]},
+    {t:2,st:718,o:[{no:1,n:"0-0 1-0",odd:7.2}]}
+  ];
+  const enriched=mergeIddaaEventDetail(event,{isSuccess:true,data:{m:detailMarkets,extra:"detail"}});
+  assert.equal(enriched.i,event.i);
+  assert.equal(enriched.m.length,6);
+  assert.equal(enriched.m[4].st,48);
+  assert.equal(enriched.m[5].st,718);
+  assert.throws(()=>mergeIddaaEventDetail(event,{isSuccess:true,data:{m:[]}}),/tam market listesi/);
 });
