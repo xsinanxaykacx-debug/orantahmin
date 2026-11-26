@@ -63,6 +63,7 @@ export function readStandingsGoals(row: any, mode: StandingsMode): [any, any] {
   return [undefined, undefined];
 }
 
-export function readStandingsPosition(row: any, fallback: number): any {
-  return first(row?.position, row?.pos, row?.rank, row?._position, row?._pos, row?._rank, fallback);
+export function readStandingsPosition(row: any, fallback: number, mode: StandingsMode = "total"): any {
+  const modePosition = mode === "home" ? first(row?.posHome, row?.positionHome, row?._posHome) : mode === "away" ? first(row?.posAway, row?.positionAway, row?._posAway) : undefined;
+  return first(modePosition, row?.position, row?.pos, row?.rank, row?._position, row?._pos, row?._rank, fallback);
 }
