@@ -1,0 +1,47 @@
+name: Mackolik cloudscraper slow diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/mackolik-cloudscraper-probe.yml"
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install scraper
+        run: pip install cloudscraper beautifulsoup4
+      - name: Test old scraper pacing
+        run: |
+          python - <<'PY'
+          import cloudscraper, time
+          from bs4 import BeautifulSoup
+          from datetime import datetime, timezone
+          base="https://www.mackolik.com"
+          s=cloudscraper.create_scraper(browser={"browser":"chrome","platform":"windows","desktop":True})
+          s.headers.update({"Accept":"application/json, text/html, */*","Accept-Language":"tr-TR,tr;q=0.9,en;q=0.7","Referer":base+"/"})
+          date=datetime.now(timezone.utc).strftime("%Y-%m-%d")
+          f=s.get(base+"/perform/p0/ajax/components/competition/livescores/json",params={"sports[]":"Soccer","matchDate":date},timeout=30)
+          print("FEED",f.status_code,len(f.content),flush=True); f.raise_for_status()
+          matches=(f.json().get("data") or {}).get("matches") or {}
+          wanted=("beşiktaş","brighton","pafos","ajax","lyon")
+          selected=[]
+          for mid,m in matches.items():
+              h=(m.get("homeTeam") or {}).get("name",""); a=(m.get("awayTeam") or {}).get("name","")
+              slug=m.get("matchSlug") or ""
+              if slug and any(w in (h+" "+a).casefold() for w in wanted):
+                  selected.append((mid,slug,h,a))
+          for mid,slug,h,a in selected[:5]:
+              url=f"{base}/mac/{slug}/iddaa/{mid}"
+              try:
+                  p=s.get(url,timeout=30)
+                  soup=BeautifulSoup(p.text,"html.parser")
+                  print(f"{h} vs {a} | HTTP {p.status_code} | bytes {len(p.content)} | markets {len(soup.select('li.widget-iddaa-markets__market-item'))} | outcomes {len(soup.select('li.widget-iddaa-markets__option'))}",flush=True)
+              except Exception as e: print(f"{h} vs {a} | ERROR {e}",flush=True)
+              time.sleep(10)
+          PY
