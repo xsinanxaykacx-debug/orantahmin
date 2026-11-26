@@ -108,8 +108,8 @@ export function resetIddaaTokenCacheForTests() {
   tokenCache = null;
 }
 
-export async function fetchIddaaUpcomingFixtures(): Promise<any> {
-  const data = await fetchIddaaFeed("livescore_season_fixtures", IDDAA_SEASON_ID);
+export async function fetchIddaaUpcomingFixtures(seasonId: number = IDDAA_SEASON_ID): Promise<any> {
+  const data = await fetchIddaaFeed("livescore_season_fixtures", seasonId);
   const rawMatches = data?.matches;
   const matches = Array.isArray(rawMatches)
     ? rawMatches
