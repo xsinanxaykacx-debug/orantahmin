@@ -1,13 +1,15 @@
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { transformIddaaPayload } from "./iddaa/transform.ts";
+import { mergeIddaaEventDetail, transformIddaaPayload } from "./iddaa/transform.ts";
 import { createFotMobEventMap, fetchFotMobFixtures, getFotMobDates } from "./fotmob/matcher.ts";
 
 const ROOT = process.cwd();
 const RAW_DIR = resolve(ROOT,"data/raw");
 const OUTPUT = resolve(ROOT,"public/data/football-bulletin.json");
 const FOTMOB_OUTPUT = resolve(ROOT,"public/data/fotmob-event-map.json");
-const FEED_URL = "https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=0&version=0";
+const SB = "https://sportsbookv2.iddaa.com/sportsbook";
+const FEED_URL = `${SB}/events?st=1&type=0&version=0`;
+const CONCURRENCY = 6;
 
 const requestHeaders = {
   Accept:"application/json, text/plain, */*",
@@ -16,35 +18,26 @@ const requestHeaders = {
   Referer:"https://www.iddaa.com/"
 };
 
-async function fetchIddaa(): Promise<string> {
-  let lastError: unknown;
-  for (let attempt=1;attempt<=3;attempt++) {
+async function getJson(url:string, timeout=30000):Promise<any> {
+  let lastError:unknown;
+  for(let attempt=1;attempt<=3;attempt++) {
     try {
-      const response = await fetch(FEED_URL,{
-        headers:requestHeaders,
-        signal:AbortSignal.timeout(45000)
-      });
-      const raw = await response.text();
-      if (response.ok) return raw;
-      lastError = new Error(`iddaa HTTP ${response.status}: ${raw.slice(0,300)}`);
-      if (![408,429,500,502,503,504].includes(response.status) || attempt===3) break;
+      const response=await fetch(url,{headers:requestHeaders,signal:AbortSignal.timeout(timeout)});
+      if(!response.ok) throw new Error(`iddaa HTTP ${response.status} (${url})`);
+      const payload=await response.json();
+      if(payload?.isSuccess!==true) throw new Error(`iddaa başarısız yanıt döndürdü (${url})`);
+      return payload;
     } catch(error) {
       lastError=error;
-      if(attempt===3) break;
+      if(attempt<3) await new Promise(resolveDelay=>setTimeout(resolveDelay,attempt*1200));
     }
-    await new Promise(resolveDelay=>setTimeout(resolveDelay,attempt*2000));
   }
-  throw lastError instanceof Error ? lastError : new Error("iddaa bülteni üç denemede alınamadı.");
+  throw lastError instanceof Error ? lastError : new Error("iddaa isteği başarısız.");
 }
 
 async function fetchOptionalJson(url:string): Promise<any|null> {
-  try {
-    const response=await fetch(url,{headers:requestHeaders,signal:AbortSignal.timeout(20000)});
-    if(!response.ok) throw new Error(`HTTP ${response.status}`);
-    const payload=await response.json();
-    if(payload?.isSuccess!==true) throw new Error("isSuccess=true dönmedi");
-    return payload;
-  } catch(error) {
+  try { return await getJson(url,20000); }
+  catch(error) {
     console.warn("iddaa yardımcı veri alınamadı:",url,error instanceof Error?error.message:error);
     return null;
   }
@@ -62,25 +55,63 @@ function parseCompetitionMap(payload:any):Record<string,string> {
   return result;
 }
 
+function eventsOf(payload:any):any[] {
+  const root=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
+  return Array.isArray(root?.events)?root.events:[];
+}
+
+async function enrichWithFullMarkets(events:any[]):Promise<{events:any[];failed:string[]}> {
+  const football=events.filter(event=>Number(event.sid)===1);
+  const enriched=new Map<string,any>();
+  const failed:string[]=[];
+  let cursor=0;
+  async function worker() {
+    while(true) {
+      const index=cursor++;
+      if(index>=football.length) return;
+      const event=football[index];
+      try {
+        const detail=await getJson(`${SB}/event/${encodeURIComponent(String(event.i))}`,30000);
+        enriched.set(String(event.i),mergeIddaaEventDetail(event,detail));
+      } catch(error) {
+        failed.push(`${event.i}: ${error instanceof Error?error.message:String(error)}`);
+      }
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(CONCURRENCY,football.length)},()=>worker()));
+  if(failed.length) {
+    throw new Error(`Tam market detayı alınamayan ${failed.length}/${football.length} futbol maçı var. İlk hata: ${failed[0]}`);
+  }
+  return {
+    events:events.map(event=>enriched.get(String(event.i)) || event),
+    failed
+  };
+}
+
 async function main():Promise<void> {
-  const raw=await fetchIddaa();
-  if(!raw.trim()) throw new Error("iddaa boş yanıt döndürdü.");
-  const payload:unknown=JSON.parse(raw);
+  const feed=await getJson(FEED_URL,45000);
+  const root=Array.isArray(feed.data)?feed.data[0]:feed.data;
+  if(!Array.isArray(root?.events) || !root.events.length) throw new Error("iddaa maç listesi boş.");
   const [marketConfigPayload,competitionPayload]=await Promise.all([
-    fetchOptionalJson("https://sportsbookv2.iddaa.com/sportsbook/get_market_config?st=1"),
-    fetchOptionalJson("https://sportsbookv2.iddaa.com/sportsbook/competitions?st=1")
+    fetchOptionalJson(`${SB}/get_market_config?st=1`),
+    fetchOptionalJson(`${SB}/competitions?st=1`)
   ]);
   const marketConfig=(marketConfigPayload?.data?.m && typeof marketConfigPayload.data.m==="object")
     ? marketConfigPayload.data.m : {};
   const competitionMap=parseCompetitionMap(competitionPayload);
-  const bulletin=transformIddaaPayload(payload,marketConfig,competitionMap);
+
+  console.log(`iddaa: ${root.events.filter((event:any)=>Number(event.sid)===1).length} futbol maçı bulundu; tam maç detayları alınıyor (eşzamanlı istek: ${CONCURRENCY}).`);
+  const full=await enrichWithFullMarkets(root.events);
+  root.events=full.events;
+  const bulletin=transformIddaaPayload(feed,marketConfig,competitionMap);
 
   const markets=new Map<string,number>();
-  let outcomes=0, matchesWithMarkets=0;
+  let outcomes=0, matchesWithMarkets=0, maxMarkets=0;
   for(const match of bulletin.matches) {
     const rows=(match.fields.iddaaMarkets || []) as Array<{code:string;outcomes:Array<{odd:number|null}>}>;
     if(rows.length) matchesWithMarkets++;
     match.fields.marketCount=rows.length;
+    maxMarkets=Math.max(maxMarkets,rows.length);
     for(const market of rows) {
       markets.set(market.code,(markets.get(market.code)||0)+1);
       outcomes+=market.outcomes.filter(item=>item.odd!==null).length;
@@ -89,7 +120,8 @@ async function main():Promise<void> {
 
   const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Istanbul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-  const rawName=`iddaa_events_${today.replace(/-/g,"")}_${stamp}.json`;
+  const rawName=`iddaa_events_full_${today.replace(/-/g,"")}_${stamp}.json`;
+  const raw=JSON.stringify(feed);
   await mkdir(RAW_DIR,{recursive:true});
   await writeFile(resolve(RAW_DIR,rawName),raw,"utf-8");
   bulletin.meta.sourceFile=rawName;
@@ -98,14 +130,13 @@ async function main():Promise<void> {
   await writeFile(temp,JSON.stringify(bulletin,null,2),"utf-8");
   await rename(temp,OUTPUT);
 
-  console.log(`iddaa: ${bulletin.meta.sourceMatchCount} kaynak kaydı | ${bulletin.matches.length} futbol maçı | ${matchesWithMarkets} marketli maç | ${markets.size} farklı market kodu | ${outcomes} fiyatlı sonuç`);
+  console.log(`iddaa TAM MARKET: ${bulletin.meta.sourceMatchCount} kaynak kaydı | ${bulletin.matches.length} futbol maçı | ${matchesWithMarkets} tam marketli maç | ${markets.size} farklı market kodu | ${outcomes} fiyatlı sonuç | maç başına en yüksek market: ${maxMarkets}`);
   console.log("MARKET_FREQUENCIES="+JSON.stringify(Object.fromEntries([...markets].sort((a,b)=>a[0].localeCompare(b[0])))));
   console.log(`COMPETITIONS_RESOLVED=${Object.keys(competitionMap).length} | MARKET_NAMES_RESOLVED=${Object.keys(marketConfig).length}`);
-  console.log("SAMPLE_MATCHES="+JSON.stringify(bulletin.matches.slice(0,5).map(m=>({
+  console.log("SAMPLE_MATCHES="+JSON.stringify(bulletin.matches.slice(0,10).map(m=>({
     id:m.matchId,home:m.homeName,away:m.awayName,league:m.fields.leagueCode,
     date:m.date,time:m.time,marketCount:m.fields.marketCount
   }))));
-
 
   try {
     const dates=getFotMobDates(bulletin.matches);

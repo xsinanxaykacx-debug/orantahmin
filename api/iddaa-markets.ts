@@ -9,7 +9,7 @@ const HEADERS = {
   Origin:"https://www.iddaa.com",
   Referer:"https://www.iddaa.com/"
 };
-const FEED = "https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type={type}&version=0";
+const SB = "https://sportsbookv2.iddaa.com/sportsbook";
 
 function value(input:string|string[]|undefined):string {
   return Array.isArray(input) ? input[0] || "" : input || "";
@@ -21,30 +21,27 @@ async function getJson(url:string):Promise<any> {
   if(payload?.isSuccess!==true) throw new Error("iddaa başarısız yanıt döndürdü.");
   return payload;
 }
-function eventsOf(payload:any):any[] {
-  const root=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
-  return Array.isArray(root?.events)?root.events:[];
-}
 
 export default async function handler(req:Req,res:Res) {
-  res.setHeader("Cache-Control","s-maxage=180, stale-while-revalidate=300");
+  res.setHeader("Cache-Control","s-maxage=120, stale-while-revalidate=180");
   res.setHeader("Access-Control-Allow-Origin","*");
   if(req.method!=="GET") return res.status(405).json({error:"Method not allowed"});
   const eventId=value(req.query.eventId).trim();
   if(!/^\d+$/.test(eventId)) return res.status(400).json({source:"iddaa.com",error:"Geçerli eventId gerekli."});
   try {
-    let event=eventsOf(await getJson(FEED.replace("{type}","0"))).find(row=>String(row.i)===eventId);
-    if(!event) event=eventsOf(await getJson(FEED.replace("{type}","1"))).find(row=>String(row.i)===eventId);
-    if(!event) return res.status(200).json({
-      source:"iddaa.com",eventId,available:false,markets:[],
-      reason:"Maç iddaa'nın açık maç ve canlı bülteninde bulunamadı."
-    });
-    const configPayload=await getJson("https://sportsbookv2.iddaa.com/sportsbook/get_market_config?st=1");
+    const [detail,configPayload]=await Promise.all([
+      getJson(`${SB}/event/${encodeURIComponent(eventId)}`),
+      getJson(`${SB}/get_market_config?st=1`)
+    ]);
+    const event=detail?.data;
+    if(!event || !Array.isArray(event.m)) throw new Error("iddaa maç detayında tam market dizisi bulunamadı.");
     const marketConfig=configPayload?.data?.m && typeof configPayload.data.m==="object" ? configPayload.data.m : {};
     const markets=parseIddaaMarkets(event,marketConfig);
+    const outcomeCount=markets.reduce((sum,market)=>sum+market.outcomes.length,0);
     return res.status(200).json({
       source:"iddaa.com",eventId,available:markets.length>0,
-      fetchedAt:new Date().toISOString(),marketCount:markets.length,markets
+      completeness:"event-detail",fetchedAt:new Date().toISOString(),
+      marketCount:markets.length,outcomeCount,markets
     });
   } catch(error) {
     return res.status(502).json({

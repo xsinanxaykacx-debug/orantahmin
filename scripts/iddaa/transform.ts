@@ -84,6 +84,14 @@ function dateParts(epochSeconds: number) {
   return { date:`${get("day")}.${get("month")}.${get("year")}`, time:`${get("hour")}:${get("minute")}` };
 }
 
+export function mergeIddaaEventDetail(event: RawEvent, detailPayload: any): RawEvent {
+  const detail = detailPayload?.data;
+  if (detailPayload?.isSuccess !== true || !detail || !Array.isArray(detail.m)) {
+    throw new Error(`iddaa maç detayı ${event.i} için tam market listesi döndürmedi.`);
+  }
+  return { ...event, ...detail, i:event.i, hn:event.hn, an:event.an, d:event.d, ci:event.ci, sid:event.sid, m:detail.m };
+}
+
 export function parseIddaaMarkets(event: RawEvent, marketConfig: Record<string, { n?: string }> = {}): IddaaMarket[] {
   return (event.m || []).map((m:any) => {
     const code = `${Number(m.t)}:${Number(m.st)}`;
