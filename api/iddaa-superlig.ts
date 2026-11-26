@@ -1,4 +1,4 @@
-import { fetchIddaaFeed, IDDAA_SEASON_ID, IDDAA_UNIQUE_TOURNAMENT_ID } from "./_lib/iddaaGismo";
+import { fetchIddaaFeed, IDDAA_SEASON_ID, IDDAA_UNIQUE_TOURNAMENT_ID } from "../lib/iddaaGismo";
 
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
