@@ -331,7 +331,7 @@ function OddsAnalysis({ match, fotmobStatus }: { match: DisplayMatch; fotmobStat
         <div className="data-empty">
           <strong>Mackolik marketleri alınamadı</strong>
           <p>{marketError || "Bu maç için Mackolik tarafından yayımlanan okunabilir oran verisi bulunamadı."}</p>
-        </div>}
+        </div>)}
     </div>
   );
 }
