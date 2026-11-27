@@ -40,10 +40,5 @@
       "source": "/api/iddaa-markets",
       "destination": "/api/iddaa?resource=markets"
     }
-  ],
-  "functions": {
-    "api/iddaa.ts": {
-      "includeFiles": "scripts/iddaa/**/*.ts"
-    }
-  }
+  ]
 }
