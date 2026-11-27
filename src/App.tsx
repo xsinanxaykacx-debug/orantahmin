@@ -410,7 +410,7 @@ function App() {
             <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
           </div>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
-          <div className="list-caption"><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
+          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
         </div>
 
         {activeNav === "statistics" ? <div className="statistics-nav-options">
@@ -438,9 +438,12 @@ function App() {
         </div> : activeNav === "leagues" ? <div className="league-directory-scroll">
           {filteredLeagues.length === 0 ? <div className="league-directory-empty">Aramayla eşleşen lig bulunamadı.</div>
             : filteredLeagues.map(league => <button type="button" key={league.id} className={selectedLeagueId === league.id ? "league-directory-item active" : "league-directory-item"} onClick={() => selectLeague(league.id)}>
-              <span className="league-directory-logo">{league.name.slice(0, 1)}</span>
+              <span className="league-directory-logo" aria-hidden="true">
+                <span>{league.name.slice(0, 1)}</span>
+                <img src={`https://media.api-sports.io/football/leagues/${league.logoId}.png`} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+              </span>
               <span className="league-directory-name"><b>{league.name}</b><small>{league.country || "Uluslararası"}</small></span>
-              <span className="league-directory-count">ID</span>
+              <span className="league-directory-arrow" aria-hidden="true">›</span>
             </button>)}
         </div> : activeNav === "matches" ? <div className="match-list-scroll">
           {loading ? <div className="list-message">Bülten yükleniyor…</div>

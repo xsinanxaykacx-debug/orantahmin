@@ -19,6 +19,52 @@ const uid = (v: any) => txt(val(v?._id, v?.id, v?.uid, v?.teamUid));
 const team = (r: any) => val(r?.team, r?.participant, r?.competitor, {});
 const teamName = (r: any) => name(team(r)) || txt(r?.teamname) || "Takım";
 const teamKey = (r: any) => uid(team(r)) || teamName(r).toLocaleLowerCase("tr-TR");
+
+const SUPER_LIG_TEAM_LOGOS: Record<string, string> = {
+  alanyaspor: "https://www.footylogos.com/downloads/logo/alanyaspor-logo-footylogos.png",
+  amed: "https://www.footylogos.com/downloads/logo/amed-logo-footylogos.png",
+  "amed sk": "https://www.footylogos.com/downloads/logo/amed-logo-footylogos.png",
+  basaksehir: "https://www.footylogos.com/downloads/logo/basaksehir-logo-footylogos.png",
+  besiktas: "https://www.footylogos.com/downloads/logo/besiktas-logo-footylogos.png",
+  "caykur rizespor": "https://www.footylogos.com/downloads/logo/caykur-rizespor-logo-footylogos.png",
+  rizespor: "https://www.footylogos.com/downloads/logo/caykur-rizespor-logo-footylogos.png",
+  corum: "https://www.footylogos.com/downloads/logo/corum-logo-footylogos.png",
+  "corum fk": "https://www.footylogos.com/downloads/logo/corum-logo-footylogos.png",
+  erzurum: "https://www.footylogos.com/downloads/logo/erzurumspor-logo-footylogos.png",
+  erzurumspor: "https://www.footylogos.com/downloads/logo/erzurumspor-logo-footylogos.png",
+  "erzurumspor fk": "https://www.footylogos.com/downloads/logo/erzurumspor-logo-footylogos.png",
+  eyupspor: "https://www.footylogos.com/downloads/logo/eyupspor-logo-footylogos.png",
+  fenerbahce: "https://www.footylogos.com/downloads/logo/fenerbahce-logo-footylogos.png",
+  galatasaray: "https://www.footylogos.com/downloads/logo/galatasaray-logo-footylogos.png",
+  "gaziantep fk": "https://www.footylogos.com/downloads/logo/gaziantep-fk-logo-footylogos.png",
+  gaziantep: "https://www.footylogos.com/downloads/logo/gaziantep-fk-logo-footylogos.png",
+  genclerbirligi: "https://www.footylogos.com/downloads/logo/genclerbirligi-logo-footylogos.png",
+  "genclerbirligi sk": "https://www.footylogos.com/downloads/logo/genclerbirligi-logo-footylogos.png",
+  goztepe: "https://www.footylogos.com/downloads/logo/goztepe-izmir-logo-footylogos.png",
+  "goztepe izmir": "https://www.footylogos.com/downloads/logo/goztepe-izmir-logo-footylogos.png",
+  kasimpasa: "https://www.footylogos.com/downloads/logo/kasimpasa-logo-footylogos.png",
+  kocaelispor: "https://www.footylogos.com/downloads/logo/kocaelispor-logo-footylogos.png",
+  konyaspor: "https://www.footylogos.com/downloads/logo/konyaspor-logo-footylogos.png",
+  samsunspor: "https://www.footylogos.com/downloads/logo/samsunspor-logo-footylogos.png",
+  trabzonspor: "https://www.footylogos.com/downloads/logo/trabzonspor-logo-footylogos.png"
+};
+
+function normalizeTeamName(value: string): string {
+  return value.toLocaleLowerCase("tr-TR")
+    .replace(/ı/g, "i").replace(/ç/g, "c").replace(/ğ/g, "g")
+    .replace(/ö/g, "o").replace(/ş/g, "s").replace(/ü/g, "u")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function teamLogo(teamObject: any, row: any, label: string): string | null {
+  const candidates = [
+    teamObject?.logo, teamObject?.lu, teamObject?.logoUrl, teamObject?.logo_url,
+    teamObject?.image, teamObject?.imageUrl, teamObject?._logo, teamObject?.crest,
+    row?.logo, row?.logoUrl, row?.logo_url, row?._logo
+  ];
+  const supplied = candidates.find(value => typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://")));
+  return supplied || SUPER_LIG_TEAM_LOGOS[normalizeTeamName(label)] || null;
+}
 const number = (v: any) => v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? null : Number(v);
 
 function form(value: any): string[] {
@@ -67,7 +113,12 @@ function leaderStat(e: any, mode: Leader): string {
   }
   return txt(val(mode === "goals" ? t?.goals : t?.assists, t?.total, e?.value)) || "—";
 }
-function TeamMark({ label }: { label: string }) { return <span className="iddaa-team-mark">{label.slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}</span>; }
+function TeamMark({ label, logo }: { label: string; logo?: string | null }) {
+  return <span className="iddaa-team-mark">
+    <span>{label.slice(0, 1).toLocaleUpperCase("tr-TR") || "?"}</span>
+    {logo ? <img src={logo} alt="" loading="lazy" onError={event => { event.currentTarget.style.display = "none"; }} /> : null}
+  </span>;
+}
 
 export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const [payload, setPayload] = useState<Payload | null>(null);
@@ -160,7 +211,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
             const [gf,ga]=readStandingsGoals(r,mode);
             const gd=readStandingsStat(r,mode,["goalsdiff","goaldifference","goal_diff"],"+/-");
             const pts=readStandingsStat(r,mode,["points","pts"],"P");
-            return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td>{txt(g)||"—"}</td><td>{txt(b)||"—"}</td><td>{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
+            return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n} logo={teamLogo(t, r, n)}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td className="standing-result-cell standing-win">{txt(g)||"—"}</td><td className="standing-result-cell standing-draw">{txt(b)||"—"}</td><td className="standing-result-cell standing-loss">{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
           })}</tbody>
         </table></div> : <div className="league-empty">{mode==="total"?"Puan tablosu verisi bulunamadı.":"Kaynak bu görünüm için ayrı bir tablo sağlamadı."}</div>}
       </section> : null}
@@ -193,7 +244,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
           })}</div>:<div className="league-empty">Bu takım için kadro verisi bulunamadı.</div>}
         </div>:<div className="league-empty">Kadro ve oyuncu istatistiklerini görmek için takım seçin.</div>}
       </section>:null}
-      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Veriler güncel sezon servislerinden alınır.</p>
+      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Takım armaları: FootyLogos.</p>
     </>}
   </div>;
 }
