@@ -1,4 +1,4 @@
-import { FIELD, FIELD_COUNT } from "./schema.js";
+import { FIELD, FIELD_COUNT } from "./schema.ts";
 
 export type IddaaOutcome = { no: number; name: string; odd: number | null };
 export type IddaaMarket = {
