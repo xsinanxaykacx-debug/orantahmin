@@ -244,7 +244,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
           })}</div>:<div className="league-empty">Bu takım için kadro verisi bulunamadı.</div>}
         </div>:<div className="league-empty">Kadro ve oyuncu istatistiklerini görmek için takım seçin.</div>}
       </section>:null}
-      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Veriler güncel sezon servislerinden alınır.</p>
+      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Takım armaları: FootyLogos.</p>
     </>}
   </div>;
 }
