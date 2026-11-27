@@ -1,10 +1,10 @@
-import { parseIddaaMarkets } from "../scripts/iddaa/transform.js";
+import { parseIddaaMarkets } from "../scripts/iddaa/transform.ts";
 import {
   fetchIddaaFeed,
   fetchIddaaUpcomingFixtures,
   IDDAA_SEASON_ID,
   IDDAA_UNIQUE_TOURNAMENT_ID
-} from "../lib/iddaaGismo.js";
+} from "../lib/iddaaGismo.ts";
 
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
