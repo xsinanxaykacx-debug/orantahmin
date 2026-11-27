@@ -43,10 +43,7 @@
   ],
   "functions": {
     "api/iddaa.ts": {
-      "includeFiles": [
-        "scripts/iddaa/**/*.ts",
-        "lib/iddaaGismo.ts"
-      ]
+      "includeFiles": "scripts/iddaa/**/*.ts"
     }
   }
 }
