@@ -62,7 +62,7 @@ function teamLogo(teamObject: any, row: any, label: string): string | null {
     teamObject?.image, teamObject?.imageUrl, teamObject?._logo, teamObject?.crest,
     row?.logo, row?.logoUrl, row?.logo_url, row?._logo
   ];
-  const supplied = candidates.find(value => typeof value === "string" && /^https?:\\/\\//i.test(value));
+  const supplied = candidates.find(value => typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://")));
   return supplied || SUPER_LIG_TEAM_LOGOS[normalizeTeamName(label)] || null;
 }
 const number = (v: any) => v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? null : Number(v);
