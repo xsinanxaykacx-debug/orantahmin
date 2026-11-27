@@ -249,3 +249,27 @@
     font-size: 8px !important;
   }
 }
+
+
+/* Team crests inside the standings table. */
+.iddaa-league-hub .iddaa-team-mark {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  color: #27394d;
+}
+.iddaa-league-hub .iddaa-team-mark > span {
+  position: relative;
+  z-index: 0;
+}
+.iddaa-league-hub .iddaa-team-mark img {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1px;
+  background: #fff;
+  object-fit: contain;
+}
