@@ -106,3 +106,146 @@
   .iddaa-league-hub .league-table-panel { padding: 13px 10px; }
   .iddaa-league-hub .iddaa-standings-table { min-width: 900px; }
 }
+
+
+/* Puan tablosu: tüm sütunlar panel içinde, yatay kaydırma yok. */
+.iddaa-league-hub,
+.iddaa-league-hub .league-table-panel,
+.iddaa-league-hub .league-table-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.iddaa-league-hub .league-table-panel {
+  padding: 18px 16px;
+}
+.iddaa-league-hub .league-table-scroll {
+  display: block;
+  overflow-x: hidden;
+}
+.iddaa-league-hub .iddaa-standings-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #dce5f3;
+}
+.iddaa-league-hub .iddaa-standings-table th,
+.iddaa-league-hub .iddaa-standings-table td {
+  min-width: 0 !important;
+  padding: 10px 5px;
+  overflow: hidden;
+  border-bottom: 1px solid #30394a;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px !important;
+  font-variant-numeric: tabular-nums;
+}
+.iddaa-league-hub .iddaa-standings-table th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  background: #202838;
+  color: #9eacc2;
+  font-size: 10px !important;
+  font-weight: 800;
+}
+.iddaa-league-hub .iddaa-standings-table th:nth-child(1),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(1) { width: 5%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(2),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(2) { width: 33%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(3),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(3) { width: 6%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(4),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(4),
+.iddaa-league-hub .iddaa-standings-table th:nth-child(5),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(5),
+.iddaa-league-hub .iddaa-standings-table th:nth-child(6),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(6) { width: 5%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(7),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(7) { width: 10%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(8),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(8),
+.iddaa-league-hub .iddaa-standings-table th:nth-child(9),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(9) { width: 7%; }
+.iddaa-league-hub .iddaa-standings-table th:nth-child(10),
+.iddaa-league-hub .iddaa-standings-table td:nth-child(10) { width: 17%; }
+.iddaa-league-hub .iddaa-standings-table .league-team-cell {
+  min-width: 0 !important;
+  text-align: left;
+  font-size: 11px !important;
+  font-weight: 700;
+}
+.iddaa-league-hub .iddaa-standings-table .standing-result-cell {
+  font-weight: 900;
+  font-size: 12px !important;
+}
+.iddaa-league-hub .iddaa-standings-table .standing-win { color: #54d69b; }
+.iddaa-league-hub .iddaa-standings-table .standing-draw { color: #f0c36b; }
+.iddaa-league-hub .iddaa-standings-table .standing-loss { color: #f17b83; }
+.iddaa-league-hub .iddaa-standings-table td:nth-child(9) b {
+  color: #f2f6ff;
+  font-size: 12px !important;
+  font-weight: 900;
+}
+.iddaa-league-hub .league-form {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  vertical-align: middle;
+}
+.iddaa-league-hub .league-form i {
+  width: 17px;
+  height: 19px;
+  flex: 0 1 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 9px !important;
+  font-style: normal;
+  font-weight: 900;
+}
+.iddaa-league-hub .league-form .league-form-g {
+  background: rgba(44, 177, 119, .18);
+  color: #62dda5;
+}
+.iddaa-league-hub .league-form .league-form-b {
+  background: rgba(224, 169, 63, .18);
+  color: #f0c36b;
+}
+.iddaa-league-hub .league-form .league-form-m {
+  background: rgba(218, 76, 86, .18);
+  color: #f18b92;
+}
+.iddaa-league-hub .iddaa-team-mark {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  margin-right: 4px;
+  font-size: 9px !important;
+}
+@media (max-width: 760px) {
+  .iddaa-league-hub .league-table-panel { padding: 12px 8px; }
+  .iddaa-league-hub .iddaa-standings-table th,
+  .iddaa-league-hub .iddaa-standings-table td {
+    padding: 8px 2px;
+    font-size: 10px !important;
+  }
+  .iddaa-league-hub .iddaa-standings-table .league-team-cell {
+    font-size: 9px !important;
+  }
+  .iddaa-league-hub .league-form { gap: 0; }
+  .iddaa-league-hub .league-form i {
+    width: clamp(9px, 2.7vw, 13px);
+    flex-basis: clamp(9px, 2.7vw, 13px);
+    height: 17px;
+    border-radius: 3px;
+    font-size: 8px !important;
+  }
+}
