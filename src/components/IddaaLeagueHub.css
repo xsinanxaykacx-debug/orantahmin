@@ -273,3 +273,16 @@
   background: #fff;
   object-fit: contain;
 }
+
+.iddaa-league-hub .iddaa-team-mark {
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+}
+@media (max-width: 760px) {
+  .iddaa-league-hub .iddaa-team-mark {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+  }
+}
