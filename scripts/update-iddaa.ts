@@ -111,6 +111,7 @@ async function main():Promise<void> {
     if(league) leagues.add(league);
     if(match.fields.iddaaInPlayFlag===true) liveFlagCount++;
   }
+  // Keep a compact coverage summary in the bulletin metadata for filter diagnostics.
   const programSummary={
     totalMatches:bulletin.matches.length,
     countsByDate:Object.fromEntries([...countsByDate.entries()].sort((a,b)=>a[0].split(".").reverse().join("-").localeCompare(b[0].split(".").reverse().join("-")))),
