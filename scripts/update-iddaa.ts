@@ -124,7 +124,7 @@ async function main():Promise<void> {
     }
   }
 
-  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\\.\\d{3}Z$/,"Z");
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
   const rawName=`iddaa_events_full_${targetDate.replace(/-/g,"")}_${stamp}.json`;
   const raw=JSON.stringify(feed);
   await mkdir(RAW_DIR,{recursive:true});
