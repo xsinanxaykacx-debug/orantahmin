@@ -423,7 +423,6 @@ function App() {
   }, [bulletin, fotmobLiveStates, iddaaLiveMatches]);
   const displayMatches = matches;
 
-  const matchFilterOptions = displayMatches;
   const allMatchesForFilters = displayMatches;
   const dateOptions = useMemo(
     () => [...new Set(displayMatches.map(matchDateKey).filter(Boolean))].sort(),
