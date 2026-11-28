@@ -1,7 +1,7 @@
 {
   "meta": {
-    "sourceFile": "iddaa_events_full_20261128_20261128T183427Z.json",
-    "generatedAt": "2026-11-28T18:34:27.551Z",
+    "sourceFile": "iddaa_events_full_20261128_20261128T183542Z.json",
+    "generatedAt": "2026-11-28T18:35:42.392Z",
     "schemaVersion": "orantahmin-iddaa-dynamic-v2",
     "sourceProvider": "iddaa",
     "sourceFieldCount": 0,
@@ -12665,27 +12665,27 @@
         "time": "22:00",
         "date": "28.11.2026",
         "mbs": 3,
-        "ms1": 3.52,
-        "msX": 3.52,
-        "ms2": 1.58,
-        "doubleChance1X": 1.69,
+        "ms1": 3.39,
+        "msX": 3.49,
+        "ms2": 1.61,
+        "doubleChance1X": 1.66,
         "doubleChance12": 1.1,
-        "doubleChanceX2": 1.1,
+        "doubleChanceX2": 1.11,
         "leagueCode": "Bolivya Profesyonel Ligi",
         "groupId": "20546",
         "subgroupId": "0",
-        "halfTimeResult1": 3.84,
-        "halfTimeResultX": 2.24,
-        "halfTimeResult2": 2.02,
-        "handicapMs1": 1.74,
-        "handicapMsX": 3.52,
-        "handicapMs2": 2.5,
-        "bttsYes": 1.36,
-        "bttsNo": 2.14,
-        "halfTimeGoals15Under": 1.45,
-        "halfTimeGoals15Over": 1.95,
-        "goals35Under": 1.42,
-        "goals35Over": 2.01,
+        "halfTimeResult1": 3.67,
+        "halfTimeResultX": 2.3,
+        "halfTimeResult2": 2.03,
+        "handicapMs1": 1.7,
+        "handicapMsX": 3.63,
+        "handicapMs2": 2.53,
+        "bttsYes": 1.31,
+        "bttsNo": 2.29,
+        "halfTimeGoals15Under": 1.5,
+        "halfTimeGoals15Over": 1.86,
+        "goals35Under": 1.49,
+        "goals35Over": 1.88,
         "eventId": "3332122",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -12705,12 +12705,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.45
+                "odd": 1.5
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.95
+                "odd": 1.86
               }
             ]
           },
@@ -12724,12 +12724,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.42
+                "odd": 1.49
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.01
+                "odd": 1.88
               }
             ]
           },
@@ -12743,17 +12743,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.45
+                "odd": 3.33
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.61
+                "odd": 2.64
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.89
+                "odd": 1.91
               }
             ]
           },
@@ -12767,17 +12767,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.52
+                "odd": 3.39
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.52
+                "odd": 3.49
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.58
+                "odd": 1.61
               }
             ]
           },
@@ -12791,17 +12791,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.74
+                "odd": 1.7
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.52
+                "odd": 3.63
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.5
+                "odd": 2.53
               }
             ]
           },
@@ -12815,12 +12815,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.36
+                "odd": 1.31
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 2.14
+                "odd": 2.29
               }
             ]
           },
@@ -12834,17 +12834,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.84
+                "odd": 3.67
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.24
+                "odd": 2.3
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.02
+                "odd": 2.03
               }
             ]
           },
@@ -12858,7 +12858,7 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.69
+                "odd": 1.66
               },
               {
                 "no": 2,
@@ -12868,7 +12868,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.1
+                "odd": 1.11
               }
             ]
           },
@@ -12887,7 +12887,7 @@
               {
                 "no": 2,
                 "name": "1 ve 2",
-                "odd": 1.31
+                "odd": 1.3
               },
               {
                 "no": 3,
@@ -12906,12 +12906,12 @@
               {
                 "no": 1,
                 "name": "Tek",
-                "odd": 1.7
+                "odd": 1.72
               },
               {
                 "no": 2,
                 "name": "Çift",
-                "odd": 1.63
+                "odd": 1.62
               }
             ]
           },
@@ -12925,12 +12925,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.11
+                "odd": 2.94
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.14
+                "odd": 1.16
               }
             ]
           },
@@ -12944,12 +12944,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.31
+                "odd": 1.37
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.28
+                "odd": 2.11
               }
             ]
           },
@@ -12963,12 +12963,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.98
+                "odd": 2.05
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.43
+                "odd": 1.4
               }
             ]
           },
@@ -12982,12 +12982,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.45
+                "odd": 1.5
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.95
+                "odd": 1.86
               }
             ]
           },
@@ -13001,12 +13001,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.98
+                "odd": 2.03
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.43
+                "odd": 1.41
               }
             ]
           }
@@ -124304,27 +124304,27 @@
         "time": "00:00",
         "date": "29.11.2026",
         "mbs": 3,
-        "ms1": 1.47,
-        "msX": 3.44,
-        "ms2": 4.37,
-        "doubleChance1X": 1.05,
-        "doubleChance12": 1.1,
-        "doubleChanceX2": 1.83,
+        "ms1": 1.46,
+        "msX": 3.38,
+        "ms2": 4.52,
+        "doubleChance1X": 1,
+        "doubleChance12": 1.11,
+        "doubleChanceX2": 1.84,
         "goals25Under": 1.64,
         "goals25Over": 1.69,
         "leagueCode": "Şili Premier Lig",
         "groupId": "49",
         "subgroupId": "0",
-        "halfTimeResult1": 1.98,
-        "halfTimeResultX": 2.04,
-        "halfTimeResult2": 4.86,
-        "handicapMs1": 2.41,
-        "handicapMsX": 3.13,
-        "handicapMs2": 1.9,
+        "halfTimeResult1": 1.96,
+        "halfTimeResultX": 2.05,
+        "halfTimeResult2": 4.95,
+        "handicapMs1": 2.39,
+        "handicapMsX": 3.16,
+        "handicapMs2": 1.91,
         "bttsYes": 1.7,
         "bttsNo": 1.63,
-        "halfTimeGoals15Under": 1.26,
-        "halfTimeGoals15Over": 2.42,
+        "halfTimeGoals15Under": 1.27,
+        "halfTimeGoals15Over": 2.41,
         "eventId": "3336711",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -124363,12 +124363,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.26
+                "odd": 1.27
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.42
+                "odd": 2.41
               }
             ]
           },
@@ -124387,12 +124387,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.38
+                "odd": 2.37
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.26
+                "odd": 4.33
               }
             ]
           },
@@ -124406,17 +124406,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.47
+                "odd": 1.46
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.44
+                "odd": 3.38
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.37
+                "odd": 4.52
               }
             ]
           },
@@ -124430,17 +124430,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.41
+                "odd": 2.39
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.13
+                "odd": 3.16
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.9
+                "odd": 1.91
               }
             ]
           },
@@ -124473,17 +124473,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.98
+                "odd": 1.96
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.04
+                "odd": 2.05
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.86
+                "odd": 4.95
               }
             ]
           },
@@ -124497,17 +124497,17 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.05
+                "odd": 1
               },
               {
                 "no": 2,
                 "name": "1 ve 2",
-                "odd": 1.1
+                "odd": 1.11
               },
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.83
+                "odd": 1.84
               }
             ]
           },
@@ -124531,7 +124531,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.41
+                "odd": 1.42
               }
             ]
           },
@@ -124545,12 +124545,12 @@
               {
                 "no": 1,
                 "name": "Tek",
-                "odd": 1.68
+                "odd": 1.7
               },
               {
                 "no": 2,
                 "name": "Çift",
-                "odd": 1.65
+                "odd": 1.63
               }
             ]
           },
@@ -124583,12 +124583,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.74
+                "odd": 1.75
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.59
+                "odd": 1.58
               }
             ]
           },
@@ -124607,7 +124607,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.43
+                "odd": 1.44
               }
             ]
           },
@@ -124621,12 +124621,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.82
+                "odd": 1.84
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.53
+                "odd": 1.52
               }
             ]
           },
@@ -124645,7 +124645,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.48
+                "odd": 2.51
               }
             ]
           }
@@ -180457,11 +180457,11 @@
         "date": "28.11.2026",
         "mbs": 1,
         "ms1": 1,
-        "msX": 8.23,
-        "ms2": 14.9,
+        "msX": 8.03,
+        "ms2": 14.25,
         "doubleChance1X": 1,
         "doubleChance12": 1,
-        "doubleChanceX2": 4.8,
+        "doubleChanceX2": 4.66,
         "goals25Under": 3.18,
         "goals25Over": 1.18,
         "leagueCode": "İspanya La Liga",
@@ -180471,14 +180471,14 @@
         "totalGoals23": 2.31,
         "totalGoals46": 2.44,
         "totalGoals7Plus": 4.39,
-        "halfTimeResult1": 1.32,
-        "halfTimeResultX": 3.29,
-        "halfTimeResult2": 10.65,
-        "handicapMs1": 1.82,
-        "handicapMsX": 3.84,
-        "handicapMs2": 2.47,
-        "bttsYes": 1.8,
-        "bttsNo": 1.66,
+        "halfTimeResult1": 1.33,
+        "halfTimeResultX": 3.27,
+        "halfTimeResult2": 10.3,
+        "handicapMs1": 1.84,
+        "handicapMsX": 3.85,
+        "handicapMs2": 2.43,
+        "bttsYes": 1.77,
+        "bttsNo": 1.69,
         "halfTimeGoals15Under": 1.8,
         "halfTimeGoals15Over": 1.66,
         "goals15Under": 7.2,
@@ -180526,7 +180526,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 4.77
+                "odd": 4.76
               },
               {
                 "no": 2,
@@ -180602,12 +180602,12 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 4.55
+                "odd": 4.6
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 11.45
+                "odd": 11.25
               },
               {
                 "no": 3,
@@ -180617,17 +180617,17 @@
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 1.27
+                "odd": 1.28
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 24.45
+                "odd": 23.6
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 24.05
+                "odd": 22.7
               }
             ]
           },
@@ -180641,22 +180641,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 18.1
+                "odd": 17.65
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.95
+                "odd": 1.91
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 3.78
+                "odd": 3.8
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 2.79
+                "odd": 2.86
               }
             ]
           },
@@ -180670,17 +180670,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.25
+                "odd": 1.26
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.82
+                "odd": 3.78
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.15
+                "odd": 9.79
               }
             ]
           },
@@ -180699,12 +180699,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 8.23
+                "odd": 8.03
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 14.9
+                "odd": 14.25
               }
             ]
           },
@@ -180718,17 +180718,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.82
+                "odd": 1.84
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.84
+                "odd": 3.85
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.47
+                "odd": 2.43
               }
             ]
           },
@@ -180771,12 +180771,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.8
+                "odd": 1.77
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.66
+                "odd": 1.69
               }
             ]
           },
@@ -180809,17 +180809,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.32
+                "odd": 1.33
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.29
+                "odd": 3.27
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.65
+                "odd": 10.3
               }
             ]
           },
@@ -180843,7 +180843,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 4.8
+                "odd": 4.66
               }
             ]
           },
@@ -180867,7 +180867,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 2.43
+                "odd": 2.4
               }
             ]
           },
@@ -180881,7 +180881,7 @@
               {
                 "no": 1,
                 "name": "Tek",
-                "odd": 1.72
+                "odd": 1.73
               },
               {
                 "no": 2,
@@ -180900,12 +180900,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 4.08
+                "odd": 4.01
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.09
+                "odd": 1.1
               }
             ]
           },
@@ -180938,12 +180938,12 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 1.3
+                "odd": 1.31
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 29.5
+                "odd": 28.5
               },
               {
                 "no": 3,
@@ -180953,32 +180953,32 @@
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 4.08
+                "odd": 4.09
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 12.65
+                "odd": 12.4
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 32
+                "odd": 30.5
               },
               {
                 "no": 7,
                 "name": "2/1",
-                "odd": 21.75
+                "odd": 21.45
               },
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 34.5
+                "odd": 34
               },
               {
                 "no": 9,
                 "name": "2/2",
-                "odd": 26.5
+                "odd": 25.5
               }
             ]
           },
@@ -180992,12 +180992,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.16
+                "odd": 2.14
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.44
+                "odd": 1.45
               }
             ]
           },
@@ -181016,7 +181016,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 5.17
+                "odd": 4.99
               }
             ]
           },
@@ -181030,12 +181030,12 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 1.88
+                "odd": 1.9
               },
               {
                 "no": 2,
                 "name": "Hayır",
-                "odd": 1.6
+                "odd": 1.58
               }
             ]
           },
@@ -181054,7 +181054,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.06
+                "odd": 2.07
               }
             ]
           },
@@ -181068,12 +181068,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.19
+                "odd": 1.2
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 3.15
+                "odd": 3.09
               }
             ]
           },
@@ -181087,32 +181087,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 2.23
+                "odd": 2.22
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 1.78
+                "odd": 1.82
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 10.45
+                "odd": 10.1
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 34.5
+                "odd": 34
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 26
+                "odd": 24.45
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 35
+                "odd": 34.5
               }
             ]
           },
@@ -181131,7 +181131,7 @@
               {
                 "no": 2,
                 "name": "Eşit",
-                "odd": 4.02
+                "odd": 4.01
               },
               {
                 "no": 3,
@@ -181150,17 +181150,17 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 8.02
+                "odd": 7.93
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 1.51
+                "odd": 1.53
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 9.21
+                "odd": 9.03
               },
               {
                 "no": 4,
@@ -181175,7 +181175,7 @@
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 12.4
+                "odd": 12.05
               }
             ]
           }
@@ -188650,29 +188650,29 @@
         "doubleChance1X": 1.18,
         "doubleChance12": 1.17,
         "doubleChanceX2": 1.62,
-        "goals25Under": 2.04,
+        "goals25Under": 2.05,
         "goals25Over": 1.5,
         "leagueCode": "İngiltere Premier Lig",
         "groupId": "43",
         "subgroupId": "0",
-        "totalGoals01": 4.2,
+        "totalGoals01": 4.25,
         "totalGoals23": 1.9,
-        "totalGoals46": 3.03,
-        "totalGoals7Plus": 9.26,
+        "totalGoals46": 3.02,
+        "totalGoals7Plus": 9.08,
         "halfTimeResult1": 2.33,
-        "halfTimeResultX": 2.2,
-        "halfTimeResult2": 3.65,
+        "halfTimeResultX": 2.21,
+        "halfTimeResult2": 3.64,
         "handicapMs1": 3.13,
-        "handicapMsX": 3.75,
+        "handicapMsX": 3.76,
         "handicapMs2": 1.59,
-        "bttsYes": 1.44,
-        "bttsNo": 2.15,
+        "bttsYes": 1.43,
+        "bttsNo": 2.17,
         "halfTimeGoals15Under": 1.42,
-        "halfTimeGoals15Over": 2.21,
-        "goals15Under": 4.22,
+        "halfTimeGoals15Over": 2.19,
+        "goals15Under": 4.26,
         "goals15Over": 1.09,
-        "goals35Under": 1.36,
-        "goals35Over": 2.37,
+        "goals35Under": 1.37,
+        "goals35Over": 2.35,
         "eventId": "3336151",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -188695,7 +188695,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.04
+                "odd": 2.05
               },
               {
                 "no": 2,
@@ -188714,12 +188714,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.16
+                "odd": 3.19
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.19
+                "odd": 1.18
               }
             ]
           },
@@ -188738,7 +188738,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.21
+                "odd": 2.19
               }
             ]
           },
@@ -188752,7 +188752,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 4.22
+                "odd": 4.26
               },
               {
                 "no": 2,
@@ -188771,12 +188771,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.36
+                "odd": 1.37
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.37
+                "odd": 2.35
               }
             ]
           },
@@ -188790,32 +188790,32 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 5.4
+                "odd": 5.45
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 4.81
+                "odd": 4.83
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 8.54
+                "odd": 8.62
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 2.63
+                "odd": 2.62
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 9.61
+                "odd": 9.52
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 4.83
+                "odd": 4.81
               }
             ]
           },
@@ -188829,22 +188829,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 6.98
+                "odd": 7
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.75
+                "odd": 1.74
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 2.74
+                "odd": 2.77
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 8.81
+                "odd": 8.8
               }
             ]
           },
@@ -188863,12 +188863,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.56
+                "odd": 2.57
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.28
+                "odd": 3.27
               }
             ]
           },
@@ -188911,7 +188911,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.75
+                "odd": 3.76
               },
               {
                 "no": 3,
@@ -188930,7 +188930,7 @@
               {
                 "no": 1,
                 "name": "0-1 gol",
-                "odd": 4.2
+                "odd": 4.25
               },
               {
                 "no": 2,
@@ -188940,12 +188940,12 @@
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 3.03
+                "odd": 3.02
               },
               {
                 "no": 4,
                 "name": "6+ gol",
-                "odd": 9.26
+                "odd": 9.08
               }
             ]
           },
@@ -188959,12 +188959,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.44
+                "odd": 1.43
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 2.15
+                "odd": 2.17
               }
             ]
           },
@@ -189002,12 +189002,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.2
+                "odd": 2.21
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.65
+                "odd": 3.64
               }
             ]
           },
@@ -189088,7 +189088,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.58
+                "odd": 3.55
               },
               {
                 "no": 2,
@@ -189126,32 +189126,32 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 2.77
+                "odd": 2.76
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 12.85
+                "odd": 12.8
               },
               {
                 "no": 3,
                 "name": "1/2",
-                "odd": 33
+                "odd": 32.5
               },
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 5.12
+                "odd": 5.14
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 5.46
+                "odd": 5.47
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 7.81
+                "odd": 7.83
               },
               {
                 "no": 7,
@@ -189161,7 +189161,7 @@
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 13.6
+                "odd": 13.55
               },
               {
                 "no": 9,
@@ -189180,7 +189180,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.8
+                "odd": 1.81
               },
               {
                 "no": 2,
@@ -189199,12 +189199,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.36
+                "odd": 1.37
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.36
+                "odd": 2.34
               }
             ]
           },
@@ -189218,7 +189218,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 5.58
+                "odd": 5.57
               },
               {
                 "no": 2,
@@ -189237,7 +189237,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 12.05
+                "odd": 11.9
               },
               {
                 "no": 2,
@@ -189256,12 +189256,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.88
+                "odd": 1.89
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.6
+                "odd": 1.59
               }
             ]
           },
@@ -189275,12 +189275,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.51
+                "odd": 1.52
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.01
+                "odd": 2
               }
             ]
           },
@@ -189294,32 +189294,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 3.35
+                "odd": 3.33
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 3.73
+                "odd": 3.76
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 4.09
+                "odd": 4.08
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 14.95
+                "odd": 15.15
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 5.56
+                "odd": 5.53
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 6.93
+                "odd": 6.99
               }
             ]
           },
@@ -189357,7 +189357,7 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 12.75
+                "odd": 12.65
               },
               {
                 "no": 2,
@@ -189367,17 +189367,17 @@
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 6.48
+                "odd": 6.44
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 3.13
+                "odd": 3.16
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 19.4
+                "odd": 19.2
               },
               {
                 "no": 6,
@@ -194851,7 +194851,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.71
+                "odd": 1.7
               }
             ]
           },
@@ -194980,7 +194980,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.77
+                "odd": 1.76
               }
             ]
           },
@@ -197066,29 +197066,29 @@
         "doubleChance1X": 1,
         "doubleChance12": 1,
         "doubleChanceX2": 3.22,
-        "goals25Under": 1.54,
-        "goals25Over": 1.81,
+        "goals25Under": 1.51,
+        "goals25Over": 1.84,
         "leagueCode": "CAF Şampiyonlar Ligi",
         "groupId": "245009",
         "subgroupId": "0",
-        "totalGoals01": 2.78,
+        "totalGoals01": 2.71,
         "totalGoals23": 1.75,
-        "totalGoals46": 3.97,
-        "totalGoals7Plus": 18.65,
-        "halfTimeResult1": 1.46,
-        "halfTimeResultX": 2.26,
-        "halfTimeResult2": 13.2,
-        "handicapMs1": 2.63,
-        "handicapMsX": 3.19,
-        "handicapMs2": 1.77,
-        "bttsYes": 3,
-        "bttsNo": 1.15,
-        "halfTimeGoals15Under": 1.24,
-        "halfTimeGoals15Over": 2.52,
-        "goals15Under": 2.74,
-        "goals15Over": 1.19,
-        "goals35Under": 1.12,
-        "goals35Over": 3.2,
+        "totalGoals46": 4.07,
+        "totalGoals7Plus": 19.75,
+        "halfTimeResult1": 1.47,
+        "halfTimeResultX": 2.23,
+        "halfTimeResult2": 13.4,
+        "handicapMs1": 2.67,
+        "handicapMsX": 3.17,
+        "handicapMs2": 1.76,
+        "bttsYes": 3.07,
+        "bttsNo": 1.14,
+        "halfTimeGoals15Under": 1.23,
+        "halfTimeGoals15Over": 2.57,
+        "goals15Under": 2.68,
+        "goals15Over": 1.21,
+        "goals35Under": 1.11,
+        "goals35Over": 3.29,
         "eventId": "3359440",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -197111,12 +197111,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.54
+                "odd": 1.51
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.81
+                "odd": 1.84
               }
             ]
           },
@@ -197130,12 +197130,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.56
+                "odd": 2.52
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.23
+                "odd": 1.24
               }
             ]
           },
@@ -197149,12 +197149,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.24
+                "odd": 1.23
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.52
+                "odd": 2.57
               }
             ]
           },
@@ -197168,12 +197168,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.74
+                "odd": 2.68
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.19
+                "odd": 1.21
               }
             ]
           },
@@ -197187,12 +197187,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.12
+                "odd": 1.11
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 3.2
+                "odd": 3.29
               }
             ]
           },
@@ -197206,22 +197206,22 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 2.15
+                "odd": 2.12
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 5.59
+                "odd": 5.56
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 21.15
+                "odd": 20.85
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 1.88
+                "odd": 1.91
               },
               {
                 "no": 5,
@@ -197245,22 +197245,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 13.4
+                "odd": 13.6
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 3.92
+                "odd": 4.03
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 1.7
+                "odd": 1.67
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 3.14
+                "odd": 3.17
               }
             ]
           },
@@ -197274,17 +197274,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.37
+                "odd": 1.38
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.57
+                "odd": 2.55
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 11.7
+                "odd": 11.9
               }
             ]
           },
@@ -197322,17 +197322,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.63
+                "odd": 2.67
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.19
+                "odd": 3.17
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.77
+                "odd": 1.76
               }
             ]
           },
@@ -197346,7 +197346,7 @@
               {
                 "no": 1,
                 "name": "0-1 gol",
-                "odd": 2.78
+                "odd": 2.71
               },
               {
                 "no": 2,
@@ -197356,12 +197356,12 @@
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 3.97
+                "odd": 4.07
               },
               {
                 "no": 4,
                 "name": "6+ gol",
-                "odd": 18.65
+                "odd": 19.75
               }
             ]
           },
@@ -197375,12 +197375,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3
+                "odd": 3.07
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.15
+                "odd": 1.14
               }
             ]
           },
@@ -197394,17 +197394,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.46
+                "odd": 1.47
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.26
+                "odd": 2.23
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 13.2
+                "odd": 13.4
               }
             ]
           },
@@ -197447,12 +197447,12 @@
               {
                 "no": 2,
                 "name": "1 ve 2",
-                "odd": 1.27
+                "odd": 1.28
               },
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.8
+                "odd": 1.79
               }
             ]
           },
@@ -197466,7 +197466,7 @@
               {
                 "no": 1,
                 "name": "Tek",
-                "odd": 1.66
+                "odd": 1.65
               },
               {
                 "no": 2,
@@ -197485,7 +197485,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 6.74
+                "odd": 6.88
               },
               {
                 "no": 2,
@@ -197504,12 +197504,12 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 1.46
+                "odd": 1.47
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 34.5
+                "odd": 35
               },
               {
                 "no": 3,
@@ -197519,12 +197519,12 @@
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 3.3
+                "odd": 3.26
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 6.57
+                "odd": 6.51
               },
               {
                 "no": 6,
@@ -197558,7 +197558,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.22
+                "odd": 2.19
               },
               {
                 "no": 2,
@@ -197577,12 +197577,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.21
+                "odd": 1.19
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.68
+                "odd": 2.73
               }
             ]
           },
@@ -197596,12 +197596,12 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 2.3
+                "odd": 2.31
               },
               {
                 "no": 2,
                 "name": "Hayır",
-                "odd": 1.31
+                "odd": 1.3
               }
             ]
           },
@@ -197615,7 +197615,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.21
+                "odd": 2.18
               },
               {
                 "no": 2,
@@ -197639,7 +197639,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 4.81
+                "odd": 4.9
               }
             ]
           },
@@ -197653,22 +197653,22 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 4.29
+                "odd": 4.41
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 1.33
+                "odd": 1.32
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 10.55
+                "odd": 10.8
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 9.35
+                "odd": 9.12
               },
               {
                 "no": 5,
@@ -197678,7 +197678,7 @@
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 20.2
+                "odd": 19.95
               }
             ]
           },
@@ -197716,7 +197716,7 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 21
+                "odd": 21.85
               },
               {
                 "no": 2,
@@ -197726,12 +197726,12 @@
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 14.35
+                "odd": 14.7
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 2.51
+                "odd": 2.47
               },
               {
                 "no": 5,
@@ -197741,7 +197741,7 @@
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 13.4
+                "odd": 13.55
               }
             ]
           }
@@ -210669,35 +210669,35 @@
         "time": "06:10",
         "date": "29.11.2026",
         "mbs": 2,
-        "ms1": 1.82,
-        "msX": 3.11,
-        "ms2": 3.49,
-        "doubleChance1X": 1.16,
-        "doubleChance12": 1.2,
-        "doubleChanceX2": 1.62,
+        "ms1": 1.79,
+        "msX": 3.18,
+        "ms2": 3.54,
+        "doubleChance1X": 1.15,
+        "doubleChance12": 1.19,
+        "doubleChanceX2": 1.66,
         "goals25Under": 1.84,
         "goals25Over": 1.63,
         "leagueCode": "Meksika Primera Ligi, Açılış Playoffla",
         "groupId": "1824",
         "subgroupId": "0",
-        "totalGoals01": 3.69,
-        "totalGoals23": 1.85,
-        "totalGoals46": 3.29,
-        "totalGoals7Plus": 11.55,
-        "halfTimeResult1": 2.31,
+        "totalGoals01": 3.68,
+        "totalGoals23": 1.84,
+        "totalGoals46": 3.31,
+        "totalGoals7Plus": 11.6,
+        "halfTimeResult1": 2.29,
         "halfTimeResultX": 2.13,
-        "halfTimeResult2": 3.91,
-        "handicapMs1": 3.15,
-        "handicapMsX": 3.68,
-        "handicapMs2": 1.6,
-        "bttsYes": 1.52,
-        "bttsNo": 2,
+        "halfTimeResult2": 3.98,
+        "handicapMs1": 3.08,
+        "handicapMsX": 3.64,
+        "handicapMs2": 1.63,
+        "bttsYes": 1.53,
+        "bttsNo": 1.98,
         "halfTimeGoals15Under": 1.36,
-        "halfTimeGoals15Over": 2.36,
-        "goals15Under": 3.74,
+        "halfTimeGoals15Over": 2.37,
+        "goals15Under": 3.72,
         "goals15Over": 1.12,
         "goals35Under": 1.28,
-        "goals35Over": 2.65,
+        "goals35Over": 2.66,
         "eventId": "3421558",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -210744,7 +210744,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.22
+                "odd": 1.23
               }
             ]
           },
@@ -210763,7 +210763,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.36
+                "odd": 2.37
               }
             ]
           },
@@ -210777,7 +210777,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.74
+                "odd": 3.72
               },
               {
                 "no": 2,
@@ -210801,7 +210801,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.65
+                "odd": 2.66
               }
             ]
           },
@@ -210815,32 +210815,32 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 4.87
+                "odd": 4.75
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 4.19
+                "odd": 4.27
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 8.35
+                "odd": 8.4
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 2.75
+                "odd": 2.71
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 10.25
+                "odd": 10.6
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 5.63
+                "odd": 5.76
               }
             ]
           },
@@ -210854,22 +210854,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 6.35
+                "odd": 6.48
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.92
+                "odd": 1.93
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 2.49
+                "odd": 2.47
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 8.94
+                "odd": 8.75
               }
             ]
           },
@@ -210883,17 +210883,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.17
+                "odd": 2.14
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.45
+                "odd": 2.47
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.47
+                "odd": 3.52
               }
             ]
           },
@@ -210907,17 +210907,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.82
+                "odd": 1.79
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.11
+                "odd": 3.18
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.49
+                "odd": 3.54
               }
             ]
           },
@@ -210931,17 +210931,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.15
+                "odd": 3.08
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.68
+                "odd": 3.64
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.6
+                "odd": 1.63
               }
             ]
           },
@@ -210955,22 +210955,22 @@
               {
                 "no": 1,
                 "name": "0-1 gol",
-                "odd": 3.69
+                "odd": 3.68
               },
               {
                 "no": 2,
                 "name": "2-3 gol",
-                "odd": 1.85
+                "odd": 1.84
               },
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 3.29
+                "odd": 3.31
               },
               {
                 "no": 4,
                 "name": "6+ gol",
-                "odd": 11.55
+                "odd": 11.6
               }
             ]
           },
@@ -210984,12 +210984,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.52
+                "odd": 1.53
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 2
+                "odd": 1.98
               }
             ]
           },
@@ -211022,7 +211022,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.31
+                "odd": 2.29
               },
               {
                 "no": 2,
@@ -211032,7 +211032,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.91
+                "odd": 3.98
               }
             ]
           },
@@ -211046,17 +211046,17 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.16
+                "odd": 1.15
               },
               {
                 "no": 2,
                 "name": "1 ve 2",
-                "odd": 1.2
+                "odd": 1.19
               },
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.62
+                "odd": 1.66
               }
             ]
           },
@@ -211070,7 +211070,7 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.12
+                "odd": 1.11
               },
               {
                 "no": 2,
@@ -211080,7 +211080,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.37
+                "odd": 1.38
               }
             ]
           },
@@ -211099,7 +211099,7 @@
               {
                 "no": 2,
                 "name": "Çift",
-                "odd": 1.64
+                "odd": 1.66
               }
             ]
           },
@@ -211113,12 +211113,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.91
+                "odd": 3.93
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.11
+                "odd": 1.1
               }
             ]
           },
@@ -211151,12 +211151,12 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 2.74
+                "odd": 2.68
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 12.35
+                "odd": 12.75
               },
               {
                 "no": 3,
@@ -211166,32 +211166,32 @@
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 5.08
+                "odd": 4.97
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 4.89
+                "odd": 4.98
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 8.24
+                "odd": 8.3
               },
               {
                 "no": 7,
                 "name": "2/1",
-                "odd": 24.9
+                "odd": 24.45
               },
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 13.4
+                "odd": 13.75
               },
               {
                 "no": 9,
                 "name": "2/2",
-                "odd": 5.89
+                "odd": 6.02
               }
             ]
           },
@@ -211205,12 +211205,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.72
+                "odd": 1.74
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.74
+                "odd": 1.73
               }
             ]
           },
@@ -211224,12 +211224,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.28
+                "odd": 1.27
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.65
+                "odd": 2.7
               }
             ]
           },
@@ -211243,7 +211243,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 5.57
+                "odd": 5.44
               },
               {
                 "no": 2,
@@ -211262,7 +211262,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 13.45
+                "odd": 13.85
               },
               {
                 "no": 2,
@@ -211281,12 +211281,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.82
+                "odd": 1.84
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.64
+                "odd": 1.63
               }
             ]
           },
@@ -211300,12 +211300,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.44
+                "odd": 1.43
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.16
+                "odd": 2.19
               }
             ]
           },
@@ -211319,32 +211319,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 3.6
+                "odd": 3.54
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 3.44
+                "odd": 3.35
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 3.96
+                "odd": 4.06
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 12.05
+                "odd": 12.2
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 6.47
+                "odd": 6.6
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 7
+                "odd": 7.08
               }
             ]
           },
@@ -211363,7 +211363,7 @@
               {
                 "no": 2,
                 "name": "Eşit",
-                "odd": 3.25
+                "odd": 3.28
               },
               {
                 "no": 3,
@@ -211382,32 +211382,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 14.15
+                "odd": 14.1
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 2.65
+                "odd": 2.62
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 6.91
+                "odd": 6.95
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 2.91
+                "odd": 2.9
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 23.15
+                "odd": 23.6
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 4.49
+                "odd": 4.57
               }
             ]
           }
@@ -245152,29 +245152,29 @@
         "doubleChance1X": 1.43,
         "doubleChance12": 1.16,
         "doubleChanceX2": 1.33,
-        "goals25Under": 2.39,
-        "goals25Over": 1.35,
+        "goals25Under": 2.42,
+        "goals25Over": 1.34,
         "leagueCode": "Almanya Bundesliga",
         "groupId": "45",
         "subgroupId": "0",
-        "totalGoals01": 5.29,
-        "totalGoals23": 2.02,
-        "totalGoals46": 2.71,
-        "totalGoals7Plus": 6.66,
-        "halfTimeResult1": 2.93,
+        "totalGoals01": 5.38,
+        "totalGoals23": 2.04,
+        "totalGoals46": 2.7,
+        "totalGoals7Plus": 6.51,
+        "halfTimeResult1": 2.92,
         "halfTimeResultX": 2.31,
         "halfTimeResult2": 2.62,
         "handicapMs1": 1.41,
-        "handicapMsX": 4.16,
-        "handicapMs2": 3.8,
-        "bttsYes": 1.32,
-        "bttsNo": 2.53,
-        "halfTimeGoals15Under": 1.53,
-        "halfTimeGoals15Over": 1.98,
-        "goals15Under": 5.22,
+        "handicapMsX": 4.17,
+        "handicapMs2": 3.78,
+        "bttsYes": 1.31,
+        "bttsNo": 2.55,
+        "halfTimeGoals15Under": 1.54,
+        "halfTimeGoals15Over": 1.97,
+        "goals15Under": 5.3,
         "goals15Over": 1,
-        "goals35Under": 1.52,
-        "goals35Over": 2,
+        "goals35Under": 1.53,
+        "goals35Over": 1.98,
         "eventId": "3336656",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -245197,12 +245197,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.39
+                "odd": 2.42
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.35
+                "odd": 1.34
               }
             ]
           },
@@ -245216,7 +245216,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.57
+                "odd": 3.6
               },
               {
                 "no": 2,
@@ -245235,12 +245235,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.53
+                "odd": 1.54
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.98
+                "odd": 1.97
               }
             ]
           },
@@ -245254,7 +245254,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 5.22
+                "odd": 5.3
               },
               {
                 "no": 2,
@@ -245273,12 +245273,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.52
+                "odd": 1.53
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2
+                "odd": 1.98
               }
             ]
           },
@@ -245292,32 +245292,32 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 8.33
+                "odd": 8.45
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 5.62
+                "odd": 5.67
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 7.44
+                "odd": 7.55
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 3.35
+                "odd": 3.33
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 8.05
+                "odd": 7.95
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 2.88
+                "odd": 2.87
               }
             ]
           },
@@ -245331,17 +245331,17 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 7.66
+                "odd": 7.71
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.53
+                "odd": 1.52
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 3.3
+                "odd": 3.35
               },
               {
                 "no": 4,
@@ -245360,17 +245360,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.69
+                "odd": 2.68
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.69
+                "odd": 2.7
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.42
+                "odd": 2.41
               }
             ]
           },
@@ -245413,12 +245413,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 4.16
+                "odd": 4.17
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.8
+                "odd": 3.78
               }
             ]
           },
@@ -245432,22 +245432,22 @@
               {
                 "no": 1,
                 "name": "0-1 gol",
-                "odd": 5.29
+                "odd": 5.38
               },
               {
                 "no": 2,
                 "name": "2-3 gol",
-                "odd": 2.02
+                "odd": 2.04
               },
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 2.71
+                "odd": 2.7
               },
               {
                 "no": 4,
                 "name": "6+ gol",
-                "odd": 6.66
+                "odd": 6.51
               }
             ]
           },
@@ -245461,12 +245461,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.32
+                "odd": 1.31
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 2.53
+                "odd": 2.55
               }
             ]
           },
@@ -245499,7 +245499,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.93
+                "odd": 2.92
               },
               {
                 "no": 2,
@@ -245590,7 +245590,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.09
+                "odd": 3.06
               },
               {
                 "no": 2,
@@ -245628,12 +245628,12 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 3.91
+                "odd": 3.9
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 12.8
+                "odd": 12.75
               },
               {
                 "no": 3,
@@ -245643,17 +245643,17 @@
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 6.65
+                "odd": 6.68
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 6.03
+                "odd": 6.05
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 5.98
+                "odd": 6.01
               },
               {
                 "no": 7,
@@ -245663,12 +245663,12 @@
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 12.65
+                "odd": 12.6
               },
               {
                 "no": 9,
                 "name": "2/2",
-                "odd": 3.32
+                "odd": 3.31
               }
             ]
           },
@@ -245682,12 +245682,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.65
+                "odd": 1.66
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.82
+                "odd": 1.81
               }
             ]
           },
@@ -245701,12 +245701,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.78
+                "odd": 1.8
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.68
+                "odd": 1.66
               }
             ]
           },
@@ -245739,7 +245739,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 6.89
+                "odd": 6.88
               },
               {
                 "no": 2,
@@ -245758,12 +245758,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.74
+                "odd": 1.75
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.71
+                "odd": 1.7
               }
             ]
           },
@@ -245777,12 +245777,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.85
+                "odd": 1.86
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.62
+                "odd": 1.61
               }
             ]
           },
@@ -245796,32 +245796,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 3.92
+                "odd": 3.91
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 6.08
+                "odd": 6.13
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 3.99
+                "odd": 3.97
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 20.05
+                "odd": 20.45
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 3.45
+                "odd": 3.44
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 5.18
+                "odd": 5.22
               }
             ]
           },
@@ -245835,12 +245835,12 @@
               {
                 "no": 1,
                 "name": "1.",
-                "odd": 2.86
+                "odd": 2.85
               },
               {
                 "no": 2,
                 "name": "Eşit",
-                "odd": 3.66
+                "odd": 3.67
               },
               {
                 "no": 3,
@@ -245859,27 +245859,27 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 13.15
+                "odd": 13.05
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 3.59
+                "odd": 3.6
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 5.83
+                "odd": 5.8
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 3.57
+                "odd": 3.6
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 11.9
+                "odd": 11.75
               },
               {
                 "no": 6,
