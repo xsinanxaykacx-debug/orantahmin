@@ -61,7 +61,38 @@ async function main():Promise<void> {
   if(!Array.isArray(root?.events) || !root.events.length) throw new Error("iddaa maç listesi boş.");
 
   const targetDate=getIstanbulDateKey();
-  const sourceFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
+  const footballEvents=root.events.filter((event:any)=>Number(event.sid)===1);
+  const sourceFootballCount=footballEvents.length;
+  const rawStateCounts:Record<string,number>={}, rawIlCounts:Record<string,number>={};
+  for(const event of footballEvents) {
+    const state=String(event.s ?? "missing"), il=String(event.il ?? "missing");
+    rawStateCounts[state]=(rawStateCounts[state]||0)+1;
+    rawIlCounts[il]=(rawIlCounts[il]||0)+1;
+  }
+  console.log("IDDAA_RAW_EVENT_FLAGS="+JSON.stringify({total:footballEvents.length,states:rawStateCounts,inPlayFlags:rawIlCounts}));
+
+  const probeSpecs=[
+    {name:"type1",url:`${SB}/events?st=1&type=1&version=0`},
+    {name:"type2",url:`${SB}/events?st=1&type=2&version=0`},
+    {name:"type3",url:`${SB}/events?st=1&type=3&version=0`},
+    {name:"live-events",url:`${SB}/live-events?st=1`},
+    {name:"live",url:`${SB}/live?st=1`},
+    {name:"events-live",url:`${SB}/events/live?st=1`}
+  ];
+  const probePayloads=await Promise.all(probeSpecs.map(spec=>fetchOptionalJson(spec.url)));
+  const endpointProbe=probeSpecs.map((spec,index)=>{
+    const payload=probePayloads[index];
+    const data=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
+    const events=Array.isArray(data?.events)?data.events:Array.isArray(data)?data:[];
+    const bySid:Record<string,number>={}, byState:Record<string,number>={}, byIl:Record<string,number>={};
+    for(const event of events) {
+      const sid=String(event?.sid??"missing"), state=String(event?.s??"missing"), il=String(event?.il??"missing");
+      bySid[sid]=(bySid[sid]||0)+1; byState[state]=(byState[state]||0)+1; byIl[il]=(byIl[il]||0)+1;
+    }
+    return {name:spec.name,ok:payload?.isSuccess===true,total:events.length,bySid,byState,byIl,
+      sample:events.slice(0,2).map((event:any)=>({i:event.i,hn:event.hn,an:event.an,sid:event.sid,s:event.s,il:event.il,d:event.d}))};
+  });
+  console.log("IDDAA_ENDPOINT_PROBES="+JSON.stringify(endpointProbe));
   if(!sourceFootballCount) {
     throw new Error("İddaa bülteninde futbol maçı bulunamadı; mevcut bülten korunuyor.");
   }
