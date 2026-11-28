@@ -10,7 +10,7 @@ import { IDDAA_LEAGUES } from "./lib/iddaaLeagues";
 
 type MatchLiveState = { status: number; homeScore: string | null; awayScore: string | null; minute: string | null };
 type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[]; liveMinute?: string | null };
-type StatusFilter = "all" | "live" | "finished";
+type StatusFilter = "all" | "live";
 type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
 type NavItem = { id: "matches" | "leagues" | "statistics" | "settings"; label: string; icon: string };
@@ -463,26 +463,15 @@ function App() {
     () => applyMatchFilters(displayMatches.filter(match => isLiveMatch(match.status))),
     [displayMatches, selectedDate, selectedLeagues]
   );
-  const scopedFinishedMatches = useMemo(
-    () => applyMatchFilters(displayMatches.filter(match => isFinishedMatch(match.status))),
-    [displayMatches, selectedDate, selectedLeagues]
-  );
-
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
-    const source = statusFilter === "live"
-      ? scopedLiveMatches
-      : statusFilter === "finished"
-        ? scopedFinishedMatches
-        : scopedMatches;
+    const source = statusFilter === "live" ? scopedLiveMatches : scopedMatches;
     return source.filter((match) => {
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
         .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
-    }).sort((a, b) => statusFilter === "finished"
-      ? dateTimeKey(b).localeCompare(dateTimeKey(a))
-      : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [scopedMatches, scopedLiveMatches, scopedFinishedMatches, statusFilter, search]);
+    }).sort((a, b) => dateTimeKey(a).localeCompare(dateTimeKey(b)));
+  }, [scopedMatches, scopedLiveMatches, statusFilter, search]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -511,7 +500,6 @@ function App() {
   );
 
   const liveCount = scopedLiveMatches.length;
-  const finishedCount = scopedFinishedMatches.length;
   const visibleCount = filteredMatches.length;
 
   useEffect(() => {
@@ -568,7 +556,6 @@ function App() {
             <div className="status-filters">
               <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{scopedMatches.length}</b></button>
               <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
-              <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
             </div>
             <div className="match-filters">
               <label className="match-filter-date"><span>TARİH</span>
@@ -592,7 +579,7 @@ function App() {
             </div>
           </>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
-          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : statusFilter === "live" ? liveCount + " canlı maç" : statusFilter === "finished" ? finishedCount + " tamamlanan maç" : matches.length + " bülten maçı"}</span></div>
+          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : statusFilter === "live" ? liveCount + " canlı maç" : matches.length + " bülten maçı"}</span></div>
         </div>
 
         {activeNav === "statistics" ? <div className="statistics-nav-options">
@@ -630,7 +617,7 @@ function App() {
         </div> : activeNav === "matches" ? <div className="match-list-scroll">
           {loading ? <div className="list-message">Bülten yükleniyor…</div>
             : error ? <div className="list-message error-text">{error}</div>
-            : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "finished" ? "Tamamlanmış maç bulunamadı." : statusFilter === "live" ? "Şu anda canlı maç bulunamadı." : "Eşleşen maç bulunamadı."}</div>
+            : filteredMatches.length === 0 ? <div className="list-message">{statusFilter === "live" ? "Şu anda canlı maç bulunamadı." : "Eşleşen maç bulunamadı."}</div>
             : leagueGroups.map(([league, group]) => (
               <section className="league-group" key={league}>
                 <div className="league-heading"><span className="league-dot" />{league}<b>{group.length}</b></div>
