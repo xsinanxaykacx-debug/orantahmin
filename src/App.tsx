@@ -64,6 +64,11 @@ function todayIstanbulKey(): string {
   const get = (type: string) => parts.find(part => part.type === type)?.value || "";
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
+function shiftIstanbulDateKey(dateKey: string, offsetDays: number): string {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + offsetDays));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+}
 function dateOptionLabel(dateKey: string): string {
   const date = new Date(`${dateKey}T12:00:00+03:00`);
   const label = new Intl.DateTimeFormat("tr-TR", {
