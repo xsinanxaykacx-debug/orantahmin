@@ -92,6 +92,17 @@ function readIddaaFirstHalfScore(_match: DisplayMatch): { home: number; away: nu
 function matchKey(match: DisplayMatch): string {
   return String(match.matchId);
 }
+function normalizeFixtureTeam(value: string | undefined): string {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ı/g, "i")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+function fixtureIdentity(match: DisplayMatch): string {
+  return `${matchDateKey(match)}|${normalizeFixtureTeam(match.homeName)}|${normalizeFixtureTeam(match.awayName)}`;
+}
 
 const MatchRow = memo(function MatchRow({
   match, active, onSelect
@@ -398,20 +409,24 @@ function App() {
   const matches = useMemo<DisplayMatch[]>(() => {
     const baseMatches = dedupeByMatchId(bulletin?.matches ?? []);
     const liveById = new Map(iddaaLiveMatches.map(match => [String(match.matchId), match]));
+    const finishedByFixture = new Map(
+      fotmobFinishedMatches.map(match => [fixtureIdentity(match), match])
+    );
     const baseIds = new Set(baseMatches.map(match => String(match.matchId)));
     const merged = baseMatches.map(match => {
       const id = String(match.matchId);
       const iddaaLive = liveById.get(id);
       const fotmobLive = fotmobLiveStates[id];
-      if (!iddaaLive && !fotmobLive) return match;
+      const fotmobFinished = finishedByFixture.get(fixtureIdentity(match));
+      if (!iddaaLive && !fotmobLive && !fotmobFinished) return match;
       return {
         ...match,
-        status: iddaaLive ? 1 : fotmobLive?.status ?? match.status,
+        status: iddaaLive ? 1 : fotmobLive?.status ?? (fotmobFinished ? 4 : match.status),
         liveMinute: iddaaLive?.liveMinute ?? fotmobLive?.minute ?? null,
         fields: {
           ...match.fields,
-          scoreHome: iddaaLive?.fields.scoreHome ?? fotmobLive?.homeScore ?? match.fields.scoreHome,
-          scoreAway: iddaaLive?.fields.scoreAway ?? fotmobLive?.awayScore ?? match.fields.scoreAway
+          scoreHome: iddaaLive?.fields.scoreHome ?? fotmobLive?.homeScore ?? fotmobFinished?.fields.scoreHome ?? match.fields.scoreHome,
+          scoreAway: iddaaLive?.fields.scoreAway ?? fotmobLive?.awayScore ?? fotmobFinished?.fields.scoreAway ?? match.fields.scoreAway
         },
         sourceRecords: iddaaLive
           ? [...match.sourceRecords, ...iddaaLive.sourceRecords]
@@ -420,7 +435,7 @@ function App() {
     });
     const liveOnly = iddaaLiveMatches.filter(match => !baseIds.has(String(match.matchId)));
     return [...merged, ...liveOnly];
-  }, [bulletin, fotmobLiveStates, iddaaLiveMatches]);
+  }, [bulletin, fotmobLiveStates, fotmobFinishedMatches, iddaaLiveMatches]);
   const displayMatches = matches;
 
   const allMatchesForFilters = displayMatches;
