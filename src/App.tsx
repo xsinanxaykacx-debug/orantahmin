@@ -92,7 +92,7 @@ function readIddaaFirstHalfScore(_match: DisplayMatch): { home: number; away: nu
 function matchKey(match: DisplayMatch): string {
   return String(match.matchId);
 }
-function normalizeFixtureTeam(value: string | undefined): string {
+function normalizeFixtureTeam(value: string | null | undefined): string {
   return String(value || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
