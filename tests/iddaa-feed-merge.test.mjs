@@ -87,3 +87,29 @@ test("authoritative bulletin rejects type-2-only fixtures but accepts live-only 
   assert.equal(byId.get("10").m.length, 2);
   assert.equal(byId.get("20").s, 1);
 });
+
+test("football programme uses only type-0 football fixtures; other feeds only enrich existing rows", () => {
+  const primary = {
+    data: [{ events: [
+      { i: 1, sid: 1, s: 0, d: 1000, m: [{ st: 1 }] },
+      { i: 2, sid: 2, s: 0, d: 2000, m: [{ st: 1 }] },
+    ] }],
+  };
+  const live = {
+    data: { events: [
+      { i: 1, sid: 1, s: 1, d: 1000, m: [{ st: 1 }, { st: 2 }] },
+      { i: 3, sid: 1, s: 1, d: 3000, m: [] },
+    ] },
+  };
+  const extended = {
+    data: { events: [{ i: 4, sid: 1, s: 0, d: 4000, m: [] }] },
+  };
+
+  const football = mergeIddaaEventFeeds([primary, live, extended], {
+    includeNewFromFeedIndexes: [],
+  }).filter(row => Number(row.sid) === 1);
+
+  assert.deepEqual(football.map(row => String(row.i)), ["1"]);
+  assert.equal(football[0].s, 1);
+  assert.equal(football[0].m.length, 2);
+});
