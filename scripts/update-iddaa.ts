@@ -63,7 +63,9 @@ async function main():Promise<void> {
     getJson(`${SB}/events?st=1&type=2&version=0`,45000)
   ]);
   const feeds=[feed,liveFeed,extendedFeed];
-  const events=mergeIddaaEventFeeds(feeds);
+  // type=0 is the authoritative public match programme. type=1 may add
+  // live-only fixtures; type=2 is enrichment-only and must not inflate the list.
+  const events=mergeIddaaEventFeeds(feeds,{includeNewFromFeedIndexes:[1]});
   if(!events.length) throw new Error("İddaa maç listesi boş.");
 
   const targetDate=getIstanbulDateKey();

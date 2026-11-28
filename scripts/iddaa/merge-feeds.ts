@@ -24,10 +24,16 @@ function extractScoreMap(response: any): Record<string, any> {
   return scores;
 }
 
-export function mergeIddaaEventFeeds(responses: any[]): RawEvent[] {
+export function mergeIddaaEventFeeds(
+  responses: any[],
+  options: { includeNewFromFeedIndexes?: number[] } = {},
+): RawEvent[] {
   const merged = new Map<string, RawEvent>();
+  const includeNewFromFeedIndexes = new Set(
+    options.includeNewFromFeedIndexes ?? responses.map((_, index) => index),
+  );
 
-  for (const response of responses) {
+  for (const [feedIndex, response] of responses.entries()) {
     const scores = extractScoreMap(response);
     for (const event of extractIddaaEvents(response)) {
       if (event?.i == null) continue;
@@ -35,6 +41,9 @@ export function mergeIddaaEventFeeds(responses: any[]): RawEvent[] {
       const previous = merged.get(id);
 
       if (!previous) {
+        // Feeds marked enrichment-only may update an existing event, but cannot
+        // introduce fixtures that are not part of the authoritative bulletin.
+        if (feedIndex !== 0 && !includeNewFromFeedIndexes.has(feedIndex)) continue;
         merged.set(id, {
           ...event,
           ...(scores[id] ? { liveScore: scores[id] } : {})

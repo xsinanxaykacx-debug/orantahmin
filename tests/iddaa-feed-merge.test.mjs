@@ -58,3 +58,28 @@ test("keeps a valid date when a later feed has no event timestamp", () => {
   ]);
   assert.equal(merged[0].d, 1234);
 });
+
+
+test("authoritative bulletin rejects type-2-only fixtures but accepts live-only events", () => {
+  const primary = {
+    data: [{ events: [{ i: 10, sid: 1, s: 0, d: 1000, m: [{ st: 1 }] }] }]
+  };
+  const live = {
+    data: { events: [{ i: 20, sid: 1, s: 1, d: 2000, m: [] }] },
+  };
+  const enrichment = {
+    data: { events: [
+      { i: 10, sid: 1, s: 0, d: 1000, m: [{ st: 1 }, { st: 88 }] },
+      { i: 30, sid: 1, s: 0, d: 3000, m: [{ st: 1 }] },
+    ] },
+  };
+
+  const merged = mergeIddaaEventFeeds([primary, live, enrichment], {
+    includeNewFromFeedIndexes: [1],
+  });
+  const byId = new Map(merged.map(row => [String(row.i), row]));
+
+  assert.deepEqual([...byId.keys()].sort(), ["10", "20"]);
+  assert.equal(byId.get("10").m.length, 2);
+  assert.equal(byId.get("20").s, 1);
+});
