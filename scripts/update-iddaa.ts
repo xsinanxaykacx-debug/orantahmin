@@ -1,6 +1,7 @@
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { mergeIddaaEventDetail, transformIddaaPayload } from "./iddaa/transform.ts";
+import { filterIddaaEventsForDate, getIstanbulDateKey } from "./iddaa/date-filter.ts";
 import { createFotMobEventMap, fetchFotMobFixtures, getFotMobDates } from "./fotmob/matcher.ts";
 
 const ROOT = process.cwd();
@@ -55,11 +56,6 @@ function parseCompetitionMap(payload:any):Record<string,string> {
   return result;
 }
 
-function eventsOf(payload:any):any[] {
-  const root=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
-  return Array.isArray(root?.events)?root.events:[];
-}
-
 async function enrichWithFullMarkets(events:any[]):Promise<{events:any[];failed:string[]}> {
   const football=events.filter(event=>Number(event.sid)===1);
   const enriched=new Map<string,any>();
@@ -92,6 +88,16 @@ async function main():Promise<void> {
   const feed=await getJson(FEED_URL,45000);
   const root=Array.isArray(feed.data)?feed.data[0]:feed.data;
   if(!Array.isArray(root?.events) || !root.events.length) throw new Error("iddaa maç listesi boş.");
+
+  const targetDate=getIstanbulDateKey();
+  const sourceFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
+  root.events=filterIddaaEventsForDate(root.events,targetDate);
+  const dailyFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
+  if(!dailyFootballCount) {
+    throw new Error(`İddaa bülteninde ${targetDate} (Türkiye saati) için futbol maçı bulunamadı; mevcut bülten korunuyor.`);
+  }
+
+  console.log(`iddaa günlük filtre: ${targetDate} Europe/Istanbul | Kaynak futbol maçı: ${sourceFootballCount} | Günlük futbol maçı: ${dailyFootballCount}`);
   const [marketConfigPayload,competitionPayload]=await Promise.all([
     fetchOptionalJson(`${SB}/get_market_config?st=1`),
     fetchOptionalJson(`${SB}/competitions?st=1`)
@@ -100,7 +106,7 @@ async function main():Promise<void> {
     ? marketConfigPayload.data.m : {};
   const competitionMap=parseCompetitionMap(competitionPayload);
 
-  console.log(`iddaa: ${root.events.filter((event:any)=>Number(event.sid)===1).length} futbol maçı bulundu; tam maç detayları alınıyor (eşzamanlı istek: ${CONCURRENCY}).`);
+  console.log(`iddaa: ${dailyFootballCount} günlük futbol maçı bulundu; tam market detayları alınıyor (eşzamanlı istek: ${CONCURRENCY}).`);
   const full=await enrichWithFullMarkets(root.events);
   root.events=full.events;
   const bulletin=transformIddaaPayload(feed,marketConfig,competitionMap);
@@ -118,9 +124,8 @@ async function main():Promise<void> {
     }
   }
 
-  const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Istanbul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-  const rawName=`iddaa_events_full_${today.replace(/-/g,"")}_${stamp}.json`;
+  const rawName=`iddaa_events_full_${targetDate.replace(/-/g,"")}_${stamp}.json`;
   const raw=JSON.stringify(feed);
   await mkdir(RAW_DIR,{recursive:true});
   await writeFile(resolve(RAW_DIR,rawName),raw,"utf-8");
@@ -130,7 +135,7 @@ async function main():Promise<void> {
   await writeFile(temp,JSON.stringify(bulletin,null,2),"utf-8");
   await rename(temp,OUTPUT);
 
-  console.log(`iddaa TAM MARKET: ${bulletin.meta.sourceMatchCount} kaynak kaydı | ${bulletin.matches.length} futbol maçı | ${matchesWithMarkets} tam marketli maç | ${markets.size} farklı market kodu | ${outcomes} fiyatlı sonuç | maç başına en yüksek market: ${maxMarkets}`);
+  console.log(`iddaa TAM MARKET: ${bulletin.meta.sourceMatchCount} kaynak kaydı | ${bulletin.matches.length} günlük futbol maçı | ${matchesWithMarkets} tam marketli maç | ${markets.size} farklı market kodu | ${outcomes} fiyatlı sonuç | maç başına en yüksek market: ${maxMarkets}`);
   console.log("MARKET_FREQUENCIES="+JSON.stringify(Object.fromEntries([...markets].sort((a,b)=>a[0].localeCompare(b[0])))));
   console.log(`COMPETITIONS_RESOLVED=${Object.keys(competitionMap).length} | MARKET_NAMES_RESOLVED=${Object.keys(marketConfig).length}`);
   console.log("SAMPLE_MATCHES="+JSON.stringify(bulletin.matches.slice(0,10).map(m=>({
@@ -146,7 +151,7 @@ async function main():Promise<void> {
     const tempMap=FOTMOB_OUTPUT+".tmp";
     await writeFile(tempMap,JSON.stringify(eventMap,null,2),"utf-8");
     await rename(tempMap,FOTMOB_OUTPUT);
-    console.log(`FotMob: ${fixtures.length} maç | Eşleşen: ${eventMap.summary.matched} | Belirsiz: ${eventMap.summary.ambiguous} | Eşleşmeyen: ${eventMap.summary.unmatched}`);
+    console.log(`FotMob: ${dates.length} günlük tarih | ${fixtures.length} maç | Eşleşen: ${eventMap.summary.matched} | Belirsiz: ${eventMap.summary.ambiguous} | Eşleşmeyen: ${eventMap.summary.unmatched}`);
   } catch(error) {
     console.warn("FotMob eşleştirmesi başarısız; önceki eşleşme dosyası korundu:",error instanceof Error?error.message:error);
   }
