@@ -131,10 +131,16 @@ export default async function handler(req: Req, res: Res) {
 
   try {
     const payload = await getJson(`${SPORTSBOOK}/events?st=1&type=1&version=0`);
-    const root = Array.isArray(payload.data) ? payload.data[0] : payload.data;
-    const events = Array.isArray(root?.events) ? root.events : [];
+    const roots = Array.isArray(payload.data) ? payload.data : [payload.data];
+    const groupedEvents = roots.flatMap((root: any) => Array.isArray(root?.events) ? root.events : []);
+    const events = groupedEvents.length
+      ? groupedEvents
+      : roots.filter((row: any) => row && typeof row === "object" && row.i != null && row.sid != null);
     const liveEvents = events.filter((event: any) => Number(event.sid) === 1 && Number(event.s) === 1);
-    const scoreMap = root?.sc && typeof root.sc === "object" ? root.sc : {};
+    const scoreMap: Record<string, any> = { ...(payload?.sc && typeof payload.sc === "object" ? payload.sc : {}) };
+    for (const root of roots) {
+      if (root?.sc && typeof root.sc === "object") Object.assign(scoreMap, root.sc);
+    }
     const metadata = await getMetadata();
     const matches = liveEvents.map((event: any, index: number) =>
       toLiveMatch(event, scoreMap[String(event.i)] || scoreMap[event.i] || null,
