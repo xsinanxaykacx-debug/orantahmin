@@ -95,6 +95,35 @@ async function main():Promise<void> {
     }
   }
 
+  const countsByDate=new Map<string,number>();
+  const statusCounts:Record<string,number>={};
+  const eventStateCounts:Record<string,number>={};
+  const leagues=new Set<string>();
+  let liveFlagCount=0;
+  for(const match of bulletin.matches) {
+    const date=String(match.date || "Tarih yok");
+    countsByDate.set(date,(countsByDate.get(date)||0)+1);
+    const status=String(match.status ?? "null");
+    statusCounts[status]=(statusCounts[status]||0)+1;
+    const eventState=String(match.fields.iddaaEventState ?? "null");
+    eventStateCounts[eventState]=(eventStateCounts[eventState]||0)+1;
+    const league=String(match.fields.leagueCode || "").trim();
+    if(league) leagues.add(league);
+    if(match.fields.iddaaInPlayFlag===true) liveFlagCount++;
+  }
+  const programSummary={
+    totalMatches:bulletin.matches.length,
+    countsByDate:Object.fromEntries([...countsByDate.entries()].sort((a,b)=>a[0].split(".").reverse().join("-").localeCompare(b[0].split(".").reverse().join("-")))),
+    distinctLeagues:leagues.size,
+    matchesWithMarkets,
+    matchesWithoutMarkets:bulletin.matches.length-matchesWithMarkets,
+    liveFlagCount,
+    statusCounts,
+    iddaaEventStateCounts:eventStateCounts
+  };
+  bulletin.meta.programSummary=programSummary;
+  console.log("IDDAA_PROGRAM_SUMMARY="+JSON.stringify(programSummary));
+
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
   const rawName=`iddaa_events_full_${targetDate.replace(/-/g,"")}_${stamp}.json`;
   const raw=JSON.stringify({fetchedAt:new Date().toISOString(),feeds:{type0:feed,type1:liveFeed,type2:extendedFeed},mergedEventCount:events.length});
