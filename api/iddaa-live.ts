@@ -61,6 +61,11 @@ export default async function handler(req: Req, res: Res) {
             i: event.i, hn: event.hn, an: event.an, d: event.d, sid: event.sid,
             s: event.s, il: event.il, ci: event.ci, markets: event.m?.length
           })),
+          stateOneSample: list.filter((event: any) => Number(event?.s) === 1).slice(0, 8).map((event: any) => ({
+            ...event, m: Array.isArray(event.m) ? event.m.slice(0, 2) : event.m
+          })),
+          scoreMapKeys: payload?.data?.sc && typeof payload.data.sc === "object" ? Object.keys(payload.data.sc).length : 0,
+          scoreMapSample: payload?.data?.sc && typeof payload.data.sc === "object" ? Object.entries(payload.data.sc).slice(0, 8) : [],
           htmlHints: !payload ? {
             hasNextData: body.includes("__NEXT_DATA__"),
             hasLiveSample: /Ipswich Town|Elche|Torino/.test(body),
