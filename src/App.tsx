@@ -407,7 +407,7 @@ function App() {
       return {
         ...match,
         status: iddaaLive ? 1 : fotmobLive?.status ?? match.status,
-        liveMinute: iddaaLive?.liveMinute ?? fotmobLive?.minute ?? match.liveMinute,
+        liveMinute: iddaaLive?.liveMinute ?? fotmobLive?.minute ?? null,
         fields: {
           ...match.fields,
           scoreHome: iddaaLive?.fields.scoreHome ?? fotmobLive?.homeScore ?? match.fields.scoreHome,
