@@ -1,4 +1,4 @@
-import { normalizeIddaaLiveResults } from "../scripts/iddaa/live-status.ts";
+import { normalizeIddaaLiveResults } from "../scripts/iddaa/live-status.js";
 
 type Req = { method?: string; query: Record<string, string | string[] | undefined> };
 type Res = { setHeader(name: string, value: string): void; status(code: number): Res; json(body: unknown): Res };
