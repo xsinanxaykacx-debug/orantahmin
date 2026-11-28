@@ -88,6 +88,29 @@ async function main():Promise<void> {
   const type1LiveEvents=type1Events.filter((event:any)=>Number(event.s)===1);
   const type1LiveOverlap=type1LiveEvents.filter((event:any)=>baseIds.has(String(event.i)));
   const type1LiveAdditional=type1LiveEvents.filter((event:any)=>!baseIds.has(String(event.i)));
+  const nowEpoch=Math.floor(Date.now()/1000);
+  const basePast=footballEvents.filter((event:any)=>Number(event.d)<nowEpoch);
+  const baseFuture=footballEvents.filter((event:any)=>Number(event.d)>=nowEpoch);
+  const statsPayload=await fetchOptionalJson(`https://statisticsv2.iddaa.com/live-results?sportId=1&date=${targetDate}`);
+  const statsScores=statsPayload?.data?.sc&&typeof statsPayload.data.sc==="object"?statsPayload.data.sc:{};
+  const statsStatusCounts:Record<string,number>={}, statsBaseOverlap:Record<string,number>={};
+  for(const [id,row] of Object.entries(statsScores) as Array<[string,any]>) {
+    const state=String(row?.s??"missing");
+    statsStatusCounts[state]=(statsStatusCounts[state]||0)+1;
+    if(baseIds.has(id)) statsBaseOverlap[state]=(statsBaseOverlap[state]||0)+1;
+  }
+  console.log("IDDAA_MATCH_WINDOW_AND_RESULTS="+JSON.stringify({
+    now:new Date().toISOString(),
+    baseTotal:footballEvents.length,
+    basePast:basePast.length,
+    baseFuture:baseFuture.length,
+    type1Live:type1LiveEvents.length,
+    futurePlusLive:baseFuture.length+type1LiveEvents.length,
+    statisticsCount:Object.keys(statsScores).length,
+    statisticsStates:statsStatusCounts,
+    statisticsOverlapWithBase:statsBaseOverlap,
+    pastBaseSamples:basePast.slice(0,15).map((event:any)=>({id:event.i,home:event.hn,away:event.an,kickoff:new Date(Number(event.d)*1000).toISOString()}))
+  }));
   console.log("IDDAA_TYPE1_OVERLAP="+JSON.stringify({
     type1Football:type1Events.length,
     type1LiveStateOne:type1LiveEvents.length,
