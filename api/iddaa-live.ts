@@ -13,7 +13,7 @@ export default async function handler(req: Req, res: Res) {
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
   const date = queryValue(req.query.date);
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return res.status(400).json({ source: "iddaa.com", error: "Geçerli tarih gerekli (YYYY-MM-DD)." });
   }
 
