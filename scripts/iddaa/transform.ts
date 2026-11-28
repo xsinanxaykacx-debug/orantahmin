@@ -113,7 +113,6 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   const epoch = Number(event.d);
   if (!id || !home || !away || !Number.isFinite(epoch) || epoch <= 0) return null;
   const {date,time} = dateParts(epoch);
-  if (!Array.isArray(event.m) || event.m.length === 0) return null;
   const markets = parseIddaaMarkets(event, marketConfig);
   const ms = marketFor(event,1,1);
   const dc = marketFor(event,2,92);
