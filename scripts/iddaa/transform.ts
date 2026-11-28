@@ -113,7 +113,6 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   const epoch = Number(event.d);
   if (!id || !home || !away || !Number.isFinite(epoch) || epoch <= 0) return null;
   const {date,time} = dateParts(epoch);
-  if (!Array.isArray(event.m) || event.m.length === 0) return null;
   const markets = parseIddaaMarkets(event, marketConfig);
   const ms = marketFor(event,1,1);
   const dc = marketFor(event,2,92);
@@ -177,7 +176,8 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   fields.iddaaMarkets = markets;
   fields.competitionId = event.ci ?? null;
   fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
-  fields.isLive = Boolean(event.k0dd);
+  fields.iddaaEventState = event.s ?? null;
+  fields.iddaaInPlayFlag = event.il ?? null;
   return {
     matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:[],
     source:{groupIndex:0,matchIndex:index}
