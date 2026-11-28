@@ -306,6 +306,7 @@ function MatchDetail({ match, tab, onTabChange }: {
 function App() {
   const [bulletin, setBulletin] = useState<BulletinDocument | null>(null);
   const [fotmobLiveStates, setFotmobLiveStates] = useState<Record<string, MatchLiveState>>({});
+  const [iddaaLiveMatches, setIddaaLiveMatches] = useState<DisplayMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
@@ -335,36 +336,55 @@ function App() {
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setInterval> | undefined;
+    let mapPromise: Promise<any[]> | null = null;
+
+    const loadEventMap = () => {
+      if (!mapPromise) {
+        mapPromise = fetch("/data/fotmob-event-map.json", { cache: "no-store" })
+          .then(response => response.ok ? response.json() : null)
+          .then(payload => Array.isArray(payload?.matches) ? payload.matches : [])
+          .catch(() => []);
+      }
+      return mapPromise;
+    };
 
     const refreshLiveStatuses = async () => {
       try {
-        const today = todayIstanbulKey();
-        const dates = [-3, -2, -1, 0].map(offset => shiftIstanbulDateKey(today, offset));
-        const payloads = await Promise.all(dates.map(async date => {
-          const response = await fetch(`/api/iddaa-live?date=${date}`, { cache: "no-store" });
-          if (!response.ok) return null;
-          return await response.json() as {
-            matches?: Array<{
-              eventId: string; status: number; homeScore: string | null;
-              awayScore: string | null; minute: string | null;
-            }>;
-          };
-        }));
+        const liveResponse = await fetch("/api/iddaa-live", { cache: "no-store" });
+        if (liveResponse.ok) {
+          const livePayload = await liveResponse.json();
+          if (active && Array.isArray(livePayload?.matches)) {
+            setIddaaLiveMatches(dedupeByMatchId(livePayload.matches));
+          }
+        }
+
+        const mapRows = await loadEventMap();
+        const iddaaByFotMob = new Map<string, string>();
+        for (const row of mapRows) {
+          if (row?.state === "matched" && row?.fotmobMatchId && row?.iddaaEventId) {
+            iddaaByFotMob.set(String(row.fotmobMatchId), String(row.iddaaEventId));
+          }
+        }
+        const ids = [...iddaaByFotMob.keys()];
+        if (!ids.length) return;
+        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = await response.json();
         if (!active) return;
         const next: Record<string, MatchLiveState> = {};
-        for (const payload of payloads) {
-          for (const item of payload?.matches || []) {
-            next[String(item.eventId)] = {
-              status: item.status,
-              homeScore: item.homeScore,
-              awayScore: item.awayScore,
-              minute: item.minute
-            };
-          }
+        for (const fixture of payload?.matches || []) {
+          const iddaaId = iddaaByFotMob.get(String(fixture.fotmobMatchId));
+          if (!iddaaId) continue;
+          next[iddaaId] = {
+            status: fixture.finished ? 4 : fixture.started ? 1 : 0,
+            homeScore: fixture.homeScore == null ? null : String(fixture.homeScore),
+            awayScore: fixture.awayScore == null ? null : String(fixture.awayScore),
+            minute: fixture.minute == null ? null : String(fixture.minute)
+          };
         }
         setFotmobLiveStates(next);
       } catch {
-        // Keep the last successful Iddaa live-results snapshot when the source is temporarily unavailable.
+        // Keep the last successful Iddaa and FotMob snapshots when either source is temporarily unavailable.
       }
     };
 
@@ -392,37 +412,44 @@ function App() {
   }), [bulletin, fotmobLiveStates]);
   const displayMatches = matches;
 
-  const dateOptions = useMemo(() => [...new Set(displayMatches.map(matchDateKey).filter(Boolean))].sort(), [displayMatches]);
+  const allMatchesForFilters = useMemo(
+    () => dedupeByMatchId([...displayMatches, ...iddaaLiveMatches]),
+    [displayMatches, iddaaLiveMatches]
+  );
+  const dateOptions = useMemo(() => [...new Set(allMatchesForFilters.map(matchDateKey).filter(Boolean))].sort(), [allMatchesForFilters]);
   const availableLeagues = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const match of displayMatches) {
+    for (const match of allMatchesForFilters) {
       const league = match.fields.leagueCode?.trim() || "Lig kodu bulunmuyor";
       counts.set(league, (counts.get(league) || 0) + 1);
     }
     return [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0], "tr"));
-  }, [displayMatches]);
+  }, [allMatchesForFilters]);
 
-  const scopedMatches = useMemo(() => displayMatches.filter(match => {
+  const applyMatchFilters = (rows: DisplayMatch[]) => rows.filter(match => {
     if (selectedDate !== "all" && matchDateKey(match) !== selectedDate) return false;
     const league = match.fields.leagueCode?.trim() || "Lig kodu bulunmuyor";
     if (selectedLeagues.length && !selectedLeagues.includes(league)) return false;
     return true;
-  }), [displayMatches, selectedDate, selectedLeagues]);
+  });
+  const scopedMatches = useMemo(() => applyMatchFilters(displayMatches), [displayMatches, selectedDate, selectedLeagues]);
+  const scopedLiveMatches = useMemo(() => applyMatchFilters(iddaaLiveMatches), [iddaaLiveMatches, selectedDate, selectedLeagues]);
 
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
-    return scopedMatches.filter((match) => {
-      const live = isLiveMatch(match.status);
-      if (statusFilter === "live" && !live) return false;
-      const finished = isFinishedMatch(match.status);
-      if (statusFilter === "finished" && !finished) return false;
+    const source = statusFilter === "live"
+      ? scopedLiveMatches
+      : statusFilter === "finished"
+        ? scopedMatches.filter(match => isFinishedMatch(match.status))
+        : scopedMatches;
+    return source.filter((match) => {
       if (!query) return true;
       return [match.homeName, match.awayName, match.fields.leagueCode, String(match.matchId)]
         .some((value) => String(value ?? "").toLocaleLowerCase("tr-TR").includes(query));
     }).sort((a, b) => statusFilter === "finished"
       ? dateTimeKey(b).localeCompare(dateTimeKey(a))
       : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [scopedMatches, statusFilter, search]);
+  }, [scopedMatches, scopedLiveMatches, statusFilter, search]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -436,8 +463,9 @@ function App() {
   }, [filteredMatches]);
 
   const selectedMatch = useMemo(
-    () => displayMatches.find((match) => String(match.matchId) === selectedId) ?? null,
-    [displayMatches, selectedId]
+    () => displayMatches.find((match) => String(match.matchId) === selectedId)
+      ?? iddaaLiveMatches.find((match) => String(match.matchId) === selectedId) ?? null,
+    [displayMatches, iddaaLiveMatches, selectedId]
   );
   const filteredLeagues = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
@@ -448,13 +476,13 @@ function App() {
     [leagueDirectory, selectedLeagueId]
   );
 
-  const liveCount = useMemo(() => scopedMatches.filter(match => isLiveMatch(match.status)).length, [scopedMatches]);
+  const liveCount = scopedLiveMatches.length;
   const finishedCount = useMemo(() => scopedMatches.filter(match => isFinishedMatch(match.status)).length, [scopedMatches]);
   const visibleCount = filteredMatches.length;
 
   useEffect(() => {
-    if (selectedId && !matches.some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
-  }, [matches, selectedId]);
+    if (selectedId && ![...matches, ...iddaaLiveMatches].some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
+  }, [matches, iddaaLiveMatches, selectedId]);
 
   function selectMatch(id: string) {
     setSelectedId(id);
@@ -530,7 +558,7 @@ function App() {
             </div>
           </>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
-          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
+          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : statusFilter === "live" ? iddaaLiveMatches.length + " canlı maç" : statusFilter === "finished" ? finishedCount + " tamamlanan maç" : matches.length + " bülten maçı"}</span></div>
         </div>
 
         {activeNav === "statistics" ? <div className="statistics-nav-options">
