@@ -309,19 +309,24 @@ function App() {
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setInterval> | undefined;
+    let iddaaByFotMob = new Map<number, string>();
+    let eventMapLoaded = false;
 
     const refreshLiveStatuses = async () => {
       try {
-        const mapResponse = await fetch("/data/fotmob-event-map.json", { cache: "no-store" });
-        if (!mapResponse.ok) return;
-        const eventMap = await mapResponse.json() as {
-          matches?: Array<{ iddaaEventId?: string | null; fotmobMatchId?: number | null; state?: string }>;
-        };
-        const iddaaByFotMob = new Map<number, string>();
-        for (const item of eventMap.matches || []) {
-          if (item.state === "matched" && item.iddaaEventId && item.fotmobMatchId) {
-            iddaaByFotMob.set(Number(item.fotmobMatchId), String(item.iddaaEventId));
+        if (!eventMapLoaded) {
+          const mapResponse = await fetch("/data/fotmob-event-map.json", { cache: "no-store" });
+          if (!mapResponse.ok) return;
+          const eventMap = await mapResponse.json() as {
+            matches?: Array<{ iddaaEventId?: string | null; fotmobMatchId?: number | null; state?: string }>;
+          };
+          iddaaByFotMob = new Map<number, string>();
+          for (const item of eventMap.matches || []) {
+            if (item.state === "matched" && item.iddaaEventId && item.fotmobMatchId) {
+              iddaaByFotMob.set(Number(item.fotmobMatchId), String(item.iddaaEventId));
+            }
           }
+          eventMapLoaded = true;
         }
         const ids = [...iddaaByFotMob.keys()];
         if (!ids.length) return;
