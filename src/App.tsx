@@ -325,25 +325,30 @@ function App() {
         }
         const ids = [...iddaaByFotMob.keys()];
         if (!ids.length) return;
-        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}`, { cache: "no-store" });
-        if (!response.ok) return;
-        const payload = await response.json() as {
-          matches?: Array<{
-            fotmobMatchId: number; started?: boolean; finished?: boolean;
-            homeScore?: number | null; awayScore?: number | null; minute?: string | null;
-          }>;
-        };
+        const batches = Array.from({ length: Math.ceil(ids.length / 300) }, (_, index) => ids.slice(index * 300, (index + 1) * 300));
+        const payloads = await Promise.all(batches.map(async batch => {
+          const response = await fetch(`/api/fotmob-live?ids=${batch.join(",")}`, { cache: "no-store" });
+          if (!response.ok) return null;
+          return await response.json() as {
+            matches?: Array<{
+              fotmobMatchId: number; started?: boolean; finished?: boolean;
+              homeScore?: number | null; awayScore?: number | null; minute?: string | null;
+            }>;
+          };
+        }));
         if (!active) return;
         const next: Record<string, FotMobLiveState> = {};
-        for (const item of payload.matches || []) {
-          const iddaaId = iddaaByFotMob.get(Number(item.fotmobMatchId));
-          if (!iddaaId) continue;
-          next[iddaaId] = {
-            status: item.finished ? 4 : item.started ? 1 : 0,
-            homeScore: item.homeScore == null ? null : String(item.homeScore),
-            awayScore: item.awayScore == null ? null : String(item.awayScore),
-            minute: item.minute || null
-          };
+        for (const payload of payloads) {
+          for (const item of payload?.matches || []) {
+            const iddaaId = iddaaByFotMob.get(Number(item.fotmobMatchId));
+            if (!iddaaId) continue;
+            next[iddaaId] = {
+              status: item.finished ? 4 : item.started ? 1 : 0,
+              homeScore: item.homeScore == null ? null : String(item.homeScore),
+              awayScore: item.awayScore == null ? null : String(item.awayScore),
+              minute: item.minute || null
+            };
+          }
         }
         setFotmobLiveStates(previous => ({ ...previous, ...next }));
       } catch {
@@ -353,7 +358,7 @@ function App() {
 
     const startPolling = async () => {
       await refreshLiveStatuses();
-      if (active) timer = setInterval(refreshLiveStatuses, 30_000);
+      if (active) timer = setInterval(refreshLiveStatuses, 60_000);
     };
     void startPolling();
     return () => {
