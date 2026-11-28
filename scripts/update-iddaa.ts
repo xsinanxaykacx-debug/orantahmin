@@ -61,91 +61,10 @@ async function main():Promise<void> {
   if(!Array.isArray(root?.events) || !root.events.length) throw new Error("iddaa maç listesi boş.");
 
   const targetDate=getIstanbulDateKey();
-  const footballEvents=root.events.filter((event:any)=>Number(event.sid)===1);
-  const sourceFootballCount=footballEvents.length;
-  const rawStateCounts:Record<string,number>={}, rawIlCounts:Record<string,number>={};
-  for(const event of footballEvents) {
-    const state=String(event.s ?? "missing"), il=String(event.il ?? "missing");
-    rawStateCounts[state]=(rawStateCounts[state]||0)+1;
-    rawIlCounts[il]=(rawIlCounts[il]||0)+1;
-  }
-  console.log("IDDAA_RAW_EVENT_FLAGS="+JSON.stringify({total:footballEvents.length,states:rawStateCounts,inPlayFlags:rawIlCounts}));
-
-  const probeSpecs=[
-    {name:"type1",url:`${SB}/events?st=1&type=1&version=0`},
-    {name:"type2",url:`${SB}/events?st=1&type=2&version=0`},
-    {name:"type3",url:`${SB}/events?st=1&type=3&version=0`},
-    {name:"live-events",url:`${SB}/live-events?st=1`},
-    {name:"live",url:`${SB}/live?st=1`},
-    {name:"events-live",url:`${SB}/events/live?st=1`}
-  ];
-  const probePayloads=await Promise.all(probeSpecs.map(spec=>fetchOptionalJson(spec.url)));
-  const type1Data=Array.isArray(probePayloads[0]?.data)?probePayloads[0].data[0]:probePayloads[0]?.data;
-  const type1Events=Array.isArray(type1Data?.events)?type1Data.events.filter((event:any)=>Number(event.sid)===1):[];
-  const baseIds=new Set(footballEvents.map((event:any)=>String(event.i)));
-  const type1Ids=new Set(type1Events.map((event:any)=>String(event.i)));
-  const type1Overlap=[...type1Ids].filter(id=>baseIds.has(id));
-  const type1LiveEvents=type1Events.filter((event:any)=>Number(event.s)===1);
-  const type1LiveOverlap=type1LiveEvents.filter((event:any)=>baseIds.has(String(event.i)));
-  const type1LiveAdditional=type1LiveEvents.filter((event:any)=>!baseIds.has(String(event.i)));
-  const nowEpoch=Math.floor(Date.now()/1000);
-  const basePast=footballEvents.filter((event:any)=>Number(event.d)<nowEpoch);
-  const baseFuture=footballEvents.filter((event:any)=>Number(event.d)>=nowEpoch);
-  const statsPayload=await fetchOptionalJson(`https://statisticsv2.iddaa.com/live-results?sportId=1&date=${targetDate}`);
-  const statsScores=statsPayload?.data?.sc&&typeof statsPayload.data.sc==="object"?statsPayload.data.sc:{};
-  const statsStatusCounts:Record<string,number>={}, statsBaseOverlap:Record<string,number>={};
-  for(const [id,row] of Object.entries(statsScores) as Array<[string,any]>) {
-    const state=String(row?.s??"missing");
-    statsStatusCounts[state]=(statsStatusCounts[state]||0)+1;
-    if(baseIds.has(id)) statsBaseOverlap[state]=(statsBaseOverlap[state]||0)+1;
-  }
-  console.log("IDDAA_MATCH_WINDOW_AND_RESULTS="+JSON.stringify({
-    now:new Date().toISOString(),
-    baseTotal:footballEvents.length,
-    basePast:basePast.length,
-    baseFuture:baseFuture.length,
-    type1Live:type1LiveEvents.length,
-    futurePlusLive:baseFuture.length+type1LiveEvents.length,
-    statisticsCount:Object.keys(statsScores).length,
-    statisticsStates:statsStatusCounts,
-    statisticsOverlapWithBase:statsBaseOverlap,
-    pastBaseSamples:basePast.slice(0,15).map((event:any)=>({id:event.i,home:event.hn,away:event.an,kickoff:new Date(Number(event.d)*1000).toISOString()}))
-  }));
-  console.log("IDDAA_TYPE1_OVERLAP="+JSON.stringify({
-    type1Football:type1Events.length,
-    type1LiveStateOne:type1LiveEvents.length,
-    baseFootball:footballEvents.length,
-    overlap:type1Overlap.length,
-    additional:[...type1Ids].filter(id=>!baseIds.has(id)).length,
-    liveOverlap:type1LiveOverlap.length,
-    liveAdditional:type1LiveAdditional.length,
-    liveAdditionalSamples:type1LiveAdditional.slice(0,20).map((event:any)=>({id:event.i,home:event.hn,away:event.an,date:new Date(Number(event.d)*1000).toISOString()})),
-    sampleLive:type1Events.filter((event:any)=>Number(event.s)===1).slice(0,8).map((event:any)=>({
-      id:event.i,home:event.hn,away:event.an,date:new Date(Number(event.d)*1000).toISOString(),
-      state:event.s,il:event.il,keys:Object.keys(event),marketCount:event.m?.length,
-      scoreKeys:Object.keys(event).filter(key=>/score|minute|status|result|home|away|time|phase/i.test(key))
-    })),
-    scoreMapKeys:type1Data?.sc&&typeof type1Data.sc==="object"?Object.keys(type1Data.sc).length:0,
-    scoreMapSample:type1Data?.sc&&typeof type1Data.sc==="object"?Object.entries(type1Data.sc).slice(0,8):[]
-  }));
-  const endpointProbe=probeSpecs.map((spec,index)=>{
-    const payload=probePayloads[index];
-    const data=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
-    const events=Array.isArray(data?.events)?data.events:Array.isArray(data)?data:[];
-    const bySid:Record<string,number>={}, byState:Record<string,number>={}, byIl:Record<string,number>={};
-    for(const event of events) {
-      const sid=String(event?.sid??"missing"), state=String(event?.s??"missing"), il=String(event?.il??"missing");
-      bySid[sid]=(bySid[sid]||0)+1; byState[state]=(byState[state]||0)+1; byIl[il]=(byIl[il]||0)+1;
-    }
-    return {name:spec.name,ok:payload?.isSuccess===true,total:events.length,bySid,byState,byIl,
-      sample:events.slice(0,2).map((event:any)=>({i:event.i,hn:event.hn,an:event.an,sid:event.sid,s:event.s,il:event.il,d:event.d}))};
-  });
-  console.log("IDDAA_ENDPOINT_PROBES="+JSON.stringify(endpointProbe));
-  if(!sourceFootballCount) {
-    throw new Error("İddaa bülteninde futbol maçı bulunamadı; mevcut bülten korunuyor.");
-  }
-
+  const sourceFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
+  if(!sourceFootballCount) throw new Error("İddaa bülteninde futbol maçı bulunamadı; mevcut bülten korunuyor.");
   console.log(`iddaa tam bülten: ${targetDate} Europe/Istanbul | Kaynak futbol maçı: ${sourceFootballCount} | Tarih filtresi uygulanmadı.`);
+
   const [marketConfigPayload,competitionPayload]=await Promise.all([
     fetchOptionalJson(`${SB}/get_market_config?st=1`),
     fetchOptionalJson(`${SB}/competitions?st=1`)
