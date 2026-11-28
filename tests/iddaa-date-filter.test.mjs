@@ -12,7 +12,7 @@ test("event timestamps are grouped by the Europe/Istanbul calendar date", () => 
 
 test("daily filter keeps only selected-day football events and leaves other sports untouched", () => {
   const events = [
-    { i: 1, sid: 1, d: epoch("2026-11-27T22:00:00Z") },
+    { i: 1, sid: 1, d: epoch("2026-11-27T20:59:00Z") },
     { i: 2, sid: 1, d: epoch("2026-11-28T12:00:00Z") },
     { i: 3, sid: 1, d: epoch("2026-11-29T12:00:00Z") },
     { i: 4, sid: 2, d: epoch("2026-11-29T12:00:00Z") },
