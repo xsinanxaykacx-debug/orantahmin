@@ -53,6 +53,24 @@ function dateTimeKey(match: DisplayMatch): string {
   const [day = "", month = "", year = ""] = (match.date || "").split(".");
   return `${year}-${month}-${day}T${match.time || "00:00"}`;
 }
+function matchDateKey(match: DisplayMatch): string {
+  const [day = "", month = "", year = ""] = (match.date || "").split(".");
+  return day && month && year ? `${year}-${month}-${day}` : "";
+}
+function todayIstanbulKey(): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find(part => part.type === type)?.value || "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+function dateOptionLabel(dateKey: string): string {
+  const date = new Date(`${dateKey}T12:00:00+03:00`);
+  const label = new Intl.DateTimeFormat("tr-TR", {
+    timeZone: "Europe/Istanbul", day: "numeric", month: "long"
+  }).format(date);
+  return dateKey === todayIstanbulKey() ? `Bugün · ${label}` : label;
+}
 function formatDate(value: string): string {
   if (!value) return "Tarih bilgisi yok";
   const [day, month, year] = value.split(".");
@@ -290,6 +308,9 @@ function App() {
   const leagueDirectory = IDDAA_LEAGUES;
   const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(52);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [selectedDate, setSelectedDate] = useState("all");
+  const [selectedLeagues, setSelectedLeagues] = useState<string[]>([]);
+  const [leagueFilterOpen, setLeagueFilterOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<MatchDetailTab>("overview");
@@ -388,9 +409,26 @@ function App() {
   }), [bulletin, fotmobLiveStates]);
   const displayMatches = matches;
 
+  const dateOptions = useMemo(() => [...new Set(displayMatches.map(matchDateKey).filter(Boolean))].sort(), [displayMatches]);
+  const availableLeagues = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const match of displayMatches) {
+      const league = match.fields.leagueCode?.trim() || "Lig kodu bulunmuyor";
+      counts.set(league, (counts.get(league) || 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0], "tr"));
+  }, [displayMatches]);
+
+  const scopedMatches = useMemo(() => displayMatches.filter(match => {
+    if (selectedDate !== "all" && matchDateKey(match) !== selectedDate) return false;
+    const league = match.fields.leagueCode?.trim() || "Lig kodu bulunmuyor";
+    if (selectedLeagues.length && !selectedLeagues.includes(league)) return false;
+    return true;
+  }), [displayMatches, selectedDate, selectedLeagues]);
+
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
-    return displayMatches.filter((match) => {
+    return scopedMatches.filter((match) => {
       const live = isLiveMatch(match.status);
       if (statusFilter === "live" && !live) return false;
       const finished = isFinishedMatch(match.status);
@@ -401,7 +439,7 @@ function App() {
     }).sort((a, b) => statusFilter === "finished"
       ? dateTimeKey(b).localeCompare(dateTimeKey(a))
       : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [displayMatches, statusFilter, search]);
+  }, [scopedMatches, statusFilter, search]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -427,12 +465,8 @@ function App() {
     [leagueDirectory, selectedLeagueId]
   );
 
-  const liveCount = useMemo(() => matches.filter((match) => {
-    return isLiveMatch(match.status);
-  }).length, [matches]);
-  const finishedCount = useMemo(() => matches.filter((match) => {
-    return isFinishedMatch(match.status);
-  }).length, [matches]);
+  const liveCount = useMemo(() => scopedMatches.filter(match => isLiveMatch(match.status)).length, [scopedMatches]);
+  const finishedCount = useMemo(() => scopedMatches.filter(match => isFinishedMatch(match.status)).length, [scopedMatches]);
   const visibleCount = filteredMatches.length;
 
   useEffect(() => {
@@ -485,11 +519,33 @@ function App() {
       <aside className="match-list-pane">
         <div className="list-header">
           <div className="brand-line"><div><span className="eyebrow">ORANTAHMİN</span><h1>{activeNav === "matches" ? "Maç Merkezi" : activeNav === "leagues" ? "Ligler" : activeNav === "statistics" ? "İstatistikler" : "Ayarlar"}</h1></div><span className="count-pill">{activeNav === "leagues" ? leagueDirectory.length : activeNav === "statistics" ? "Σ" : matches.length}</span></div>
-          {activeNav === "matches" && <div className="status-filters">
-            <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{matches.length}</b></button>
-            <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
-            <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
-          </div>}
+          {activeNav === "matches" && <>
+            <div className="status-filters">
+              <button className={statusFilter === "all" ? "active" : ""} onClick={() => setStatusFilter("all")}>Tümü <b>{scopedMatches.length}</b></button>
+              <button className={statusFilter === "live" ? "active" : ""} onClick={() => setStatusFilter("live")}>Canlı <b>{liveCount}</b></button>
+              <button className={statusFilter === "finished" ? "active" : ""} onClick={() => setStatusFilter("finished")}>Biten <b>{finishedCount}</b></button>
+            </div>
+            <div className="match-filters">
+              <label className="match-filter-date"><span>TARİH</span>
+                <select value={selectedDate} onChange={event => setSelectedDate(event.target.value)}>
+                  <option value="all">Tüm tarihler ({matches.length})</option>
+                  {dateOptions.map(date => <option key={date} value={date}>{dateOptionLabel(date)} ({displayMatches.filter(match => matchDateKey(match) === date).length})</option>)}
+                </select>
+              </label>
+              <div className="league-filter-wrap">
+                <span className="filter-label">LİG FİLTRESİ</span>
+                <button type="button" className={selectedLeagues.length ? "league-filter-button active" : "league-filter-button"} onClick={() => setLeagueFilterOpen(open => !open)}>
+                  {selectedLeagues.length ? `${selectedLeagues.length} lig seçildi` : "Tüm ligler"} <span>⌄</span>
+                </button>
+                {leagueFilterOpen && <div className="league-filter-panel">
+                  <div className="league-filter-panel-head"><strong>Lig seç</strong><button type="button" onClick={() => setSelectedLeagues([])}>Temizle</button></div>
+                  {availableLeagues.map(([league, count]) => <button type="button" key={league} className={selectedLeagues.includes(league) ? "league-filter-option selected" : "league-filter-option"} onClick={() => setSelectedLeagues(current => current.includes(league) ? current.filter(item => item !== league) : [...current, league])}>
+                    <span>{league}</span><b>{count}</b><i>{selectedLeagues.includes(league) ? "✓" : ""}</i>
+                  </button>)}
+                </div>}
+              </div>
+            </div>
+          </>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
           <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : matches.length + " benzersiz maç"}</span></div>
         </div>
