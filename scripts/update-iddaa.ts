@@ -83,10 +83,17 @@ async function main():Promise<void> {
   const bulletin=transformIddaaPayload({isSuccess:true,data:{events}},marketConfig,competitionMap);
 
   const markets=new Map<string,number>();
-  let outcomes=0, matchesWithMarkets=0, maxMarkets=0;
+  let outcomes=0, matchesWithMarkets=0, matchesWithPricedOdds=0, maxMarkets=0;
+  const countsByDateWithPricedOdds=new Map<string,number>();
   for(const match of bulletin.matches) {
     const rows=(match.fields.iddaaMarkets || []) as Array<{code:string;outcomes:Array<{odd:number|null}>}>;
     if(rows.length) matchesWithMarkets++;
+    const hasPricedOdds=rows.some(market=>market.outcomes.some(item=>item.odd!==null));
+    if(hasPricedOdds) {
+      matchesWithPricedOdds++;
+      const date=String(match.date || "Tarih yok");
+      countsByDateWithPricedOdds.set(date,(countsByDateWithPricedOdds.get(date)||0)+1);
+    }
     match.fields.marketCount=rows.length;
     maxMarkets=Math.max(maxMarkets,rows.length);
     for(const market of rows) {
@@ -99,7 +106,6 @@ async function main():Promise<void> {
   const statusCounts:Record<string,number>={};
   const eventStateCounts:Record<string,number>={};
   const leagues=new Set<string>();
-  let liveFlagCount=0;
   for(const match of bulletin.matches) {
     const date=String(match.date || "Tarih yok");
     countsByDate.set(date,(countsByDate.get(date)||0)+1);
@@ -109,7 +115,6 @@ async function main():Promise<void> {
     eventStateCounts[eventState]=(eventStateCounts[eventState]||0)+1;
     const league=String(match.fields.leagueCode || "").trim();
     if(league) leagues.add(league);
-    if(match.fields.iddaaInPlayFlag===true) liveFlagCount++;
   }
   // Keep a compact coverage summary in the bulletin metadata for filter diagnostics.
   const programSummary={
@@ -118,7 +123,10 @@ async function main():Promise<void> {
     distinctLeagues:leagues.size,
     matchesWithMarkets,
     matchesWithoutMarkets:bulletin.matches.length-matchesWithMarkets,
-    liveFlagCount,
+    matchesWithPricedOdds,
+    matchesWithoutPricedOdds:bulletin.matches.length-matchesWithPricedOdds,
+    countsByDateWithPricedOdds:Object.fromEntries([...countsByDateWithPricedOdds.entries()].sort((a,b)=>a[0].split(".").reverse().join("-").localeCompare(b[0].split(".").reverse().join("-")))),
+    pricedOutcomeCount:outcomes,
     statusCounts,
     iddaaEventStateCounts:eventStateCounts
   };
