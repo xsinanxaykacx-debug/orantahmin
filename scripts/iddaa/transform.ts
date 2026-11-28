@@ -26,6 +26,11 @@ function asNumber(value: unknown): number | null {
   const n = Number(String(value).replace(",", "."));
   return Number.isFinite(n) && n > 0 ? n : null;
 }
+function asScore(value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
 function label(value: unknown): string {
   return String(value ?? "").trim();
 }
@@ -122,7 +127,14 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   const row: unknown[] = Array(FIELD_COUNT).fill(null);
   const put = (field:number,value:unknown) => { row[field] = value; };
   put(FIELD.MATCH_ID,id); put(FIELD.HOME_NAME,home); put(FIELD.AWAY_NAME,away);
-  put(FIELD.STATUS,0); put(FIELD.TIME,time); put(FIELD.DATE,date); put(FIELD.MBS,event.mbc ?? null);
+  const status = Number(event.s) === 1 ? 1 : 0;
+  const liveScore = event.liveScore && typeof event.liveScore === "object" ? event.liveScore : null;
+  const liveMinute = liveScore
+    ? Number(liveScore.s) === 4 ? "HT"
+      : Number(liveScore.s) === 12 ? "PEN"
+      : liveScore.min != null && Number.isFinite(Number(liveScore.min)) ? `${Number(liveScore.min)}'` : "CANLI"
+    : null;
+  put(FIELD.STATUS,status); put(FIELD.TIME,time); put(FIELD.DATE,date); put(FIELD.MBS,event.mbc ?? null);
   put(FIELD.LEAGUE_CODE,event.ci == null ? null : (competitionMap[String(event.ci)] || String(event.ci)));
   put(FIELD.GROUP_ID,event.ci == null ? null : String(event.ci)); put(FIELD.SUBGROUP_ID,event.ci == null ? null : "0");
   put(FIELD.EVENT_ID,id);
@@ -178,8 +190,13 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
   fields.iddaaEventState = event.s ?? null;
   fields.iddaaInPlayFlag = event.il ?? null;
+  fields.iddaaLiveState = liveScore?.s ?? null;
+  if (liveScore) {
+    fields.scoreHome = asScore(liveScore.ht?.c);
+    fields.scoreAway = asScore(liveScore.at?.c);
+  }
   return {
-    matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:[],
+    matchId:id,homeName:home,awayName:away,date,time,status,liveMinute,fields,raw:[],
     source:{groupIndex:0,matchIndex:index}
   };
 }
