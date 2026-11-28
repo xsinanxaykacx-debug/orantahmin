@@ -132,8 +132,46 @@ async function main():Promise<void> {
     statusCounts,
     iddaaEventStateCounts:eventStateCounts
   };
-  bulletin.meta.programSummary=programSummary;
-  console.log("IDDAA_PROGRAM_SUMMARY="+JSON.stringify(programSummary));
+  const liveWithoutPricedOdds=bulletin.matches.filter(match=>{
+    const rows=(match.fields.iddaaMarkets || []) as Array<{outcomes:Array<{odd:number|null}>}>;
+    return Number(match.status)===1 && !rows.some(market=>market.outcomes.some(item=>item.odd!==null));
+  }).length;
+  const eligibleMatches=bulletin.matches.filter(match=>{
+    const rows=(match.fields.iddaaMarkets || []) as Array<{outcomes:Array<{odd:number|null}>}>;
+    const hasPricedOdds=rows.some(market=>market.outcomes.some(item=>item.odd!==null));
+    return hasPricedOdds || Number(match.status)===1;
+  });
+  const displayedCountsByDate=new Map<string,number>();
+  const displayedStatusCounts:Record<string,number>={};
+  const displayedEventStateCounts:Record<string,number>={};
+  const displayedLeagues=new Set<string>();
+  for(const match of eligibleMatches) {
+    const date=String(match.date || "Tarih yok");
+    displayedCountsByDate.set(date,(displayedCountsByDate.get(date)||0)+1);
+    const status=String(match.status ?? "null");
+    displayedStatusCounts[status]=(displayedStatusCounts[status]||0)+1;
+    const eventState=String(match.fields.iddaaEventState ?? "null");
+    displayedEventStateCounts[eventState]=(displayedEventStateCounts[eventState]||0)+1;
+    const league=String(match.fields.leagueCode || "").trim();
+    if(league) displayedLeagues.add(league);
+  }
+  const sourceProgramSummary=programSummary;
+  bulletin.matches=eligibleMatches;
+  bulletin.meta.includedMatchCount=eligibleMatches.length;
+  bulletin.meta.rejectedMatchCount=Math.max(0,Number(bulletin.meta.sourceMatchCount || 0)-eligibleMatches.length);
+  bulletin.meta.programSummary={
+    ...sourceProgramSummary,
+    sourceTotalMatches:sourceProgramSummary.totalMatches,
+    totalMatches:eligibleMatches.length,
+    countsByDate:Object.fromEntries([...displayedCountsByDate.entries()].sort((a,b)=>a[0].split(".").reverse().join("-").localeCompare(b[0].split(".").reverse().join("-")))),
+    distinctLeagues:displayedLeagues.size,
+    displayedMatchesWithPricedOdds:matchesWithPricedOdds,
+    displayedMatchesWithoutPricedOdds:liveWithoutPricedOdds,
+    liveWithoutPricedOdds,
+    statusCounts:displayedStatusCounts,
+    iddaaEventStateCounts:displayedEventStateCounts
+  };
+  console.log("IDDAA_PROGRAM_SUMMARY="+JSON.stringify(bulletin.meta.programSummary));
 
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
   const rawName=`iddaa_events_full_${targetDate.replace(/-/g,"")}_${stamp}.json`;
