@@ -64,11 +64,6 @@ function todayIstanbulKey(): string {
   const get = (type: string) => parts.find(part => part.type === type)?.value || "";
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
-function shiftIstanbulDateKey(dateKey: string, offsetDays: number): string {
-  const [year, month, day] = dateKey.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day + offsetDays));
-  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
-}
 function dateOptionLabel(dateKey: string): string {
   const date = new Date(`${dateKey}T12:00:00+03:00`);
   const label = new Intl.DateTimeFormat("tr-TR", {
@@ -540,7 +535,7 @@ function App() {
               <label className="match-filter-date"><span>TARİH</span>
                 <select value={selectedDate} onChange={event => setSelectedDate(event.target.value)}>
                   <option value="all">Tüm tarihler ({matches.length})</option>
-                  {dateOptions.map(date => <option key={date} value={date}>{dateOptionLabel(date)} ({displayMatches.filter(match => matchDateKey(match) === date).length})</option>)}
+                  {dateOptions.map(date => <option key={date} value={date}>{dateOptionLabel(date)} ({allMatchesForFilters.filter(match => matchDateKey(match) === date).length})</option>)}
                 </select>
               </label>
               <div className="league-filter-wrap">
@@ -558,7 +553,7 @@ function App() {
             </div>
           </>}
           {activeNav !== "statistics" && <label className="match-search"><span>⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={activeNav === "leagues" ? "Lig veya ülke ara..." : "Takım, lig veya maç ara..."} /><kbd>/</kbd></label>}
-          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : statusFilter === "live" ? iddaaLiveMatches.length + " canlı maç" : statusFilter === "finished" ? finishedCount + " tamamlanan maç" : matches.length + " bülten maçı"}</span></div>
+          <div className={`list-caption ${activeNav === "leagues" ? "league-list-caption" : ""}`}><span>{activeNav === "leagues" ? "Lig kataloğu" : activeNav === "statistics" ? "Sezon analiz merkezi" : statusFilter === "finished" ? `${visibleCount} biten maç` : `${visibleCount} karşılaşma`}</span><span>{activeNav === "leagues" ? `${leagueDirectory.length} doğrulanmış İddaa ligi` : activeNav === "statistics" ? "Lig ve takım performansı" : statusFilter === "live" ? liveCount + " canlı maç" : statusFilter === "finished" ? finishedCount + " tamamlanan maç" : matches.length + " bülten maçı"}</span></div>
         </div>
 
         {activeNav === "statistics" ? <div className="statistics-nav-options">
