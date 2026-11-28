@@ -88,16 +88,17 @@ function toLiveMatch(event: any, score: any, marketConfig: Record<string, { n?: 
       : score?.min != null && Number.isFinite(Number(score.min))
         ? `${Number(score.min)}'`
         : "CANLI";
-  const ms = markets.find(item => item.code === "1:1:");
+  const ms = markets.find(item => item.code === "1:1:") || markets.find(item => item.code === "4:4:");
+  const msCode = ms?.code || "1:1:";
   const dc = markets.find(item => item.code === "2:92:");
   const scoreHome = scoreValue(score?.ht?.c);
   const scoreAway = scoreValue(score?.at?.c);
   const fields: Record<string, any> = {
     matchId, homeName, awayName, status: 1, time, date,
     mbs: event.mbc ?? null,
-    ms1: outcomeOdd(markets, "1:1:", 1),
-    msX: outcomeOdd(markets, "1:1:", 2),
-    ms2: outcomeOdd(markets, "1:1:", 3),
+    ms1: outcomeOdd(markets, msCode, 1),
+    msX: outcomeOdd(markets, msCode, 2),
+    ms2: outcomeOdd(markets, msCode, 3),
     doubleChance1X: outcomeOdd(markets, "2:92:", 1),
     doubleChance12: outcomeOdd(markets, "2:92:", 2),
     doubleChanceX2: outcomeOdd(markets, "2:92:", 3),
