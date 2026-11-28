@@ -570,7 +570,7 @@ function App() {
                 </select>
               </label>
               <div className="league-filter-wrap">
-                <span className="filter-label">LİG FİLTRESİ</span>
+                <span className="filter-label">LİG SEÇİMİ</span>
                 <button type="button" className={selectedLeagues.length ? "league-filter-button active" : "league-filter-button"} onClick={() => setLeagueFilterOpen(open => !open)}>
                   {selectedLeagues.length ? `${selectedLeagues.length} lig seçildi` : "Tüm ligler"} <span>⌄</span>
                 </button>
