@@ -1,4 +1,4 @@
-﻿import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { OddsService } from "./services/iddaaOddsService";
 import type { BulletinDocument, BulletinMatch, MatchDetailTab, MatchFields } from "./types/match";
 import { dedupeByMatchId, isValidOdds, uniqueOdds } from "./utils/bulletinUtils";
@@ -8,7 +8,8 @@ import { IddaaLeagueHub } from "./components/IddaaLeagueHub";
 import { settleMarketOutcome, type MatchResult } from "./utils/marketSettlement";
 import { IDDAA_LEAGUES } from "./lib/iddaaLeagues";
 
-type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[] };
+type FotMobLiveState = { status: number; homeScore: string | null; awayScore: string | null; minute: string | null };
+type DisplayMatch = BulletinMatch & { sourceRecords: BulletinMatch[]; liveMinute?: string | null };
 type StatusFilter = "all" | "live" | "finished";
 type MarketSelection = { label: string; field: keyof MatchFields };
 type MarketDefinition = { key: string; title: string; selections: MarketSelection[] };
@@ -87,8 +88,8 @@ const MatchRow = memo(function MatchRow({
   return (
     <button type="button" className={`match-row ${active ? "selected" : ""}`} onClick={() => onSelect(matchKey(match))}>
       <div className="match-row-top">
-        <span>{match.time || "Saat yok"}</span>
-        <span className={`match-state ${isLiveMatch(match.status) ? "live" : ""}`}>{isLiveMatch(match.status) && statusLabel(match.status)}</span>
+        <span>{isLiveMatch(match.status) ? (match.liveMinute || "CANLI") : isFinishedMatch(match.status) ? "MS" : (match.time || "Saat yok")}</span>
+        <span className={`match-state ${isLiveMatch(match.status) ? "live" : ""}`}>{isLiveMatch(match.status) ? "Canlı" : isFinishedMatch(match.status) ? "Bitti" : ""}</span>
       </div>
       <div className="match-row-content">
         <div className="teams-stack">
@@ -281,6 +282,7 @@ function MatchDetail({ match, tab, onTabChange }: {
 
 function App() {
   const [bulletin, setBulletin] = useState<BulletinDocument | null>(null);
+  const [fotmobLiveStates, setFotmobLiveStates] = useState<Record<string, FotMobLiveState>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
@@ -304,7 +306,86 @@ function App() {
     return () => { active = false; };
   }, []);
 
-  const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []), [bulletin]);
+  useEffect(() => {
+    let active = true;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    let iddaaByFotMob = new Map<number, string>();
+    let eventMapLoaded = false;
+
+    const refreshLiveStatuses = async () => {
+      try {
+        if (!eventMapLoaded) {
+          const mapResponse = await fetch("/data/fotmob-event-map.json", { cache: "no-store" });
+          if (!mapResponse.ok) return;
+          const eventMap = await mapResponse.json() as {
+            matches?: Array<{ iddaaEventId?: string | null; fotmobMatchId?: number | null; state?: string }>;
+          };
+          iddaaByFotMob = new Map<number, string>();
+          for (const item of eventMap.matches || []) {
+            if (item.state === "matched" && item.iddaaEventId && item.fotmobMatchId) {
+              iddaaByFotMob.set(Number(item.fotmobMatchId), String(item.iddaaEventId));
+            }
+          }
+          eventMapLoaded = true;
+        }
+        const ids = [...iddaaByFotMob.keys()];
+        if (!ids.length) return;
+        const batches = Array.from({ length: Math.ceil(ids.length / 300) }, (_, index) => ids.slice(index * 300, (index + 1) * 300));
+        const payloads = await Promise.all(batches.map(async batch => {
+          const response = await fetch(`/api/fotmob-live?ids=${batch.join(",")}`, { cache: "no-store" });
+          if (!response.ok) return null;
+          return await response.json() as {
+            matches?: Array<{
+              fotmobMatchId: number; started?: boolean; finished?: boolean;
+              homeScore?: number | null; awayScore?: number | null; minute?: string | null;
+            }>;
+          };
+        }));
+        if (!active) return;
+        const next: Record<string, FotMobLiveState> = {};
+        for (const payload of payloads) {
+          for (const item of payload?.matches || []) {
+            const iddaaId = iddaaByFotMob.get(Number(item.fotmobMatchId));
+            if (!iddaaId) continue;
+            next[iddaaId] = {
+              status: item.finished ? 4 : item.started ? 1 : 0,
+              homeScore: item.homeScore == null ? null : String(item.homeScore),
+              awayScore: item.awayScore == null ? null : String(item.awayScore),
+              minute: item.minute || null
+            };
+          }
+        }
+        setFotmobLiveStates(previous => ({ ...previous, ...next }));
+      } catch {
+        // Keep the last successful status snapshot when FotMob is temporarily unavailable.
+      }
+    };
+
+    const startPolling = async () => {
+      await refreshLiveStatuses();
+      if (active) timer = setInterval(refreshLiveStatuses, 60_000);
+    };
+    void startPolling();
+    return () => {
+      active = false;
+      if (timer) clearInterval(timer);
+    };
+  }, []);
+
+  const matches = useMemo<DisplayMatch[]>(() => dedupeByMatchId(bulletin?.matches ?? []).map(match => {
+    const live = fotmobLiveStates[String(match.matchId)];
+    if (!live) return match;
+    return {
+      ...match,
+      status: live.status,
+      liveMinute: live.minute,
+      fields: {
+        ...match.fields,
+        scoreHome: live.homeScore ?? match.fields.scoreHome,
+        scoreAway: live.awayScore ?? match.fields.scoreAway
+      }
+    };
+  }), [bulletin, fotmobLiveStates]);
   const displayMatches = matches;
 
   const filteredMatches = useMemo(() => {
