@@ -25,6 +25,8 @@ test("Iddaa in-play event transforms live state, zero scores and minute", () => 
   assert.equal(match?.fields.scoreAway, 1);
   assert.equal(match?.liveMinute, "HT");
   assert.equal(match?.fields.iddaaLiveState, 4);
+  assert.equal(match?.fields.status, 1);
+  assert.equal(match?.fields.iddaaInPlayFlag, true);
 });
 
 test("Iddaa scheduled event remains not started", () => {
