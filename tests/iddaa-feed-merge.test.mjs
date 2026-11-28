@@ -65,7 +65,10 @@ test("authoritative bulletin rejects type-2-only fixtures but accepts live-only 
     data: [{ events: [{ i: 10, sid: 1, s: 0, d: 1000, m: [{ st: 1 }] }] }]
   };
   const live = {
-    data: { events: [{ i: 20, sid: 1, s: 1, d: 2000, m: [] }] },
+    data: { events: [
+      { i: 20, sid: 1, s: 1, d: 2000, m: [] },
+      { i: 21, sid: 1, s: 0, d: 2100, m: [] },
+    ] },
   };
   const enrichment = {
     data: { events: [
@@ -76,6 +79,7 @@ test("authoritative bulletin rejects type-2-only fixtures but accepts live-only 
 
   const merged = mergeIddaaEventFeeds([primary, live, enrichment], {
     includeNewFromFeedIndexes: [1],
+    onlyLiveNewFromFeedIndexes: [1],
   });
   const byId = new Map(merged.map(row => [String(row.i), row]));
 
