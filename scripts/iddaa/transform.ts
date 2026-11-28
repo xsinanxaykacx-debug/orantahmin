@@ -177,7 +177,8 @@ export function transformIddaaEvent(event: RawEvent, index: number, marketConfig
   fields.iddaaMarkets = markets;
   fields.competitionId = event.ci ?? null;
   fields.competitionName = event.ci == null ? null : (competitionMap[String(event.ci)] || null);
-  fields.isLive = Boolean(event.k0dd);
+  fields.iddaaEventState = event.s ?? null;
+  fields.iddaaInPlayFlag = event.il ?? null;
   return {
     matchId:id,homeName:home,awayName:away,date,time,status:0,fields,raw:[],
     source:{groupIndex:0,matchIndex:index}
