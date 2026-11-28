@@ -80,6 +80,25 @@ async function main():Promise<void> {
     {name:"events-live",url:`${SB}/events/live?st=1`}
   ];
   const probePayloads=await Promise.all(probeSpecs.map(spec=>fetchOptionalJson(spec.url)));
+  const type1Data=Array.isArray(probePayloads[0]?.data)?probePayloads[0].data[0]:probePayloads[0]?.data;
+  const type1Events=Array.isArray(type1Data?.events)?type1Data.events.filter((event:any)=>Number(event.sid)===1):[];
+  const baseIds=new Set(footballEvents.map((event:any)=>String(event.i)));
+  const type1Ids=new Set(type1Events.map((event:any)=>String(event.i)));
+  const type1Overlap=[...type1Ids].filter(id=>baseIds.has(id));
+  console.log("IDDAA_TYPE1_OVERLAP="+JSON.stringify({
+    type1Football:type1Events.length,
+    type1LiveStateOne:type1Events.filter((event:any)=>Number(event.s)===1).length,
+    baseFootball:footballEvents.length,
+    overlap:type1Overlap.length,
+    additional:[...type1Ids].filter(id=>!baseIds.has(id)).length,
+    sampleLive:type1Events.filter((event:any)=>Number(event.s)===1).slice(0,8).map((event:any)=>({
+      id:event.i,home:event.hn,away:event.an,date:new Date(Number(event.d)*1000).toISOString(),
+      state:event.s,il:event.il,keys:Object.keys(event),marketCount:event.m?.length,
+      scoreKeys:Object.keys(event).filter(key=>/score|minute|status|result|home|away|time|phase/i.test(key))
+    })),
+    scoreMapKeys:type1Data?.sc&&typeof type1Data.sc==="object"?Object.keys(type1Data.sc).length:0,
+    scoreMapSample:type1Data?.sc&&typeof type1Data.sc==="object"?Object.entries(type1Data.sc).slice(0,8):[]
+  }));
   const endpointProbe=probeSpecs.map((spec,index)=>{
     const payload=probePayloads[index];
     const data=Array.isArray(payload?.data)?payload.data[0]:payload?.data;
