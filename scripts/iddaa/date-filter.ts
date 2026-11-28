@@ -19,7 +19,7 @@ export function filterIddaaEventsForDate<T extends { sid?: unknown; d?: unknown 
   events: T[],
   dateKey: string,
 ): T[] {
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(dateKey)) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
     throw new Error(`Geçersiz Türkiye tarihi: ${dateKey}`);
   }
   return events.filter((event) =>
