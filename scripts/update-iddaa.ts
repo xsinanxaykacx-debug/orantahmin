@@ -1,7 +1,7 @@
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { mergeIddaaEventDetail, transformIddaaPayload } from "./iddaa/transform.ts";
-import { filterIddaaEventsForDate, getIstanbulDateKey } from "./iddaa/date-filter.ts";
+import { getIstanbulDateKey } from "./iddaa/date-filter.ts";
 import { createFotMobEventMap, fetchFotMobFixtures, getFotMobDates } from "./fotmob/matcher.ts";
 
 const ROOT = process.cwd();
@@ -91,13 +91,8 @@ async function main():Promise<void> {
 
   const targetDate=getIstanbulDateKey();
   const sourceFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
-  root.events=filterIddaaEventsForDate(root.events,targetDate);
-  const dailyFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
-  if(!dailyFootballCount) {
-    throw new Error(`İddaa bülteninde ${targetDate} (Türkiye saati) için futbol maçı bulunamadı; mevcut bülten korunuyor.`);
-  }
-
-  console.log(`iddaa günlük filtre: ${targetDate} Europe/Istanbul | Kaynak futbol maçı: ${sourceFootballCount} | Günlük futbol maçı: ${dailyFootballCount}`);
+  const dailyFootballSourceCount=sourceFootballCount;
+  console.log(`iddaa bülteni: ${targetDate} Europe/Istanbul | Kaynak futbol maçı: ${dailyFootballSourceCount}; maçlar dönüştürüldükten sonra date alanına göre filtrelenecek.`);
   const [marketConfigPayload,competitionPayload]=await Promise.all([
     fetchOptionalJson(`${SB}/get_market_config?st=1`),
     fetchOptionalJson(`${SB}/competitions?st=1`)
@@ -106,10 +101,18 @@ async function main():Promise<void> {
     ? marketConfigPayload.data.m : {};
   const competitionMap=parseCompetitionMap(competitionPayload);
 
-  console.log(`iddaa: ${dailyFootballCount} günlük futbol maçı bulundu; tam market detayları alınıyor (eşzamanlı istek: ${CONCURRENCY}).`);
+  console.log(`iddaa: ${dailyFootballSourceCount} futbol maçı için tam market detayları alınıyor (eşzamanlı istek: ${CONCURRENCY}).`);
   const full=await enrichWithFullMarkets(root.events);
   root.events=full.events;
   const bulletin=transformIddaaPayload(feed,marketConfig,competitionMap);
+  const beforeDateFilter=bulletin.matches.length;
+  bulletin.matches=bulletin.matches.filter((match:any)=>match.date===targetDate.split("-").reverse().join("."));
+  bulletin.meta.includedMatchCount=bulletin.matches.length;
+  bulletin.meta.rejectedMatchCount=bulletin.meta.sourceMatchCount-bulletin.matches.length;
+  if(!bulletin.matches.length) {
+    throw new Error(`İddaa bülteninde matches[].date alanına göre ${targetDate} (Türkiye saati) için maç bulunamadı; mevcut bülten korunuyor.`);
+  }
+  console.log(`İddaa date filtresi: ${targetDate} | Dönüştürülen maç: ${beforeDateFilter} | Bugünün maçları: ${bulletin.matches.length}`);
 
   const markets=new Map<string,number>();
   let outcomes=0, matchesWithMarkets=0, maxMarkets=0;
