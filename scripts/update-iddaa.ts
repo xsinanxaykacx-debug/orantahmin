@@ -63,13 +63,15 @@ async function main():Promise<void> {
     getJson(`${SB}/events?st=1&type=2&version=0`,45000)
   ]);
   const feeds=[feed,liveFeed,extendedFeed];
-  // type=0 is the authoritative public match programme. type=1 may add
-  // live-only fixtures; type=2 is enrichment-only and must not inflate the list.
-  const events=mergeIddaaEventFeeds(feeds,{includeNewFromFeedIndexes:[1],onlyLiveNewFromFeedIndexes:[1]});
-  if(!events.length) throw new Error("İddaa maç listesi boş.");
+  // The public Football section is defined exclusively by type=0.
+  // type=1 and type=2 may enrich rows already present in type=0, but must
+  // never add fixtures. Keep only football (sid=1) before transformation.
+  const events=mergeIddaaEventFeeds(feeds,{includeNewFromFeedIndexes:[]})
+    .filter((event:any)=>Number(event.sid)===1);
+  if(!events.length) throw new Error("İddaa Futbol bölümünde maç bulunamadı.");
 
   const targetDate=getIstanbulDateKey();
-  const sourceFootballCount=events.filter((event:any)=>Number(event.sid)===1).length;
+  const sourceFootballCount=events.length;
   if(!sourceFootballCount) throw new Error("İddaa bülteninde futbol maçı bulunamadı; mevcut bülten korunuyor.");
   console.log(`iddaa birleşik bülten: ${targetDate} Europe/Istanbul | type=0: ${extractIddaaEvents(feed).filter((event:any)=>Number(event.sid)===1).length} | type=1: ${extractIddaaEvents(liveFeed).filter((event:any)=>Number(event.sid)===1).length} | type=2: ${extractIddaaEvents(extendedFeed).filter((event:any)=>Number(event.sid)===1).length} | Tekil futbol maçı: ${sourceFootballCount}.`);
 
