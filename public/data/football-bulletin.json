@@ -1,18 +1,18 @@
 {
   "meta": {
-    "sourceFile": "iddaa_events_full_20261128_20261128T193954Z.json",
-    "generatedAt": "2026-11-28T19:39:54.247Z",
+    "sourceFile": "iddaa_events_full_20261128_20261128T194112Z.json",
+    "generatedAt": "2026-11-28T19:41:12.281Z",
     "schemaVersion": "orantahmin-iddaa-dynamic-v2",
     "sourceProvider": "iddaa",
     "sourceFieldCount": 0,
-    "sourceMatchCount": 820,
-    "includedMatchCount": 762,
+    "sourceMatchCount": 821,
+    "includedMatchCount": 763,
     "rejectedMatchCount": 58,
     "warningCount": 0,
     "programSummary": {
-      "totalMatches": 762,
+      "totalMatches": 763,
       "countsByDate": {
-        "28.11.2026": 48,
+        "28.11.2026": 49,
         "29.11.2026": 620,
         "30.11.2026": 88,
         "01.12.2026": 1,
@@ -21,16 +21,24 @@
         "07.12.2026": 1
       },
       "distinctLeagues": 190,
-      "matchesWithMarkets": 573,
+      "matchesWithMarkets": 574,
       "matchesWithoutMarkets": 189,
-      "liveFlagCount": 479,
+      "matchesWithPricedOdds": 574,
+      "matchesWithoutPricedOdds": 189,
+      "countsByDateWithPricedOdds": {
+        "28.11.2026": 38,
+        "29.11.2026": 480,
+        "30.11.2026": 55,
+        "01.12.2026": 1
+      },
+      "pricedOutcomeCount": 27103,
       "statusCounts": {
         "0": 736,
-        "1": 26
+        "1": 27
       },
       "iddaaEventStateCounts": {
         "0": 736,
-        "1": 26
+        "1": 27
       }
     }
   },
@@ -27937,13 +27945,13 @@
         "leagueCode": "Hong Kong 1.Lig",
         "groupId": "22369",
         "subgroupId": "0",
-        "handicapMs1": 2.34,
-        "handicapMsX": 3.59,
+        "handicapMs1": 2.35,
+        "handicapMsX": 3.57,
         "handicapMs2": 1.82,
-        "bttsYes": 1.32,
-        "bttsNo": 2.26,
-        "goals35Under": 1.51,
-        "goals35Over": 1.85,
+        "bttsYes": 1.33,
+        "bttsNo": 2.23,
+        "goals35Under": 1.5,
+        "goals35Over": 1.88,
         "eventId": "3335800",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -27961,12 +27969,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.51
+                "odd": 1.5
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.85
+                "odd": 1.88
               }
             ]
           },
@@ -28004,12 +28012,12 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.34
+                "odd": 2.35
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.59
+                "odd": 3.57
               },
               {
                 "no": 3,
@@ -28028,12 +28036,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.32
+                "odd": 1.33
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 2.26
+                "odd": 2.23
               }
             ]
           },
@@ -28090,12 +28098,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.16
+                "odd": 2.14
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.35
+                "odd": 1.36
               }
             ]
           },
@@ -28109,12 +28117,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.34
+                "odd": 1.33
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.19
+                "odd": 2.23
               }
             ]
           }
@@ -158512,12 +158520,12 @@
         "time": "22:45",
         "date": "28.11.2026",
         "mbs": 1,
-        "ms1": 1.57,
-        "msX": 3.58,
-        "ms2": 4.19,
-        "doubleChance1X": 1.09,
+        "ms1": 1.59,
+        "msX": 3.53,
+        "ms2": 4.07,
+        "doubleChance1X": 1.1,
         "doubleChance12": 1.15,
-        "doubleChanceX2": 1.89,
+        "doubleChanceX2": 1.85,
         "goals25Under": 1.95,
         "goals25Over": 1.55,
         "leagueCode": "Belçika Pro Lig",
@@ -158525,19 +158533,19 @@
         "subgroupId": "0",
         "totalGoals01": 3.94,
         "totalGoals23": 1.87,
-        "totalGoals46": 3.16,
+        "totalGoals46": 3.15,
         "totalGoals7Plus": 10.3,
-        "halfTimeResult1": 2.06,
-        "halfTimeResultX": 2.23,
-        "halfTimeResult2": 4.54,
-        "handicapMs1": 2.54,
-        "handicapMsX": 3.51,
-        "handicapMs2": 1.87,
-        "bttsYes": 1.55,
-        "bttsNo": 1.95,
+        "halfTimeResult1": 2.08,
+        "halfTimeResultX": 2.22,
+        "halfTimeResult2": 4.43,
+        "handicapMs1": 2.6,
+        "handicapMsX": 3.52,
+        "handicapMs2": 1.83,
+        "bttsYes": 1.54,
+        "bttsNo": 1.97,
         "halfTimeGoals15Under": 1.4,
-        "halfTimeGoals15Over": 2.26,
-        "goals15Under": 3.97,
+        "halfTimeGoals15Over": 2.27,
+        "goals15Under": 3.98,
         "goals15Over": 1.1,
         "goals35Under": 1.32,
         "goals35Over": 2.5,
@@ -158582,7 +158590,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.1
+                "odd": 3.09
               },
               {
                 "no": 2,
@@ -158606,7 +158614,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.26
+                "odd": 2.27
               }
             ]
           },
@@ -158620,7 +158628,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.97
+                "odd": 3.98
               },
               {
                 "no": 2,
@@ -158658,32 +158666,32 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 4.42
+                "odd": 4.5
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 4.84
+                "odd": 4.81
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 9.97
+                "odd": 9.79
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 2.3
+                "odd": 2.33
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 11.6
+                "odd": 11.35
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 6.81
+                "odd": 6.56
               }
             ]
           },
@@ -158697,22 +158705,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 7.32
+                "odd": 7.24
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.9
+                "odd": 1.89
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 2.55
+                "odd": 2.56
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 7.27
+                "odd": 7.46
               }
             ]
           },
@@ -158726,17 +158734,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.92
+                "odd": 1.95
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.58
+                "odd": 2.57
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.02
+                "odd": 3.92
               }
             ]
           },
@@ -158750,17 +158758,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.57
+                "odd": 1.59
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.58
+                "odd": 3.53
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.19
+                "odd": 4.07
               }
             ]
           },
@@ -158774,17 +158782,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.54
+                "odd": 2.6
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.51
+                "odd": 3.52
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.87
+                "odd": 1.83
               }
             ]
           },
@@ -158808,7 +158816,7 @@
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 3.16
+                "odd": 3.15
               },
               {
                 "no": 4,
@@ -158827,12 +158835,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.55
+                "odd": 1.54
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.95
+                "odd": 1.97
               }
             ]
           },
@@ -158865,17 +158873,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.06
+                "odd": 2.08
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.23
+                "odd": 2.22
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.54
+                "odd": 4.43
               }
             ]
           },
@@ -158889,7 +158897,7 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.09
+                "odd": 1.1
               },
               {
                 "no": 2,
@@ -158899,7 +158907,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.89
+                "odd": 1.85
               }
             ]
           },
@@ -158913,7 +158921,7 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.08
+                "odd": 1.09
               },
               {
                 "no": 2,
@@ -158923,7 +158931,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 1.48
+                "odd": 1.47
               }
             ]
           },
@@ -158956,7 +158964,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.9
+                "odd": 3.87
               },
               {
                 "no": 2,
@@ -158994,12 +159002,12 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 2.29
+                "odd": 2.34
               },
               {
                 "no": 2,
                 "name": "1/0",
-                "odd": 14
+                "odd": 13.85
               },
               {
                 "no": 3,
@@ -159009,17 +159017,17 @@
               {
                 "no": 4,
                 "name": "0/1",
-                "odd": 4.55
+                "odd": 4.6
               },
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 5.6
+                "odd": 5.54
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 9.61
+                "odd": 9.39
               },
               {
                 "no": 7,
@@ -159029,12 +159037,12 @@
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 15.45
+                "odd": 15.2
               },
               {
                 "no": 9,
                 "name": "2/2",
-                "odd": 7.26
+                "odd": 7.01
               }
             ]
           },
@@ -159048,12 +159056,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.95
+                "odd": 1.92
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.56
+                "odd": 1.57
               }
             ]
           },
@@ -159067,12 +159075,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.22
+                "odd": 1.23
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.96
+                "odd": 2.89
               }
             ]
           },
@@ -159086,12 +159094,12 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 4.39
+                "odd": 4.51
               },
               {
                 "no": 2,
                 "name": "Hayır",
-                "odd": 1.08
+                "odd": 1.07
               }
             ]
           },
@@ -159105,7 +159113,7 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 16.4
+                "odd": 15.8
               },
               {
                 "no": 2,
@@ -159124,12 +159132,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2
+                "odd": 1.98
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.52
+                "odd": 1.53
               }
             ]
           },
@@ -159143,12 +159151,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.38
+                "odd": 1.4
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.31
+                "odd": 2.28
               }
             ]
           },
@@ -159162,17 +159170,17 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 3.12
+                "odd": 3.15
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 2.91
+                "odd": 2.99
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 4.53
+                "odd": 4.47
               },
               {
                 "no": 4,
@@ -159182,12 +159190,12 @@
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 7.65
+                "odd": 7.4
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 8.61
+                "odd": 8.38
               }
             ]
           },
@@ -159201,7 +159209,7 @@
               {
                 "no": 1,
                 "name": "1.",
-                "odd": 2.85
+                "odd": 2.86
               },
               {
                 "no": 2,
@@ -159225,17 +159233,17 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 12.55
+                "odd": 12.65
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 2.35
+                "odd": 2.39
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 7.04
+                "odd": 6.99
               },
               {
                 "no": 4,
@@ -159245,12 +159253,12 @@
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 26.5
+                "odd": 25.5
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 5.22
+                "odd": 5.12
               }
             ]
           }
@@ -191393,12 +191401,12 @@
         "time": "22:45",
         "date": "28.11.2026",
         "mbs": 1,
-        "ms1": 1.09,
-        "msX": 6.2,
-        "ms2": 11.7,
+        "ms1": 1.1,
+        "msX": 6.18,
+        "ms2": 11.55,
         "doubleChance1X": 1,
         "doubleChance12": 1,
-        "doubleChanceX2": 3.77,
+        "doubleChanceX2": 3.75,
         "goals25Under": 2.3,
         "goals25Over": 1.39,
         "leagueCode": "Fransa Ligue 1",
@@ -191408,13 +191416,13 @@
         "totalGoals23": 1.98,
         "totalGoals46": 2.81,
         "totalGoals7Plus": 7.44,
-        "halfTimeResult1": 1.44,
-        "halfTimeResultX": 2.78,
-        "halfTimeResult2": 9.52,
-        "handicapMs1": 2.31,
+        "halfTimeResult1": 1.45,
+        "halfTimeResultX": 2.77,
+        "halfTimeResult2": 9.43,
+        "handicapMs1": 2.32,
         "handicapMsX": 3.63,
-        "handicapMs2": 1.98,
-        "bttsYes": 1.98,
+        "handicapMs2": 1.97,
+        "bttsYes": 1.97,
         "bttsNo": 1.54,
         "halfTimeGoals15Under": 1.53,
         "halfTimeGoals15Over": 1.98,
@@ -191463,12 +191471,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.72
+                "odd": 3.71
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.12
+                "odd": 1.13
               }
             ]
           },
@@ -191539,32 +191547,32 @@
               {
                 "no": 1,
                 "name": "1 ve Alt",
-                "odd": 3.49
+                "odd": 3.5
               },
               {
                 "no": 2,
                 "name": "0 ve Alt",
-                "odd": 7.76
+                "odd": 7.74
               },
               {
                 "no": 3,
                 "name": "2 ve Alt",
-                "odd": 24.05
+                "odd": 23.6
               },
               {
                 "no": 4,
                 "name": "1 ve Üst",
-                "odd": 1.51
+                "odd": 1.52
               },
               {
                 "no": 5,
                 "name": "0 ve Üst",
-                "odd": 25.5
+                "odd": 24.9
               },
               {
                 "no": 6,
                 "name": "2 ve Üst",
-                "odd": 21.9
+                "odd": 21.5
               }
             ]
           },
@@ -191578,22 +191586,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 13.05
+                "odd": 12.95
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 2.27
+                "odd": 2.25
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 2.71
+                "odd": 2.72
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 3.28
+                "odd": 3.3
               }
             ]
           },
@@ -191607,7 +191615,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.37
+                "odd": 1.38
               },
               {
                 "no": 2,
@@ -191617,7 +191625,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 8.73
+                "odd": 8.64
               }
             ]
           },
@@ -191631,17 +191639,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.09
+                "odd": 1.1
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 6.2
+                "odd": 6.18
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 11.7
+                "odd": 11.55
               }
             ]
           },
@@ -191655,7 +191663,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.31
+                "odd": 2.32
               },
               {
                 "no": 2,
@@ -191665,7 +191673,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.98
+                "odd": 1.97
               }
             ]
           },
@@ -191708,7 +191716,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.98
+                "odd": 1.97
               },
               {
                 "no": 2,
@@ -191746,17 +191754,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.44
+                "odd": 1.45
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.78
+                "odd": 2.77
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 9.52
+                "odd": 9.43
               }
             ]
           },
@@ -191780,7 +191788,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 3.77
+                "odd": 3.75
               }
             ]
           },
@@ -191804,7 +191812,7 @@
               {
                 "no": 3,
                 "name": "0 ve 2",
-                "odd": 2.1
+                "odd": 2.09
               }
             ]
           },
@@ -191837,7 +191845,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 4.77
+                "odd": 4.73
               },
               {
                 "no": 2,
@@ -191875,7 +191883,7 @@
               {
                 "no": 1,
                 "name": "1/1",
-                "odd": 1.43
+                "odd": 1.44
               },
               {
                 "no": 2,
@@ -191895,12 +191903,12 @@
               {
                 "no": 5,
                 "name": "0/0",
-                "odd": 8.9
+                "odd": 8.88
               },
               {
                 "no": 6,
                 "name": "0/2",
-                "odd": 24.05
+                "odd": 23.6
               },
               {
                 "no": 7,
@@ -191910,12 +191918,12 @@
               {
                 "no": 8,
                 "name": "2/0",
-                "odd": 30
+                "odd": 29.5
               },
               {
                 "no": 9,
                 "name": "2/2",
-                "odd": 21.4
+                "odd": 21.1
               }
             ]
           },
@@ -191953,7 +191961,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 5.9
+                "odd": 5.81
               }
             ]
           },
@@ -191967,12 +191975,12 @@
               {
                 "no": 1,
                 "name": "Evet",
-                "odd": 2.25
+                "odd": 2.26
               },
               {
                 "no": 2,
                 "name": "Hayır",
-                "odd": 1.41
+                "odd": 1.4
               }
             ]
           },
@@ -192005,12 +192013,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.16
+                "odd": 1.17
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 3.39
+                "odd": 3.36
               }
             ]
           },
@@ -192024,7 +192032,7 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 2.71
+                "odd": 2.7
               },
               {
                 "no": 2,
@@ -192034,7 +192042,7 @@
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 8.54
+                "odd": 8.47
               },
               {
                 "no": 4,
@@ -192049,7 +192057,7 @@
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 22.7
+                "odd": 22.25
               }
             ]
           },
@@ -192087,17 +192095,17 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 10.85
+                "odd": 10.8
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 1.6
+                "odd": 1.61
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 9.57
+                "odd": 9.52
               },
               {
                 "no": 4,
@@ -192112,7 +192120,7 @@
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 10.65
+                "odd": 10.55
               }
             ]
           }
@@ -245685,29 +245693,29 @@
         "doubleChance1X": 1.82,
         "doubleChance12": 1.1,
         "doubleChanceX2": 1.06,
-        "goals25Under": 1.92,
-        "goals25Over": 1.47,
+        "goals25Under": 1.96,
+        "goals25Over": 1.45,
         "leagueCode": "Güney Kore K-Lig 2",
         "groupId": "1809",
         "subgroupId": "0",
-        "totalGoals01": 3.97,
-        "totalGoals23": 1.84,
-        "totalGoals46": 2.99,
-        "totalGoals7Plus": 9.26,
-        "halfTimeResult1": 4.46,
-        "halfTimeResultX": 2.19,
-        "halfTimeResult2": 1.92,
+        "totalGoals01": 4.08,
+        "totalGoals23": 1.86,
+        "totalGoals46": 2.95,
+        "totalGoals7Plus": 8.88,
+        "halfTimeResult1": 4.44,
+        "halfTimeResultX": 2.2,
+        "halfTimeResult2": 1.91,
         "handicapMs1": 1.9,
-        "handicapMsX": 3.35,
+        "handicapMsX": 3.37,
         "handicapMs2": 2.31,
-        "bttsYes": 1.5,
-        "bttsNo": 1.87,
-        "halfTimeGoals15Under": 1.38,
-        "halfTimeGoals15Over": 2.1,
-        "goals15Under": 3.74,
-        "goals15Over": 1.07,
-        "goals35Under": 1.31,
-        "goals35Over": 2.29,
+        "bttsYes": 1.48,
+        "bttsNo": 1.9,
+        "halfTimeGoals15Under": 1.39,
+        "halfTimeGoals15Over": 2.07,
+        "goals15Under": 3.83,
+        "goals15Over": 1.06,
+        "goals35Under": 1.33,
+        "goals35Over": 2.24,
         "eventId": "3333005",
         "marketMs": "1:1:",
         "marketDoubleChance": "2:92:",
@@ -245730,12 +245738,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.92
+                "odd": 1.96
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.47
+                "odd": 1.45
               }
             ]
           },
@@ -245749,12 +245757,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.38
+                "odd": 1.39
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.1
+                "odd": 2.07
               }
             ]
           },
@@ -245768,12 +245776,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 3.74
+                "odd": 3.83
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.07
+                "odd": 1.06
               }
             ]
           },
@@ -245787,12 +245795,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.31
+                "odd": 1.33
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.29
+                "odd": 2.24
               }
             ]
           },
@@ -245806,22 +245814,22 @@
               {
                 "no": 1,
                 "name": "Alt ve Var",
-                "odd": 7.29
+                "odd": 7.32
               },
               {
                 "no": 2,
                 "name": "Üst ve Var",
-                "odd": 1.82
+                "odd": 1.79
               },
               {
                 "no": 3,
                 "name": "Alt ve Yok",
-                "odd": 2.53
+                "odd": 2.58
               },
               {
                 "no": 4,
                 "name": "Üst ve Yok",
-                "odd": 6.53
+                "odd": 6.51
               }
             ]
           },
@@ -245835,17 +245843,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.97
+                "odd": 3.95
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.53
+                "odd": 2.54
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.81
+                "odd": 1.8
               }
             ]
           },
@@ -245888,7 +245896,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.35
+                "odd": 3.37
               },
               {
                 "no": 3,
@@ -245907,22 +245915,22 @@
               {
                 "no": 1,
                 "name": "0-1 gol",
-                "odd": 3.97
+                "odd": 4.08
               },
               {
                 "no": 2,
                 "name": "2-3 gol",
-                "odd": 1.84
+                "odd": 1.86
               },
               {
                 "no": 3,
                 "name": "4-5 gol",
-                "odd": 2.99
+                "odd": 2.95
               },
               {
                 "no": 4,
                 "name": "6+ gol",
-                "odd": 9.26
+                "odd": 8.88
               }
             ]
           },
@@ -245936,12 +245944,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.5
+                "odd": 1.48
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.87
+                "odd": 1.9
               }
             ]
           },
@@ -245955,17 +245963,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.46
+                "odd": 4.44
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.19
+                "odd": 2.2
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.92
+                "odd": 1.91
               }
             ]
           },
@@ -246003,12 +246011,12 @@
               {
                 "no": 1,
                 "name": "1 ve 0",
-                "odd": 1.43
+                "odd": 1.44
               },
               {
                 "no": 2,
                 "name": "1 ve 2",
-                "odd": 1.33
+                "odd": 1.32
               },
               {
                 "no": 3,
@@ -246046,7 +246054,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.52
+                "odd": 3.46
               },
               {
                 "no": 2,
@@ -246065,12 +246073,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 2.31
+                "odd": 2.33
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.3
+                "odd": 1.29
               }
             ]
           },
@@ -246084,12 +246092,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.94
+                "odd": 1.97
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.45
+                "odd": 1.44
               }
             ]
           },
@@ -246108,7 +246116,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.21
+                "odd": 2.18
               }
             ]
           },
@@ -246122,12 +246130,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.97
+                "odd": 1.98
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.44
+                "odd": 1.43
               }
             ]
           },
@@ -246141,32 +246149,32 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 7.51
+                "odd": 7.4
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 8.71
+                "odd": 8.86
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 4.47
+                "odd": 4.43
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 14.05
+                "odd": 14.45
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 2.87
+                "odd": 2.84
               },
               {
                 "no": 6,
                 "name": "2 ve Yok",
-                "odd": 2.72
+                "odd": 2.76
               }
             ]
           },
@@ -246185,7 +246193,7 @@
               {
                 "no": 2,
                 "name": "Eşit",
-                "odd": 3.31
+                "odd": 3.32
               },
               {
                 "no": 3,
@@ -246204,27 +246212,27 @@
               {
                 "no": 1,
                 "name": "1 ve Var",
-                "odd": 24.9
+                "odd": 24.45
               },
               {
                 "no": 2,
                 "name": "1 ve Yok",
-                "odd": 5.15
+                "odd": 5.14
               },
               {
                 "no": 3,
                 "name": "0 ve Var",
-                "odd": 6.65
+                "odd": 6.58
               },
               {
                 "no": 4,
                 "name": "0 ve Yok",
-                "odd": 3.02
+                "odd": 3.07
               },
               {
                 "no": 5,
                 "name": "2 ve Var",
-                "odd": 11.3
+                "odd": 11
               },
               {
                 "no": 6,
@@ -261165,7 +261173,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "82'",
+      "liveMinute": "84'",
       "fields": {
         "matchId": "3333231",
         "homeName": "Almanya U19 (K)",
@@ -261189,12 +261197,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.66
+                "odd": 1.51
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.54
+                "odd": 1.68
               }
             ]
           },
@@ -261208,17 +261216,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.76
+                "odd": 1.91
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.67
+                "odd": 1.52
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.25
+                "odd": 12.1
               }
             ]
           },
@@ -261232,17 +261240,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.83
+                "odd": 1.97
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.58
+                "odd": 1.47
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 14
+                "odd": 16
               }
             ]
           }
@@ -261269,7 +261277,7 @@
       "date": "28.11.2026",
       "time": "20:45",
       "status": 1,
-      "liveMinute": "87'",
+      "liveMinute": "88'",
       "fields": {
         "matchId": "3336047",
         "homeName": "Alcorcon",
@@ -261293,17 +261301,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.83
+                "odd": 5.34
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.1
+                "odd": 1.05
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 7.48
+                "odd": 8.57
               }
             ]
           },
@@ -261317,12 +261325,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.11
+                "odd": 1.06
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.83
+                "odd": 3.19
               }
             ]
           },
@@ -261336,17 +261344,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.55
+                "odd": 5.07
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.11
+                "odd": 1.06
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 6.84
+                "odd": 7.9
               }
             ]
           },
@@ -261360,17 +261368,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.83
+                "odd": 5.34
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.1
+                "odd": 1.05
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 7.48
+                "odd": 8.57
               }
             ]
           }
@@ -261397,7 +261405,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "79'",
+      "liveMinute": "80'",
       "fields": {
         "matchId": "3428932",
         "homeName": "FCSB",
@@ -261450,7 +261458,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 6.55
+                "odd": 8.15
               }
             ]
           },
@@ -261464,17 +261472,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.28
+                "odd": 2.58
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.53
+                "odd": 1.42
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 7.24
+                "odd": 7.17
               }
             ]
           },
@@ -261488,17 +261496,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.42
+                "odd": 2.74
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.47
+                "odd": 1.38
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 8.99
+                "odd": 8.69
               }
             ]
           },
@@ -261544,7 +261552,7 @@
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "39'",
+      "liveMinute": "40'",
       "fields": {
         "matchId": "3332864",
         "homeName": "CD Alcoyano",
@@ -261568,17 +261576,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 8.17
+                "odd": 7.93
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.39
+                "odd": 3.4
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.19
+                "odd": 1.2
               }
             ]
           },
@@ -261592,7 +261600,7 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.43
+                "odd": 1.44
               },
               {
                 "no": 2,
@@ -261611,17 +261619,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.1
+                "odd": 2.09
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 3.48
+                "odd": 3.47
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.99
+                "odd": 2.01
               }
             ]
           },
@@ -261635,17 +261643,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.57
+                "odd": 2.55
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.21
+                "odd": 2.2
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.43
+                "odd": 2.46
               }
             ]
           },
@@ -261664,7 +261672,7 @@
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.65
+                "odd": 1.66
               }
             ]
           }
@@ -261691,7 +261699,7 @@
       "date": "28.11.2026",
       "time": "20:45",
       "status": 1,
-      "liveMinute": "91'",
+      "liveMinute": "93'",
       "fields": {
         "matchId": "3337201",
         "homeName": "UE San Juan Atletico de Montcada",
@@ -261727,7 +261735,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "78'",
+      "liveMinute": "79'",
       "fields": {
         "matchId": "3428925",
         "homeName": "Lusitânia de Lourosa",
@@ -261751,17 +261759,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.26
+                "odd": 2.34
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.4
+                "odd": 1.37
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.25
+                "odd": 10.55
               }
             ]
           },
@@ -261780,7 +261788,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 5.61
+                "odd": 5.94
               }
             ]
           },
@@ -261794,17 +261802,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.18
+                "odd": 2.26
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.46
+                "odd": 1.41
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 8.35
+                "odd": 8.75
               }
             ]
           },
@@ -261818,17 +261826,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.26
+                "odd": 2.34
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.4
+                "odd": 1.37
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.25
+                "odd": 10.55
               }
             ]
           }
@@ -261855,7 +261863,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "78'",
+      "liveMinute": "79'",
       "fields": {
         "matchId": "3428838",
         "homeName": "Kifisia FC",
@@ -261879,17 +261887,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.94
+                "odd": 3.09
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.4
+                "odd": 1.36
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 6.4
+                "odd": 6.7
               }
             ]
           },
@@ -261908,7 +261916,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 6.55
+                "odd": 6.99
               }
             ]
           },
@@ -261922,17 +261930,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.7
+                "odd": 2.83
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.49
+                "odd": 1.43
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 5.27
+                "odd": 5.58
               }
             ]
           },
@@ -261946,17 +261954,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.94
+                "odd": 3.09
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.4
+                "odd": 1.36
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 6.4
+                "odd": 6.7
               }
             ]
           }
@@ -261983,7 +261991,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "84'",
+      "liveMinute": "85'",
       "fields": {
         "matchId": "3336585",
         "homeName": "At Malagueno",
@@ -262007,12 +262015,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.23
+                "odd": 1.21
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.26
+                "odd": 2.33
               }
             ]
           },
@@ -262026,17 +262034,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.35
+                "odd": 3.6
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.24
+                "odd": 1.21
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 6.43
+                "odd": 6.11
               }
             ]
           },
@@ -262050,17 +262058,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.55
+                "odd": 3.83
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.19
+                "odd": 1.18
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 7.3
+                "odd": 6.85
               }
             ]
           },
@@ -262074,7 +262082,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 4.7
+                "odd": 4.59
               },
               {
                 "no": 2,
@@ -262106,7 +262114,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "81'",
+      "liveMinute": "83'",
       "fields": {
         "matchId": "3332040",
         "homeName": "Ballymena U",
@@ -262130,12 +262138,12 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.06
+                "odd": 1.05
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.68
+                "odd": 3.74
               },
               {
                 "no": 3,
@@ -262154,12 +262162,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.36
+                "odd": 1.33
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.94
+                "odd": 1.98
               }
             ]
           },
@@ -262173,17 +262181,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.54
+                "odd": 4.6
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.36
+                "odd": 1.34
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.21
+                "odd": 3.3
               }
             ]
           },
@@ -262197,17 +262205,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 5.19
+                "odd": 5.24
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.3
+                "odd": 1.28
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.47
+                "odd": 3.55
               }
             ]
           }
@@ -262234,7 +262242,7 @@
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "39'",
+      "liveMinute": "40'",
       "fields": {
         "matchId": "3336033",
         "homeName": "CSD Macara",
@@ -262258,17 +262266,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 10.2
+                "odd": 9.56
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.82
+                "odd": 3.98
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.12
+                "odd": 1.11
               }
             ]
           },
@@ -262282,12 +262290,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.67
+                "odd": 1.63
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.54
+                "odd": 1.56
               }
             ]
           },
@@ -262301,17 +262309,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.3
+                "odd": 2.31
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 4.53
+                "odd": 4.25
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.64
+                "odd": 1.68
               }
             ]
           },
@@ -262325,17 +262333,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.04
+                "odd": 3.09
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.5
+                "odd": 2.4
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.91
+                "odd": 1.95
               }
             ]
           },
@@ -262349,12 +262357,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.54
+                "odd": 1.57
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.65
+                "odd": 1.62
               }
             ]
           }
@@ -262381,7 +262389,7 @@
       "date": "28.11.2026",
       "time": "21:15",
       "status": 1,
-      "liveMinute": "66'",
+      "liveMinute": "67'",
       "fields": {
         "matchId": "3425359",
         "homeName": "AS Kayes",
@@ -262405,7 +262413,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.38
+                "odd": 3.33
               },
               {
                 "no": 2,
@@ -262415,7 +262423,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.07
+                "odd": 4.25
               }
             ]
           },
@@ -262429,12 +262437,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.52
+                "odd": 1.5
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.68
+                "odd": 1.7
               }
             ]
           },
@@ -262448,17 +262456,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.02
+                "odd": 2.99
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.54
+                "odd": 1.52
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.54
+                "odd": 3.69
               }
             ]
           },
@@ -262472,7 +262480,7 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.38
+                "odd": 3.33
               },
               {
                 "no": 2,
@@ -262482,7 +262490,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.07
+                "odd": 4.25
               }
             ]
           },
@@ -262496,7 +262504,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 6.27
+                "odd": 6.41
               },
               {
                 "no": 2,
@@ -262528,7 +262536,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "74'",
+      "liveMinute": "76'",
       "fields": {
         "matchId": "3337390",
         "homeName": "CE Europa",
@@ -262557,12 +262565,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.49
+                "odd": 3.53
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.11
+                "odd": 1.1
               }
             ]
           },
@@ -262576,12 +262584,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.59
+                "odd": 1.61
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.61
+                "odd": 1.59
               }
             ]
           },
@@ -262600,12 +262608,12 @@
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.61
+                "odd": 1.63
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.47
+                "odd": 3.35
               }
             ]
           },
@@ -262619,17 +262627,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.13
+                "odd": 3.17
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.46
+                "odd": 1.47
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.03
+                "odd": 3.89
               }
             ]
           }
@@ -262650,13 +262658,160 @@
       }
     },
     {
+      "matchId": "3389724",
+      "homeName": "Houston Dynamo",
+      "awayName": "San Jose Earthquakes",
+      "date": "28.11.2026",
+      "time": "22:30",
+      "status": 1,
+      "liveMinute": "0'",
+      "fields": {
+        "matchId": "3389724",
+        "homeName": "Houston Dynamo",
+        "awayName": "San Jose Earthquakes",
+        "status": 1,
+        "time": "22:30",
+        "date": "28.11.2026",
+        "mbs": 1,
+        "leagueCode": "ABD Major Lig",
+        "groupId": "15",
+        "subgroupId": "0",
+        "eventId": "3389724",
+        "iddaaMarkets": [
+          {
+            "t": 4,
+            "st": 4,
+            "line": null,
+            "code": "4:4:",
+            "name": "Maç Sonucu",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.89
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 3
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 2.9
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 14,
+            "line": "2.5",
+            "code": "4:14:2.5",
+            "name": "Alt/Üst 2.5",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Alt",
+                "odd": 1.64
+              },
+              {
+                "no": 2,
+                "name": "Üst",
+                "odd": 1.68
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 34,
+            "line": "1",
+            "code": "4:34:1",
+            "name": "Sıradaki Golü Kim Atar ( 1 . Gol )",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.56
+              },
+              {
+                "no": 2,
+                "name": "Olmaz",
+                "odd": 10.05
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 1.99
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 23,
+            "line": "0:0",
+            "code": "4:23:0:0",
+            "name": "Maçın Kalanını Kim Kazanır 0:0",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.89
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 3
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 2.9
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 131,
+            "line": null,
+            "code": "4:131:",
+            "name": "Karşılıklı Gol",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Var",
+                "odd": 1.54
+              },
+              {
+                "no": 2,
+                "name": "Yok",
+                "odd": 1.79
+              }
+            ]
+          }
+        ],
+        "competitionId": 15,
+        "competitionName": "ABD Major Lig",
+        "iddaaEventState": 1,
+        "iddaaInPlayFlag": true,
+        "iddaaLiveState": 2,
+        "scoreHome": 0,
+        "scoreAway": 0,
+        "marketCount": 5
+      },
+      "raw": [],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 748
+      }
+    },
+    {
       "matchId": "3337392",
       "homeName": "Lugo",
       "awayName": "UD Ourense",
       "date": "28.11.2026",
       "time": "20:45",
       "status": 1,
-      "liveMinute": "91'",
+      "liveMinute": "93'",
       "fields": {
         "matchId": "3337392",
         "homeName": "Lugo",
@@ -262682,7 +262837,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 748
+        "matchIndex": 749
       }
     },
     {
@@ -262692,7 +262847,7 @@
       "date": "28.11.2026",
       "time": "21:15",
       "status": 1,
-      "liveMinute": "67'",
+      "liveMinute": "68'",
       "fields": {
         "matchId": "3331929",
         "homeName": "Kisvarda",
@@ -262721,12 +262876,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.56
+                "odd": 1.55
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.92
+                "odd": 4.96
               }
             ]
           },
@@ -262745,7 +262900,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 3.59
+                "odd": 3.62
               }
             ]
           },
@@ -262769,7 +262924,7 @@
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.98
+                "odd": 4
               }
             ]
           },
@@ -262788,12 +262943,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.56
+                "odd": 1.55
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.92
+                "odd": 4.96
               }
             ]
           }
@@ -262810,7 +262965,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 749
+        "matchIndex": 750
       }
     },
     {
@@ -262820,7 +262975,7 @@
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "40'",
+      "liveMinute": "41'",
       "fields": {
         "matchId": "3359444",
         "homeName": "AS Far Rabat",
@@ -262849,7 +263004,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 7.86
+                "odd": 7.77
               },
               {
                 "no": 3,
@@ -262868,12 +263023,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.97
+                "odd": 1.91
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.33
+                "odd": 1.37
               }
             ]
           },
@@ -262887,17 +263042,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.14
+                "odd": 1.15
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 5.44
+                "odd": 5.19
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.93
+                "odd": 4.97
               }
             ]
           },
@@ -262911,17 +263066,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.16
+                "odd": 1.17
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.4
+                "odd": 3.31
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 10.6
+                "odd": 10.45
               }
             ]
           },
@@ -262935,12 +263090,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 2.57
+                "odd": 2.61
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.16
+                "odd": 1.15
               }
             ]
           }
@@ -262957,7 +263112,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 750
+        "matchIndex": 751
       }
     },
     {
@@ -262967,7 +263122,7 @@
       "date": "28.11.2026",
       "time": "21:30",
       "status": 1,
-      "liveMinute": "50'",
+      "liveMinute": "51'",
       "fields": {
         "matchId": "3428856",
         "homeName": "Palermo",
@@ -263015,12 +263170,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.56
+                "odd": 1.53
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.76
+                "odd": 1.81
               }
             ]
           },
@@ -263039,12 +263194,12 @@
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 3.92
+                "odd": 3.77
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.47
+                "odd": 2.5
               }
             ]
           },
@@ -263058,17 +263213,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.04
+                "odd": 2.07
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.36
+                "odd": 2.33
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.38
+                "odd": 3.4
               }
             ]
           },
@@ -263082,12 +263237,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.74
+                "odd": 1.76
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.58
+                "odd": 1.56
               }
             ]
           }
@@ -263104,7 +263259,154 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 751
+        "matchIndex": 752
+      }
+    },
+    {
+      "matchId": "3428908",
+      "homeName": "Wisla Kraków",
+      "awayName": "Motor Lublin",
+      "date": "28.11.2026",
+      "time": "22:15",
+      "status": 1,
+      "liveMinute": "24'",
+      "fields": {
+        "matchId": "3428908",
+        "homeName": "Wisla Kraków",
+        "awayName": "Motor Lublin",
+        "status": 1,
+        "time": "22:15",
+        "date": "28.11.2026",
+        "mbs": 1,
+        "leagueCode": "Polonya Ekstraklasa",
+        "groupId": "202",
+        "subgroupId": "0",
+        "eventId": "3428908",
+        "iddaaMarkets": [
+          {
+            "t": 4,
+            "st": 4,
+            "line": null,
+            "code": "4:4:",
+            "name": "Maç Sonucu",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.86
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 2.83
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 3.16
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 14,
+            "line": "2.5",
+            "code": "4:14:2.5",
+            "name": "Alt/Üst 2.5",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Alt",
+                "odd": 1.4
+              },
+              {
+                "no": 2,
+                "name": "Üst",
+                "odd": 2.04
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 34,
+            "line": "1",
+            "code": "4:34:1",
+            "name": "Sıradaki Golü Kim Atar ( 1 . Gol )",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.57
+              },
+              {
+                "no": 2,
+                "name": "Olmaz",
+                "odd": 7.57
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 2.17
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 23,
+            "line": "0:0",
+            "code": "4:23:0:0",
+            "name": "Maçın Kalanını Kim Kazanır 0:0",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1.86
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 2.83
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 3.16
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 131,
+            "line": null,
+            "code": "4:131:",
+            "name": "Karşılıklı Gol",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Var",
+                "odd": 1.76
+              },
+              {
+                "no": 2,
+                "name": "Yok",
+                "odd": 1.51
+              }
+            ]
+          }
+        ],
+        "competitionId": 202,
+        "competitionName": "Polonya Ekstraklasa",
+        "iddaaEventState": 1,
+        "iddaaInPlayFlag": true,
+        "iddaaLiveState": 2,
+        "scoreHome": 0,
+        "scoreAway": 0,
+        "marketCount": 5
+      },
+      "raw": [],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 753
       }
     },
     {
@@ -263114,7 +263416,7 @@
       "date": "28.11.2026",
       "time": "22:30",
       "status": 1,
-      "liveMinute": "9'",
+      "liveMinute": "10'",
       "fields": {
         "matchId": "3331855",
         "homeName": "Osnabruck",
@@ -263143,7 +263445,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.93
+                "odd": 2.94
               },
               {
                 "no": 3,
@@ -263167,7 +263469,7 @@
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.71
+                "odd": 1.72
               }
             ]
           },
@@ -263210,7 +263512,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.93
+                "odd": 2.94
               },
               {
                 "no": 3,
@@ -263229,12 +263531,12 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 1.55
+                "odd": 1.56
               },
               {
                 "no": 2,
                 "name": "Yok",
-                "odd": 1.77
+                "odd": 1.76
               }
             ]
           }
@@ -263251,7 +263553,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 752
+        "matchIndex": 754
       }
     },
     {
@@ -263261,7 +263563,7 @@
       "date": "28.11.2026",
       "time": "21:00",
       "status": 1,
-      "liveMinute": "80'",
+      "liveMinute": "81'",
       "fields": {
         "matchId": "3336649",
         "homeName": "A.Sanluqueno",
@@ -263285,12 +263587,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.27
+                "odd": 1.25
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.15
+                "odd": 2.23
               }
             ]
           },
@@ -263304,17 +263606,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.23
+                "odd": 4.46
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 1.27
+                "odd": 1.25
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.12
+                "odd": 4.19
               }
             ]
           },
@@ -263328,17 +263630,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.65
+                "odd": 4.9
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 1.22
+                "odd": 1.2
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.52
+                "odd": 4.57
               }
             ]
           },
@@ -263352,7 +263654,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 3.44
+                "odd": 3.52
               },
               {
                 "no": 2,
@@ -263374,281 +263676,6 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 753
-      }
-    },
-    {
-      "matchId": "3428926",
-      "homeName": "Sporting CP B",
-      "awayName": "Amarante FC",
-      "date": "28.11.2026",
-      "time": "21:00",
-      "status": 1,
-      "liveMinute": "81'",
-      "fields": {
-        "matchId": "3428926",
-        "homeName": "Sporting CP B",
-        "awayName": "Amarante FC",
-        "status": 1,
-        "time": "21:00",
-        "date": "28.11.2026",
-        "mbs": 1,
-        "leagueCode": "Portugal Portekiz 2. Lig",
-        "groupId": "50757",
-        "subgroupId": "0",
-        "eventId": "3428926",
-        "iddaaMarkets": [
-          {
-            "t": 4,
-            "st": 4,
-            "line": null,
-            "code": "4:4:",
-            "name": "Maç Sonucu",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 1
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 6.89
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 17.55
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 14,
-            "line": "4.5",
-            "code": "4:14:4.5",
-            "name": "Alt/Üst 4.5",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "Alt",
-                "odd": 1
-              },
-              {
-                "no": 2,
-                "name": "Üst",
-                "odd": 6.79
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 34,
-            "line": "4",
-            "code": "4:34:4",
-            "name": "Sıradaki Golü Kim Atar ( 4 . Gol )",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 2.7
-              },
-              {
-                "no": 2,
-                "name": "Olmaz",
-                "odd": 1.33
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 6.89
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 23,
-            "line": "2:1",
-            "code": "4:23:2:1",
-            "name": "Maçın Kalanını Kim Kazanır 2:1",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 2.83
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 1.29
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 7.94
-              }
-            ]
-          }
-        ],
-        "competitionId": 50757,
-        "competitionName": "Portugal Portekiz 2. Lig",
-        "iddaaEventState": 1,
-        "iddaaInPlayFlag": true,
-        "iddaaLiveState": 3,
-        "scoreHome": 2,
-        "scoreAway": 1,
-        "marketCount": 4
-      },
-      "raw": [],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 754
-      }
-    },
-    {
-      "matchId": "3428916",
-      "homeName": "Académico de Viseu",
-      "awayName": "Alverca",
-      "date": "28.11.2026",
-      "time": "21:00",
-      "status": 1,
-      "liveMinute": "73'",
-      "fields": {
-        "matchId": "3428916",
-        "homeName": "Académico de Viseu",
-        "awayName": "Alverca",
-        "status": 1,
-        "time": "21:00",
-        "date": "28.11.2026",
-        "mbs": 1,
-        "leagueCode": "Portekiz Premier Lig",
-        "groupId": "566",
-        "subgroupId": "0",
-        "eventId": "3428916",
-        "iddaaMarkets": [
-          {
-            "t": 4,
-            "st": 4,
-            "line": null,
-            "code": "4:4:",
-            "name": "Maç Sonucu",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 17.55
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 15.65
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 1
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 14,
-            "line": "3.5",
-            "code": "4:14:3.5",
-            "name": "Alt/Üst 3.5",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "Alt",
-                "odd": 1
-              },
-              {
-                "no": 2,
-                "name": "Üst",
-                "odd": 5.25
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 34,
-            "line": "3",
-            "code": "4:34:3",
-            "name": "Sıradaki Golü Kim Atar ( 3 . Gol )",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 2.72
-              },
-              {
-                "no": 2,
-                "name": "Olmaz",
-                "odd": 1.68
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 3.71
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 23,
-            "line": "0:2",
-            "code": "4:23:0:2",
-            "name": "Maçın Kalanını Kim Kazanır 0:2",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 3.04
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 1.54
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 4.33
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 131,
-            "line": null,
-            "code": "4:131:",
-            "name": "Karşılıklı Gol",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "Var",
-                "odd": 2.43
-              },
-              {
-                "no": 2,
-                "name": "Yok",
-                "odd": 1.25
-              }
-            ]
-          }
-        ],
-        "competitionId": 566,
-        "competitionName": "Portekiz Premier Lig",
-        "iddaaEventState": 1,
-        "iddaaInPlayFlag": true,
-        "iddaaLiveState": 3,
-        "scoreHome": 0,
-        "scoreAway": 2,
-        "marketCount": 5
-      },
-      "raw": [],
-      "source": {
-        "groupIndex": 0,
         "matchIndex": 755
       }
     },
@@ -263659,7 +263686,7 @@
       "date": "28.11.2026",
       "time": "22:30",
       "status": 1,
-      "liveMinute": "9'",
+      "liveMinute": "10'",
       "fields": {
         "matchId": "3428974",
         "homeName": "Servette FC",
@@ -263683,17 +263710,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.68
+                "odd": 1.75
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.13
+                "odd": 3.02
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.41
+                "odd": 3.29
               }
             ]
           },
@@ -263707,12 +263734,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.61
+                "odd": 1.6
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.7
+                "odd": 1.72
               }
             ]
           },
@@ -263726,17 +263753,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.48
+                "odd": 1.52
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 10.2
+                "odd": 9.87
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 2.18
+                "odd": 2.13
               }
             ]
           },
@@ -263750,17 +263777,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.68
+                "odd": 1.75
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.13
+                "odd": 3.02
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 3.41
+                "odd": 3.29
               }
             ]
           },
@@ -263800,13 +263827,288 @@
       }
     },
     {
+      "matchId": "3428926",
+      "homeName": "Sporting CP B",
+      "awayName": "Amarante FC",
+      "date": "28.11.2026",
+      "time": "21:00",
+      "status": 1,
+      "liveMinute": "83'",
+      "fields": {
+        "matchId": "3428926",
+        "homeName": "Sporting CP B",
+        "awayName": "Amarante FC",
+        "status": 1,
+        "time": "21:00",
+        "date": "28.11.2026",
+        "mbs": 1,
+        "leagueCode": "Portugal Portekiz 2. Lig",
+        "groupId": "50757",
+        "subgroupId": "0",
+        "eventId": "3428926",
+        "iddaaMarkets": [
+          {
+            "t": 4,
+            "st": 4,
+            "line": null,
+            "code": "4:4:",
+            "name": "Maç Sonucu",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 1
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 7.09
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 17.55
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 14,
+            "line": "4.5",
+            "code": "4:14:4.5",
+            "name": "Alt/Üst 4.5",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Alt",
+                "odd": 1
+              },
+              {
+                "no": 2,
+                "name": "Üst",
+                "odd": 7.34
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 34,
+            "line": "4",
+            "code": "4:34:4",
+            "name": "Sıradaki Golü Kim Atar ( 4 . Gol )",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 2.89
+              },
+              {
+                "no": 2,
+                "name": "Olmaz",
+                "odd": 1.28
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 7.26
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 23,
+            "line": "2:1",
+            "code": "4:23:2:1",
+            "name": "Maçın Kalanını Kim Kazanır 2:1",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 3.03
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 1.25
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 8.28
+              }
+            ]
+          }
+        ],
+        "competitionId": 50757,
+        "competitionName": "Portugal Portekiz 2. Lig",
+        "iddaaEventState": 1,
+        "iddaaInPlayFlag": true,
+        "iddaaLiveState": 3,
+        "scoreHome": 2,
+        "scoreAway": 1,
+        "marketCount": 4
+      },
+      "raw": [],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 757
+      }
+    },
+    {
+      "matchId": "3428916",
+      "homeName": "Académico de Viseu",
+      "awayName": "Alverca",
+      "date": "28.11.2026",
+      "time": "21:00",
+      "status": 1,
+      "liveMinute": "75'",
+      "fields": {
+        "matchId": "3428916",
+        "homeName": "Académico de Viseu",
+        "awayName": "Alverca",
+        "status": 1,
+        "time": "21:00",
+        "date": "28.11.2026",
+        "mbs": 1,
+        "leagueCode": "Portekiz Premier Lig",
+        "groupId": "566",
+        "subgroupId": "0",
+        "eventId": "3428916",
+        "iddaaMarkets": [
+          {
+            "t": 4,
+            "st": 4,
+            "line": null,
+            "code": "4:4:",
+            "name": "Maç Sonucu",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 17.55
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 16.8
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 1
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 14,
+            "line": "3.5",
+            "code": "4:14:3.5",
+            "name": "Alt/Üst 3.5",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Alt",
+                "odd": 1
+              },
+              {
+                "no": 2,
+                "name": "Üst",
+                "odd": 5.82
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 34,
+            "line": "3",
+            "code": "4:34:3",
+            "name": "Sıradaki Golü Kim Atar ( 3 . Gol )",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 2.84
+              },
+              {
+                "no": 2,
+                "name": "Olmaz",
+                "odd": 1.61
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 3.9
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 23,
+            "line": "0:2",
+            "code": "4:23:0:2",
+            "name": "Maçın Kalanını Kim Kazanır 0:2",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "1",
+                "odd": 3.16
+              },
+              {
+                "no": 2,
+                "name": "0",
+                "odd": 1.49
+              },
+              {
+                "no": 3,
+                "name": "2",
+                "odd": 4.5
+              }
+            ]
+          },
+          {
+            "t": 4,
+            "st": 131,
+            "line": null,
+            "code": "4:131:",
+            "name": "Karşılıklı Gol",
+            "outcomes": [
+              {
+                "no": 1,
+                "name": "Var",
+                "odd": 2.58
+              },
+              {
+                "no": 2,
+                "name": "Yok",
+                "odd": 1.22
+              }
+            ]
+          }
+        ],
+        "competitionId": 566,
+        "competitionName": "Portekiz Premier Lig",
+        "iddaaEventState": 1,
+        "iddaaInPlayFlag": true,
+        "iddaaLiveState": 3,
+        "scoreHome": 0,
+        "scoreAway": 2,
+        "marketCount": 5
+      },
+      "raw": [],
+      "source": {
+        "groupIndex": 0,
+        "matchIndex": 758
+      }
+    },
+    {
       "matchId": "3428721",
       "homeName": "KSC Lokeren Temse",
       "awayName": "Beerschot",
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "36'",
+      "liveMinute": "37'",
       "fields": {
         "matchId": "3428721",
         "homeName": "KSC Lokeren Temse",
@@ -263830,17 +264132,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.89
+                "odd": 3
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.59
+                "odd": 2.6
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.92
+                "odd": 1.87
               }
             ]
           },
@@ -263854,12 +264156,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.29
+                "odd": 1.27
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 2.09
+                "odd": 2.14
               }
             ]
           },
@@ -263873,17 +264175,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.07
+                "odd": 2.14
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 6.5
+                "odd": 6.23
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.59
+                "odd": 1.57
               }
             ]
           },
@@ -263897,17 +264199,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 2.89
+                "odd": 3
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.59
+                "odd": 2.6
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.92
+                "odd": 1.87
               }
             ]
           }
@@ -263924,154 +264226,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 757
-      }
-    },
-    {
-      "matchId": "3428908",
-      "homeName": "Wisla Kraków",
-      "awayName": "Motor Lublin",
-      "date": "28.11.2026",
-      "time": "22:15",
-      "status": 1,
-      "liveMinute": "23'",
-      "fields": {
-        "matchId": "3428908",
-        "homeName": "Wisla Kraków",
-        "awayName": "Motor Lublin",
-        "status": 1,
-        "time": "22:15",
-        "date": "28.11.2026",
-        "mbs": 1,
-        "leagueCode": "Polonya Ekstraklasa",
-        "groupId": "202",
-        "subgroupId": "0",
-        "eventId": "3428908",
-        "iddaaMarkets": [
-          {
-            "t": 4,
-            "st": 4,
-            "line": null,
-            "code": "4:4:",
-            "name": "Maç Sonucu",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 1.8
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 2.87
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 3.3
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 14,
-            "line": "2.5",
-            "code": "4:14:2.5",
-            "name": "Alt/Üst 2.5",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "Alt",
-                "odd": 1.43
-              },
-              {
-                "no": 2,
-                "name": "Üst",
-                "odd": 1.97
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 34,
-            "line": "1",
-            "code": "4:34:1",
-            "name": "Sıradaki Golü Kim Atar ( 1 . Gol )",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 1.54
-              },
-              {
-                "no": 2,
-                "name": "Olmaz",
-                "odd": 7.94
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 2.2
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 23,
-            "line": "0:0",
-            "code": "4:23:0:0",
-            "name": "Maçın Kalanını Kim Kazanır 0:0",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "1",
-                "odd": 1.8
-              },
-              {
-                "no": 2,
-                "name": "0",
-                "odd": 2.87
-              },
-              {
-                "no": 3,
-                "name": "2",
-                "odd": 3.3
-              }
-            ]
-          },
-          {
-            "t": 4,
-            "st": 131,
-            "line": null,
-            "code": "4:131:",
-            "name": "Karşılıklı Gol",
-            "outcomes": [
-              {
-                "no": 1,
-                "name": "Var",
-                "odd": 1.73
-              },
-              {
-                "no": 2,
-                "name": "Yok",
-                "odd": 1.54
-              }
-            ]
-          }
-        ],
-        "competitionId": 202,
-        "competitionName": "Polonya Ekstraklasa",
-        "iddaaEventState": 1,
-        "iddaaInPlayFlag": true,
-        "iddaaLiveState": 2,
-        "scoreHome": 0,
-        "scoreAway": 0,
-        "marketCount": 5
-      },
-      "raw": [],
-      "source": {
-        "groupIndex": 0,
-        "matchIndex": 758
+        "matchIndex": 759
       }
     },
     {
@@ -264081,7 +264236,7 @@
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "39'",
+      "liveMinute": "40'",
       "fields": {
         "matchId": "3359440",
         "homeName": "RSB Berkane",
@@ -264110,7 +264265,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 6.91
+                "odd": 6.9
               },
               {
                 "no": 3,
@@ -264129,12 +264284,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.52
+                "odd": 1.48
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.68
+                "odd": 1.73
               }
             ]
           },
@@ -264148,17 +264303,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.28
+                "odd": 1.29
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 3.62
+                "odd": 3.48
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 4.86
+                "odd": 4.96
               }
             ]
           },
@@ -264177,12 +264332,12 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.61
+                "odd": 2.56
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 8.58
+                "odd": 8.64
               }
             ]
           },
@@ -264196,7 +264351,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 2.79
+                "odd": 2.86
               },
               {
                 "no": 2,
@@ -264218,7 +264373,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 759
+        "matchIndex": 760
       }
     },
     {
@@ -264228,7 +264383,7 @@
       "date": "28.11.2026",
       "time": "21:30",
       "status": 1,
-      "liveMinute": "50'",
+      "liveMinute": "52'",
       "fields": {
         "matchId": "3428704",
         "homeName": "SC Austria Lustenau",
@@ -264257,7 +264412,7 @@
               {
                 "no": 2,
                 "name": "0",
-                "odd": 15.4
+                "odd": 15.8
               },
               {
                 "no": 3,
@@ -264276,12 +264431,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.76
+                "odd": 1.67
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.56
+                "odd": 1.64
               }
             ]
           },
@@ -264295,17 +264450,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 3.14
+                "odd": 3.22
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 4.84
+                "odd": 4.43
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.41
+                "odd": 1.44
               }
             ]
           },
@@ -264319,17 +264474,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 4.93
+                "odd": 5
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 2.83
+                "odd": 2.71
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 1.54
+                "odd": 1.56
               }
             ]
           }
@@ -264346,7 +264501,7 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 760
+        "matchIndex": 761
       }
     },
     {
@@ -264356,7 +264511,7 @@
       "date": "28.11.2026",
       "time": "22:00",
       "status": 1,
-      "liveMinute": "39'",
+      "liveMinute": "40'",
       "fields": {
         "matchId": "3359443",
         "homeName": "R Casablanca",
@@ -264380,17 +264535,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.11
+                "odd": 1.13
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.49
+                "odd": 3.33
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 16
+                "odd": 14
               }
             ]
           },
@@ -264404,12 +264559,12 @@
               {
                 "no": 1,
                 "name": "Alt",
-                "odd": 1.82
+                "odd": 1.75
               },
               {
                 "no": 2,
                 "name": "Üst",
-                "odd": 1.42
+                "odd": 1.47
               }
             ]
           },
@@ -264423,17 +264578,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.1
+                "odd": 1.12
               },
               {
                 "no": 2,
                 "name": "Olmaz",
-                "odd": 4.73
+                "odd": 4.54
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 7.13
+                "odd": 6.61
               }
             ]
           },
@@ -264447,17 +264602,17 @@
               {
                 "no": 1,
                 "name": "1",
-                "odd": 1.11
+                "odd": 1.13
               },
               {
                 "no": 2,
                 "name": "0",
-                "odd": 3.49
+                "odd": 3.33
               },
               {
                 "no": 3,
                 "name": "2",
-                "odd": 16
+                "odd": 14
               }
             ]
           },
@@ -264471,7 +264626,7 @@
               {
                 "no": 1,
                 "name": "Var",
-                "odd": 4.09
+                "odd": 3.98
               },
               {
                 "no": 2,
@@ -264493,12 +264648,12 @@
       "raw": [],
       "source": {
         "groupIndex": 0,
-        "matchIndex": 761
+        "matchIndex": 762
       }
     }
   ],
   "diagnostics": {
-    "handicapMarketIdMatchCount": 762,
+    "handicapMarketIdMatchCount": 763,
     "warningCounts": {},
     "warnings": []
   }
