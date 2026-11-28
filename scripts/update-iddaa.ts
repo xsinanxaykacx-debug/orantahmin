@@ -85,12 +85,18 @@ async function main():Promise<void> {
   const baseIds=new Set(footballEvents.map((event:any)=>String(event.i)));
   const type1Ids=new Set(type1Events.map((event:any)=>String(event.i)));
   const type1Overlap=[...type1Ids].filter(id=>baseIds.has(id));
+  const type1LiveEvents=type1Events.filter((event:any)=>Number(event.s)===1);
+  const type1LiveOverlap=type1LiveEvents.filter((event:any)=>baseIds.has(String(event.i)));
+  const type1LiveAdditional=type1LiveEvents.filter((event:any)=>!baseIds.has(String(event.i)));
   console.log("IDDAA_TYPE1_OVERLAP="+JSON.stringify({
     type1Football:type1Events.length,
-    type1LiveStateOne:type1Events.filter((event:any)=>Number(event.s)===1).length,
+    type1LiveStateOne:type1LiveEvents.length,
     baseFootball:footballEvents.length,
     overlap:type1Overlap.length,
     additional:[...type1Ids].filter(id=>!baseIds.has(id)).length,
+    liveOverlap:type1LiveOverlap.length,
+    liveAdditional:type1LiveAdditional.length,
+    liveAdditionalSamples:type1LiveAdditional.slice(0,20).map((event:any)=>({id:event.i,home:event.hn,away:event.an,date:new Date(Number(event.d)*1000).toISOString()})),
     sampleLive:type1Events.filter((event:any)=>Number(event.s)===1).slice(0,8).map((event:any)=>({
       id:event.i,home:event.hn,away:event.an,date:new Date(Number(event.d)*1000).toISOString(),
       state:event.s,il:event.il,keys:Object.keys(event),marketCount:event.m?.length,
