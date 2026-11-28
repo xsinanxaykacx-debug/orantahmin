@@ -423,15 +423,12 @@ function App() {
   }, [bulletin, fotmobLiveStates, iddaaLiveMatches]);
   const displayMatches = matches;
 
-  const matchFilterOptions = useMemo(
-    () => dedupeByMatchId([...displayMatches, ...iddaaLiveMatches]),
-    [displayMatches, iddaaLiveMatches]
+  const matchFilterOptions = displayMatches;
+  const allMatchesForFilters = displayMatches;
+  const dateOptions = useMemo(
+    () => [...new Set(displayMatches.map(matchDateKey).filter(Boolean))].sort(),
+    [displayMatches]
   );
-  const allMatchesForFilters = useMemo(
-    () => dedupeByMatchId([...matchFilterOptions, ...fotmobFinishedMatches]),
-    [matchFilterOptions, fotmobFinishedMatches]
-  );
-  const dateOptions = useMemo(() => [...new Set(allMatchesForFilters.map(matchDateKey).filter(Boolean))].sort(), [allMatchesForFilters]);
   const availableLeagues = useMemo(() => {
     const counts = new Map<string, number>();
     for (const match of allMatchesForFilters) {
@@ -453,11 +450,8 @@ function App() {
     [displayMatches, selectedDate, selectedLeagues]
   );
   const scopedFinishedMatches = useMemo(
-    () => applyMatchFilters(dedupeByMatchId([
-      ...displayMatches.filter(match => isFinishedMatch(match.status)),
-      ...fotmobFinishedMatches
-    ])),
-    [displayMatches, fotmobFinishedMatches, selectedDate, selectedLeagues]
+    () => applyMatchFilters(displayMatches.filter(match => isFinishedMatch(match.status))),
+    [displayMatches, selectedDate, selectedLeagues]
   );
 
   const filteredMatches = useMemo(() => {
