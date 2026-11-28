@@ -56,14 +56,42 @@ function normalizeTeamName(value: string): string {
     .replace(/[^a-z0-9]+/g, " ").trim();
 }
 
-function teamLogo(teamObject: any, row: any, label: string): string | null {
+function teamLogo(teamObject: any, row: any, label: string, leagueLogos: Record<string, string> = {}): string | null {
   const candidates = [
     teamObject?.logo, teamObject?.lu, teamObject?.logoUrl, teamObject?.logo_url,
     teamObject?.image, teamObject?.imageUrl, teamObject?._logo, teamObject?.crest,
     row?.logo, row?.logoUrl, row?.logo_url, row?._logo
   ];
   const supplied = candidates.find(value => typeof value === "string" && (value.startsWith("https://") || value.startsWith("http://")));
-  return supplied || SUPER_LIG_TEAM_LOGOS[normalizeTeamName(label)] || null;
+  return supplied || leagueLogos[normalizeTeamName(label)] || SUPER_LIG_TEAM_LOGOS[normalizeTeamName(label)] || null;
+}
+
+type SportsDbTeam = { strTeam?: string; strTeamAlternate?: string; strBadge?: string };
+const TEAM_LOGO_CACHE = new Map<string, Promise<Record<string, string>>>();
+
+function loadLeagueTeamLogos(leagueName: string): Promise<Record<string, string>> {
+  const cached = TEAM_LOGO_CACHE.get(leagueName);
+  if (cached) return cached;
+  const request = fetch("https://www.thesportsdb.com/api/v1/json/123/search_all_teams.php?l=" + encodeURIComponent(leagueName))
+    .then(async response => {
+      if (!response.ok) throw new Error("Takım armaları kaynağına erişilemedi.");
+      const body = await response.json();
+      const logos: Record<string, string> = {};
+      for (const item of arr(body?.teams) as SportsDbTeam[]) {
+        if (!item?.strBadge) continue;
+        for (const alias of [item.strTeam, ...(item.strTeamAlternate || "").split(",")]) {
+          const key = normalizeTeamName(String(alias || ""));
+          if (key) logos[key] = item.strBadge;
+        }
+      }
+      return logos;
+    })
+    .catch(error => {
+      TEAM_LOGO_CACHE.delete(leagueName);
+      throw error;
+    });
+  TEAM_LOGO_CACHE.set(leagueName, request);
+  return request;
 }
 const number = (v: any) => v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? null : Number(v);
 
@@ -133,6 +161,16 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
   const [teamData, setTeamData] = useState<TeamPayload | null>(null);
   const [teamLoading, setTeamLoading] = useState(false);
   const [teamError, setTeamError] = useState<string | null>(null);
+  const [leagueTeamLogos, setLeagueTeamLogos] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let active = true;
+    setLeagueTeamLogos({});
+    loadLeagueTeamLogos(league.sportsDbLeague)
+      .then(logos => { if (active) setLeagueTeamLogos(logos); })
+      .catch(() => { if (active) setLeagueTeamLogos({}); });
+    return () => { active = false; };
+  }, [league.id, league.sportsDbLeague]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -211,7 +249,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
             const [gf,ga]=readStandingsGoals(r,mode);
             const gd=readStandingsStat(r,mode,["goalsdiff","goaldifference","goal_diff"],"+/-");
             const pts=readStandingsStat(r,mode,["points","pts"],"P");
-            return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n} logo={teamLogo(t, r, n)}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td className="standing-result-cell standing-win">{txt(g)||"—"}</td><td className="standing-result-cell standing-draw">{txt(b)||"—"}</td><td className="standing-result-cell standing-loss">{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
+            return <tr key={uid(t)||n}><td>{p}</td><td className="league-team-cell"><TeamMark label={n} logo={teamLogo(t, r, n, leagueTeamLogos)}/><span>{n}</span></td><td>{txt(o)||"—"}</td><td className="standing-result-cell standing-win">{txt(g)||"—"}</td><td className="standing-result-cell standing-draw">{txt(b)||"—"}</td><td className="standing-result-cell standing-loss">{txt(l)||"—"}</td><td>{gf==null&&ga==null?"—":(txt(gf)||"—")+":"+(txt(ga)||"—")}</td><td>{gd==null?"—":(Number(gd)>0?"+":"")+String(gd)}</td><td><b>{txt(pts)||"—"}</b></td><td><span className="league-form">{f.length?f.map((x,j)=><i key={j} className={"league-form-"+x.toLowerCase()} title={x==="G"?"Galibiyet":x==="B"?"Beraberlik":"Mağlubiyet"}>{x}</i>):"—"}</span></td></tr>;
           })}</tbody>
         </table></div> : <div className="league-empty">{mode==="total"?"Puan tablosu verisi bulunamadı.":"Kaynak bu görünüm için ayrı bir tablo sağlamadı."}</div>}
       </section> : null}
@@ -221,7 +259,7 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
         {rounds.length?<label className="iddaa-round-filter">Tur <select value={round} onChange={e=>setRound(e.target.value)}><option value="all">Tüm turlar</option>{rounds.map(r=><option key={r} value={r}>{r}</option>)}</select></label>:null}
         {filteredFixtures.length?<div className="league-fixtures">{filteredFixtures.map((m:any,i:number)=>{
           const event=val(m?.sport_event,m?.event,m),h=fixtureTeam(m,"home"),a=fixtureTeam(m,"away"),hn=name(h)||"Ev sahibi",an=name(a)||"Deplasman",hs=fixtureScore(m,"home"),as=fixtureScore(m,"away");
-          return <div className="league-fixture" key={txt(val(m?._id,m?.id,m?.matchid,m?.matchId,event?.id,i))}><div className="league-fixture-time">{dateText(val(m?._dt?.uts,m?.date,m?._dt,m?.datetime,m?.starttime,m?.time,event?.start_time))}<small>{roundOf(m) ? `Tur ${roundOf(m)}` : txt(val(m?.status?.name,m?.status?.shortName,m?.status,m?._status))||"—"}</small></div><div className="league-fixture-teams"><span><TeamMark label={hn}/>{hn}</span><span><TeamMark label={an}/>{an}</span></div><b className="league-fixture-score">{hs!=null&&as!=null?String(hs)+" : "+String(as):"— : —"}</b></div>;
+          return <div className="league-fixture" key={txt(val(m?._id,m?.id,m?.matchid,m?.matchId,event?.id,i))}><div className="league-fixture-time">{dateText(val(m?._dt?.uts,m?.date,m?._dt,m?.datetime,m?.starttime,m?.time,event?.start_time))}<small>{roundOf(m) ? `Tur ${roundOf(m)}` : txt(val(m?.status?.name,m?.status?.shortName,m?.status,m?._status))||"—"}</small></div><div className="league-fixture-teams"><span><TeamMark label={hn} logo={teamLogo(h, m, hn, leagueTeamLogos)}/>{hn}</span><span><TeamMark label={an} logo={teamLogo(a, m, an, leagueTeamLogos)}/>{an}</span></div><b className="league-fixture-score">{hs!=null&&as!=null?String(hs)+" : "+String(as):"— : —"}</b></div>;
         })}</div>:<div className="league-empty">Bu görünümde listelenebilir maç bulunamadı.</div>}
         {fixtureMode==="upcoming"&&payload?.feedErrors?.fixtures?<p className="iddaa-feed-warning">{payload.feedErrors.fixtures}</p>:null}
       </section>:null}
@@ -237,14 +275,14 @@ export function IddaaLeagueHub({ league }: { league: IddaaLeague }) {
         <div className="card-heading"><span>TAKIM KADROLARI</span><small>{teams.length || (league.hasStandings ? 18 : 0)} takım</small></div>
         <label className="iddaa-team-select">Takım seç <select value={teamUid} onChange={e=>setTeamUid(e.target.value)}><option value="">Takım seçin</option>{teams.map(t=><option key={uid(t)} value={uid(t)}>{name(t)}</option>)}</select></label>
         {teamLoading?<div className="league-loading">Kadro yükleniyor…</div>:teamError?<div className="league-warning">{teamError}</div>:teamData?<div className="iddaa-squad-content">
-          <h3>{name(teamData.team)||name(selectedTeam)||"Takım kadrosu"}</h3>
+          <h3 className="iddaa-squad-team-heading"><TeamMark label={name(teamData.team)||name(selectedTeam)||"Takım"} logo={teamLogo(teamData.team || selectedTeam, {}, name(teamData.team)||name(selectedTeam)||"Takım", leagueTeamLogos)}/>{name(teamData.team)||name(selectedTeam)||"Takım kadrosu"}</h3>
           {arr(teamData.players).length?<div className="iddaa-squad-grid">{teamData.players.map((p:any,i:number)=>{
             const id=txt(val(p?._id,p?.id,p?.playerid)), fact=teamData.facts?.[id], stats=fact?.stats?.teams?.[teamUid]?.seasons?.[String(league.seasonId)]||fact?.stats||{}, injury=arr(teamData.injuries).find((x:any)=>txt(val(x?.player?._id,x?.player?.id))===id);
             return <div className="iddaa-squad-player" key={id||i}><span className="iddaa-shirt">{txt(val(p?.shirtnumber,p?.shirt_number,p?.number))||"—"}</span><div><b>{name(p)||txt(p?.fullname)||"Oyuncu"}</b><small>{name(p?.position)||txt(p?.position)||"—"}{injury?" · Durum bildirimi":""}</small></div><strong>{txt(val(stats?.matches,stats?.played))||"—"}<small>maç</small></strong></div>;
           })}</div>:<div className="league-empty">Bu takım için kadro verisi bulunamadı.</div>}
         </div>:<div className="league-empty">Kadro ve oyuncu istatistiklerini görmek için takım seçin.</div>}
       </section>:null}
-      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Takım armaları: FootyLogos.</p>
+      <p className="league-source-note">Kaynak: iddaa.com · Sportradar Gismo. Takım armaları: İddaa verisi, TheSportsDB ve FootyLogos.</p>
     </>}
   </div>;
 }
