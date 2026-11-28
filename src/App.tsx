@@ -302,6 +302,7 @@ function App() {
   const [bulletin, setBulletin] = useState<BulletinDocument | null>(null);
   const [fotmobLiveStates, setFotmobLiveStates] = useState<Record<string, MatchLiveState>>({});
   const [iddaaLiveMatches, setIddaaLiveMatches] = useState<DisplayMatch[]>([]);
+  const [fotmobFinishedMatches, setFotmobFinishedMatches] = useState<DisplayMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<NavItem["id"]>("matches");
@@ -362,10 +363,13 @@ function App() {
         }
         const ids = [...iddaaByFotMob.keys()];
         if (!ids.length) return;
-        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}`, { cache: "no-store" });
+        const response = await fetch(`/api/fotmob-live?ids=${ids.join(",")}&includeAll=1`, { cache: "no-store" });
         if (!response.ok) return;
         const payload = await response.json();
         if (!active) return;
+        if (Array.isArray(payload?.finishedMatches)) {
+          setFotmobFinishedMatches(dedupeByMatchId(payload.finishedMatches));
+        }
         const next: Record<string, MatchLiveState> = {};
         for (const fixture of payload?.matches || []) {
           const iddaaId = iddaaByFotMob.get(String(fixture.fotmobMatchId));
@@ -407,11 +411,15 @@ function App() {
   }), [bulletin, fotmobLiveStates]);
   const displayMatches = matches;
 
-  const allMatchesForFilters = useMemo(
+  const matchFilterOptions = useMemo(
     () => dedupeByMatchId([...displayMatches, ...iddaaLiveMatches]),
     [displayMatches, iddaaLiveMatches]
   );
-  const dateOptions = useMemo(() => [...new Set(allMatchesForFilters.map(matchDateKey).filter(Boolean))].sort(), [allMatchesForFilters]);
+  const allMatchesForFilters = useMemo(
+    () => dedupeByMatchId([...matchFilterOptions, ...fotmobFinishedMatches]),
+    [matchFilterOptions, fotmobFinishedMatches]
+  );
+  const dateOptions = useMemo(() => [...new Set(matchFilterOptions.map(matchDateKey).filter(Boolean))].sort(), [matchFilterOptions]);
   const availableLeagues = useMemo(() => {
     const counts = new Map<string, number>();
     for (const match of allMatchesForFilters) {
@@ -429,13 +437,20 @@ function App() {
   });
   const scopedMatches = useMemo(() => applyMatchFilters(displayMatches), [displayMatches, selectedDate, selectedLeagues]);
   const scopedLiveMatches = useMemo(() => applyMatchFilters(iddaaLiveMatches), [iddaaLiveMatches, selectedDate, selectedLeagues]);
+  const scopedFinishedMatches = useMemo(
+    () => applyMatchFilters(dedupeByMatchId([
+      ...displayMatches.filter(match => isFinishedMatch(match.status)),
+      ...fotmobFinishedMatches
+    ])),
+    [displayMatches, fotmobFinishedMatches, selectedDate, selectedLeagues]
+  );
 
   const filteredMatches = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
     const source = statusFilter === "live"
       ? scopedLiveMatches
       : statusFilter === "finished"
-        ? scopedMatches.filter(match => isFinishedMatch(match.status))
+        ? scopedFinishedMatches
         : scopedMatches;
     return source.filter((match) => {
       if (!query) return true;
@@ -444,7 +459,7 @@ function App() {
     }).sort((a, b) => statusFilter === "finished"
       ? dateTimeKey(b).localeCompare(dateTimeKey(a))
       : dateTimeKey(a).localeCompare(dateTimeKey(b)));
-  }, [scopedMatches, scopedLiveMatches, statusFilter, search]);
+  }, [scopedMatches, scopedLiveMatches, scopedFinishedMatches, statusFilter, search]);
 
   const leagueGroups = useMemo(() => {
     const groups = new Map<string, DisplayMatch[]>();
@@ -459,8 +474,9 @@ function App() {
 
   const selectedMatch = useMemo(
     () => displayMatches.find((match) => String(match.matchId) === selectedId)
-      ?? iddaaLiveMatches.find((match) => String(match.matchId) === selectedId) ?? null,
-    [displayMatches, iddaaLiveMatches, selectedId]
+      ?? iddaaLiveMatches.find((match) => String(match.matchId) === selectedId)
+      ?? fotmobFinishedMatches.find((match) => String(match.matchId) === selectedId) ?? null,
+    [displayMatches, iddaaLiveMatches, fotmobFinishedMatches, selectedId]
   );
   const filteredLeagues = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("tr-TR");
@@ -472,12 +488,12 @@ function App() {
   );
 
   const liveCount = scopedLiveMatches.length;
-  const finishedCount = useMemo(() => scopedMatches.filter(match => isFinishedMatch(match.status)).length, [scopedMatches]);
+  const finishedCount = scopedFinishedMatches.length;
   const visibleCount = filteredMatches.length;
 
   useEffect(() => {
-    if (selectedId && ![...matches, ...iddaaLiveMatches].some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
-  }, [matches, iddaaLiveMatches, selectedId]);
+    if (selectedId && ![...matches, ...iddaaLiveMatches, ...fotmobFinishedMatches].some((match) => String(match.matchId) === selectedId)) setSelectedId(null);
+  }, [matches, iddaaLiveMatches, fotmobFinishedMatches, selectedId]);
 
   function selectMatch(id: string) {
     setSelectedId(id);
@@ -535,7 +551,7 @@ function App() {
               <label className="match-filter-date"><span>TARİH</span>
                 <select value={selectedDate} onChange={event => setSelectedDate(event.target.value)}>
                   <option value="all">Tüm tarihler ({matches.length})</option>
-                  {dateOptions.map(date => <option key={date} value={date}>{dateOptionLabel(date)} ({allMatchesForFilters.filter(match => matchDateKey(match) === date).length})</option>)}
+                  {dateOptions.map(date => <option key={date} value={date}>{dateOptionLabel(date)} ({matchFilterOptions.filter(match => matchDateKey(match) === date).length})</option>)}
                 </select>
               </label>
               <div className="league-filter-wrap">
