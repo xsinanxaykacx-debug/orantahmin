@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { transformIddaaPayload } from "./iddaa/transform.ts";
 import { getIstanbulDateKey } from "./iddaa/date-filter.ts";
 import { createFotMobEventMap, fetchFotMobFixtures, getFotMobDates } from "./fotmob/matcher.ts";
+import { extractIddaaEvents, mergeIddaaEventFeeds } from "./iddaa/merge-feeds.ts";
 
 const ROOT = process.cwd();
 const RAW_DIR = resolve(ROOT,"data/raw");
@@ -56,14 +57,19 @@ function parseCompetitionMap(payload:any):Record<string,string> {
 }
 
 async function main():Promise<void> {
-  const feed=await getJson(FEED_URL,45000);
-  const root=Array.isArray(feed.data)?feed.data[0]:feed.data;
-  if(!Array.isArray(root?.events) || !root.events.length) throw new Error("iddaa maç listesi boş.");
+  const [feed,liveFeed,extendedFeed]=await Promise.all([
+    getJson(FEED_URL,45000),
+    getJson(`${SB}/events?st=1&type=1&version=0`,45000),
+    getJson(`${SB}/events?st=1&type=2&version=0`,45000)
+  ]);
+  const feeds=[feed,liveFeed,extendedFeed];
+  const events=mergeIddaaEventFeeds(feeds);
+  if(!events.length) throw new Error("İddaa maç listesi boş.");
 
   const targetDate=getIstanbulDateKey();
-  const sourceFootballCount=root.events.filter((event:any)=>Number(event.sid)===1).length;
+  const sourceFootballCount=events.filter((event:any)=>Number(event.sid)===1).length;
   if(!sourceFootballCount) throw new Error("İddaa bülteninde futbol maçı bulunamadı; mevcut bülten korunuyor.");
-  console.log(`iddaa tam bülten: ${targetDate} Europe/Istanbul | Kaynak futbol maçı: ${sourceFootballCount} | Tarih filtresi uygulanmadı.`);
+  console.log(`iddaa birleşik bülten: ${targetDate} Europe/Istanbul | type=0: ${extractIddaaEvents(feed).filter((event:any)=>Number(event.sid)===1).length} | type=1: ${extractIddaaEvents(liveFeed).filter((event:any)=>Number(event.sid)===1).length} | type=2: ${extractIddaaEvents(extendedFeed).filter((event:any)=>Number(event.sid)===1).length} | Tekil futbol maçı: ${sourceFootballCount}.`);
 
   const [marketConfigPayload,competitionPayload]=await Promise.all([
     fetchOptionalJson(`${SB}/get_market_config?st=1`),
@@ -74,7 +80,7 @@ async function main():Promise<void> {
   const competitionMap=parseCompetitionMap(competitionPayload);
 
   console.log(`iddaa: ${sourceFootballCount} futbol maçı dönüştürülüyor. Tam marketler maç seçildiğinde api/iddaa?resource=markets üzerinden alınacak.`);
-  const bulletin=transformIddaaPayload(feed,marketConfig,competitionMap);
+  const bulletin=transformIddaaPayload({isSuccess:true,data:{events}},marketConfig,competitionMap);
 
   const markets=new Map<string,number>();
   let outcomes=0, matchesWithMarkets=0, maxMarkets=0;
@@ -91,7 +97,7 @@ async function main():Promise<void> {
 
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
   const rawName=`iddaa_events_full_${targetDate.replace(/-/g,"")}_${stamp}.json`;
-  const raw=JSON.stringify(feed);
+  const raw=JSON.stringify({fetchedAt:new Date().toISOString(),feeds:{type0:feed,type1:liveFeed,type2:extendedFeed},mergedEventCount:events.length});
   await mkdir(RAW_DIR,{recursive:true});
   await writeFile(resolve(RAW_DIR,rawName),raw,"utf-8");
   bulletin.meta.sourceFile=rawName;
